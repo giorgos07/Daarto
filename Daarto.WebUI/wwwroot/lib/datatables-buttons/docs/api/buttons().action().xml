@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>buttons().action()</name>
+	<summary>Get / set the action functions for the selected buttons</summary>
+	<since>1.0.0</since>
+
+	<type type="function">
+		<signature>buttons().action()</signature>
+		<returns type="DataTables.Api">
+			DataTables API instance which contains the action functions for the selected buttons
+		</returns>
+		<description>
+			Get the action functions for the selected buttons.
+		</description>
+	</type>
+
+	<type type="function">
+		<signature>buttons().action( set )</signature>
+		<parameter type="function" name="set">
+			Function to set for the selected button's action method, replacing any action that was previously assigned to the buttons. The same function is used for all selected buttons.
+
+			The function takes four parameters:
+
+			1. `-type object` Event object that triggered the event
+			2. `-type DataTables.Api` A DataTables API instance for the host DataTable
+			3. `-type jQuery` jQuery instance for the button node that was clicked on
+			4. `-type object` The button's configuration object
+
+			No return value is expected.
+
+			The function is executed with in the scope of a DataTables API instance for the selected button (i.e. `b-api button()`) for the button in question.
+		</parameter>
+		<returns type="DataTables.Api">
+			DataTables API instance with the selected buttons in the result set, available for chaining further operations on the buttons.
+		</returns>
+		<description>
+			Set the action functions for the selected buttons.
+		</description>
+	</type>
+
+	<description>
+		This method provides the ability to get or set the action function of the selected buttons. The action function (which can be set on initialisation by `b-init buttons.buttons.action`) defines what the button will do when activated.
+
+		Please note that when setting an action, the new function will replace any action that the button already has assigned to it. This is an important consideration as many button types define their own action that would no longer be executed if replaced.
+	</description>
+
+	<example title="Set a simple action function for all buttons"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.buttons().action( function( e, dt, button, config ) {
+	console.log( 'Button '+this.text()+' activated' );
+	this.disable();
+} );
+
+]]></example>
+</dt-api>

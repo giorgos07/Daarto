@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="5">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-print">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'print',
+				autoPrint: false
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Disable auto print</title>
+
+<info><![CDATA[
+
+By default, when the `b-button print` button opens the print view window it will automatically call the browser's `window.print()` method to present the browser's print dialogue box to the end user and they can set the options they wish. When the print action is confirmed or cancelled the print view window is then automatically closed.
+
+If this automatic print and close behaviour is not what you want and you would rather the end user select the print command themselves, the `autoPrint` option can be specified to disable this behaviour. This example shows that in practice.
+
+]]></info>
+
+</dt-example>
+

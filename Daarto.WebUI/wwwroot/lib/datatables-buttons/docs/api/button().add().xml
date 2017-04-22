@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>button().add()</name>
+	<summary>Create a new button and add it to the document</summary>
+	<since>1.0.0</since>
+
+	<type type="function">
+		<signature>button().add( index, config )</signature>
+		<parameter type="int|string|null" name="index">
+			Insert index for the button. This option can be one of:
+
+			* An integer value if the value is to be inserted into the main buttons collection,
+			* A string with a dash (`-`) separator if the button is to be inserted into a collection (please refer to the `b-type button-selector` documentation for full details of button indexes, including how they apply to collections of sub-buttons),
+			* `null` to insert a button at the end of the main buttons collection.
+		</parameter>
+		<parameter type="object|string|function" name="config">
+			Button configuration. Please refer to `b-init buttons.buttons` for full details of the configuration options available here.
+		</parameter>
+		<returns type="DataTables.Api">
+			New DataTables API instance with the result set containing the newly created button. This means it is possible to immediately using the chaining API to manipulate the button.
+		</returns>
+		<description>
+			Create a new button, adding it to the selected button instance and inserting immediately into the document.
+		</description>
+	</type>
+
+	<description>
+		This method provides the ability to dynamically add new buttons to a button instance. The inverse of this method is `b-api button().remove()` which can be used to remove existing buttons dynamically.
+
+		**Important**: This method will effect the indexes of other buttons in the instances. If you are using index based selectors for the buttons, please ensure that you take this into account for API interactions after calling this method.
+
+		When using the `b-api buttons()` selector method, the second argument (the buttons selector) is effectively ignored when processing this method. Only the button instances are used.
+	</description>
+
+	<example title="Add a new button, into index position 0, that provides the ability to reload an Ajax sourced DataTable"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.button().add( 0, {
+	action: function ( e, dt, button, config ) {
+		dt.ajax.reload();
+	},
+	text: 'Reload table'
+} );
+
+]]></example>
+</dt-api>

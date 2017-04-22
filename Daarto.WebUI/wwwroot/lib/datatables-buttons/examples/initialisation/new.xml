@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="10">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons">
+<![CDATA[
+
+$(document).ready(function() {
+	var table = $('#example').DataTable();
+
+	new $.fn.dataTable.Buttons( table, {
+		buttons: [
+			{
+				text: 'Button 1',
+				action: function ( e, dt, node, conf ) {
+					console.log( 'Button 1 clicked on' );
+				}
+			},
+			{
+				text: 'Button 2',
+				action: function ( e, dt, node, conf ) {
+					console.log( 'Button 2 clicked on' );
+				}
+			}
+		]
+	} );
+
+	table.buttons( 0, null ).container().prependTo(
+		table.table().container()
+	);
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">`new` initialisation</title>
+
+<info><![CDATA[
+
+Buttons will typically be initialised through the `b-init buttons` parameter in the DataTables configuration object, but it is also possible to construct a new buttons list at any time using the `new $.fn.dataTable.Buttons()` constructor. This constructor takes two parameters:
+
+1. DataTable to apply the buttons to
+2. Button options - this matches the options that can be given to the `b-init buttons` option.
+
+This example shows a Buttons constructor being used with its API to create and insert a set of buttons after a DataTable has been created.
+
+]]></info>
+
+</dt-example>
+

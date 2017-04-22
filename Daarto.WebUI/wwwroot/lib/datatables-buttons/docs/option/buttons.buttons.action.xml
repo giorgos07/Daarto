@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.buttons.action</name>
+	<summary>Action to take when the button is activated</summary>
+	<since>1.0.0</since>
+
+	<default value="Default action depends upon the button type. Please refer to the button type documentation"/>
+
+	<type type="function">
+		<signature>action( e, dt, node, config )</signature>
+		<scope>
+			DataTables API instance for the selected button - i.e. `b-api button()` for the button in question
+		</scope>
+		<parameter type="object" name="e">
+			Event object that triggered the event
+		</parameter>
+		<parameter type="DataTables.Api" name="dt">
+			A DataTables API instance for the host DataTable
+		</parameter>
+		<parameter type="jQuery" name="node">
+			jQuery instance for the button node that was clicked on
+		</parameter>
+		<parameter type="object" name="config">
+			The button's configuration object
+		</parameter>
+		<returns>
+			No return value is required or expected. No action is taken upon any value that is returned.
+		</returns>
+		<description>
+			The function is executed when the button is activated, allowing some action to be triggered by the end user.
+		</description>
+	</type>
+
+	<description>
+		This function defined the action that the button will take when activated by the end user. This will normally be to perform some operation on the DataTable, but can be absolutely anything since the function can be defined by yourself.
+
+		Buttons can be activated a number of different ways:
+
+		* Mouse: Click
+		* Mobile: Tap on the button
+		* Keyboard: _tab_ to navigate the buttons and _return_ to activate
+		* API: `b-api button().trigger()`
+	</description>
+
+	<example title="DataTables initialisation: Custom action functions"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: {
+		buttons: [
+			{
+				text: 'Alert',
+				action: function ( e, dt, node, config ) {
+					alert( 'Activated!' );
+					this.disable(); // disable button
+				}
+			}
+		]
+	}
+} );
+
+]]></example>
+
+	<example title="Instance initialisation: Custom action functions"><![CDATA[
+
+new $.fn.dataTable.Buttons( table, {
+	buttons: [
+		{ 
+			text: 'Copy to div',
+			action: function ( e, dt, node, config ) {
+				// Copy an array based DataTables' data to another element
+				$('#output').html( dt.data().map( function (row) {
+					return row.join(' | ' );
+				} ).join('<br>');
+			}
+		}
+	]
+} );
+
+]]></example>
+</dt-option>

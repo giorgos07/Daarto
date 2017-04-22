@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>buttons()</name>
+	<summary>Select one or more buttons</summary>
+	<since>1.0.0</since>
+
+	<type type="function">
+		<signature>buttons( [ groupSelector, ] buttonSelector )</signature>
+		<parameter type="button-group-selector" name="groupSelector" default="undefined">
+			Button group (instance) selector. Provides the ability to select buttons from one or more instances of the Buttons class.
+
+			By default this is `-type undefined` resulting in all instances attached to the DataTable being selected.
+		</parameter>
+		<parameter type="button-selector" name="buttonSelector">
+			Selector to obtain the buttons that should be acted upon.
+		</parameter>
+		<returns type="DataTables.Api">
+			DataTables API instance where the result set contains information about the selected buttons so operations can be chained.
+		</returns>
+		<description>
+			Select one or more buttons from the button instances attached to a DataTable.
+		</description>
+	</type>
+
+	<description>
+		The Buttons extension provides a powerful set of selector options so you can select which buttons to perform actions upon. This is very similar to the core DataTables `dt-api rows()`, `dt-api columns()` and `dt-api cells()` which provide the ability to select elements from the table, and more generally like jQuery selectors, so you will be immediately familiar with this interface.
+
+		Using the `b-type button-selector` parameter it is possible to select one or more buttons that you wish to perform an operation on (for example changing the display text or enabling and disabling the button).
+
+		If no parameters are passed in, all buttons in all collections are selected.
+
+		Additionally, as it is possible to have multiple instances of the Buttons extension attached to a single DataTable, the `b-type button-group-selector` option can be optionally included to select buttons from one or more button sets.
+	</description>
+
+	<example title="Disable all buttons with the class 'csv'"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.buttons( '.csv' ).disable();
+
+]]></example>
+
+	<example title="Change the text for button indexes 2 and 2-0"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.buttons( [2, '2-0'] ).text( 'Not available' );
+
+]]></example>
+
+	<example title="Select and disable all buttons from instance index 0"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.buttons( 0, null ).disable();
+
+]]></example>
+
+	<example title="Enable all buttons with the class `export` from the instance with the name `output`"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.buttons( 'output:name', '.export' ).enable();
+
+]]></example>
+</dt-api>

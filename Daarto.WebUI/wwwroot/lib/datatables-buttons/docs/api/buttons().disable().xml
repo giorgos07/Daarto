@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>buttons().disable()</name>
+	<summary>Disable the selected buttons</summary>
+	<since>1.0.0</since>
+
+	<type type="function">
+		<signature>buttons().disable()</signature>
+		<returns type="DataTables.Api">
+			DataTables API instance with the selected buttons in the result set, available for chaining further operations on the buttons.
+		</returns>
+		<description>
+			Disable the selected buttons.
+		</description>
+	</type>
+
+	<description>
+		It can often be useful to enable and disable buttons based on some external logic. A common example is an _Edit_ button that is disabled when no rows are selected in a table.
+
+		When a button is disabled its visual appearance is updated to show its deactivated status (this is done by adding the class `-string disabled` to the button element). Additionally, when a disabled button is clicked on (or otherwise activated by the keyboard or `b-api button().trigger()`) the button's action is not executed.
+
+		This method can be used to dynamically disable buttons. Unlike its counterpart method, `b-api buttons().enable()`, this method cannot be used to both enable and disable buttons, it can only be used to disable.
+	</description>
+
+	<example title="Disable all buttons"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.buttons().disable();
+
+]]></example>
+
+	<example title="Set enabled state on a logic condition"><![CDATA[
+
+var table = $('#myTable').DataTable();
+var buttons = table.buttons( ['.edit', '.delete'] );
+
+if ( table.rows( { selected: true } ).indexes().length === 0 ) {
+	buttons.disable();
+}
+else {
+	buttons.enable();
+}
+
+]]></example>
+</dt-api>

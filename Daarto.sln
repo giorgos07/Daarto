@@ -1,0 +1,40 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.26403.7
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daarto.WebUI", "Daarto.WebUI\Daarto.WebUI.csproj", "{E38624C0-A928-410A-ACEF-476717651678}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daarto.IdentityProvider", "Daarto.IdentityProvider\Daarto.IdentityProvider.csproj", "{FE4188C8-2AE0-4A50-8CE0-D1DCFAC64785}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daarto.Services", "Daarto.Services\Daarto.Services.csproj", "{BDE6493A-A23D-4A36-90E2-F3AB34BCEA47}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daarto.DataAccess", "Daarto.DataAccess\Daarto.DataAccess.csproj", "{F0C5576A-A3C2-4FDA-A76C-62914A339E3F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E38624C0-A928-410A-ACEF-476717651678}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E38624C0-A928-410A-ACEF-476717651678}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E38624C0-A928-410A-ACEF-476717651678}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E38624C0-A928-410A-ACEF-476717651678}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE4188C8-2AE0-4A50-8CE0-D1DCFAC64785}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE4188C8-2AE0-4A50-8CE0-D1DCFAC64785}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE4188C8-2AE0-4A50-8CE0-D1DCFAC64785}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE4188C8-2AE0-4A50-8CE0-D1DCFAC64785}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDE6493A-A23D-4A36-90E2-F3AB34BCEA47}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDE6493A-A23D-4A36-90E2-F3AB34BCEA47}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDE6493A-A23D-4A36-90E2-F3AB34BCEA47}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDE6493A-A23D-4A36-90E2-F3AB34BCEA47}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F0C5576A-A3C2-4FDA-A76C-62914A339E3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F0C5576A-A3C2-4FDA-A76C-62914A339E3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F0C5576A-A3C2-4FDA-A76C-62914A339E3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F0C5576A-A3C2-4FDA-A76C-62914A339E3F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

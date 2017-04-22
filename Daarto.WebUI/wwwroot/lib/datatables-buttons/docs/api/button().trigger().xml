@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>button().trigger()</name>
+	<summary>Trigger the action of the selected button</summary>
+	<since>1.0.0</since>
+
+	<type type="function">
+		<signature>button().trigger()</signature>
+		<returns type="DataTables.Api">
+			DataTables API instance with the selected buttons in the result set, available for chaining further operations on the buttons.
+		</returns>
+		<description>
+			Programmatically trigger the action of the selected button.
+		</description>
+	</type>
+
+	<description>
+		This method can be used to programmatically trigger the actions of the selected button. Typically a button's action will be triggered by an end user interaction (clicking, keyboard navigation), but it can be useful to trigger the action from code - for example to periodically update the data contained in a DataTable.
+
+		Please note that some buttons types might not be able to be triggered programmatically. Specifically Adobe Flash based buttons that are used for clipboard and local file saving actions cannot be triggered without a user click action as a security mechanism that is built into Flash and cannot be overridden.
+	</description>
+
+	<example title="Trigger the button at index 2-1"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.button( '2-1' ).trigger();
+
+]]></example>
+</dt-api>

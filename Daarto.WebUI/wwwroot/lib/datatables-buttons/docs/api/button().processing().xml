@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>button().processing()</name>
+	<summary>Get / set the processing state for a button</summary>
+	<since>1.3.0</since>
+
+	<type type="function">
+		<signature>button().processing()</signature>
+		<returns type="boolean">
+			`true` if the button is currently in its processing state, `false` otherwise.
+		</returns>
+		<description>
+			Determine if a button is currently in the processing state or not.
+		</description>
+	</type>
+
+	<type type="function">
+		<signature>button().processing( set )</signature>
+		<parameter type="boolean" name="set">
+			Flag to indicate if the processing state should be enabled (`true`) or disabled (`false`).
+		</parameter>
+		<returns type="DataTables.Api">
+			DataTables API instance with the selected button in the result set, available for chaining further operations on the buttons.
+		</returns>
+		<description>
+			Set the processing state for the selected button.
+		</description>
+	</type>
+
+	<description>
+		Some actions that can be triggered by a button click can take a noticeable amount of time to complete - for example getting data from a server via an Ajax request, building a complex PDF document or any other asynchronous action. While the processing for that action is happening, it can be helpful to the end user to let them know that something is happening by showing a processing indicator. This method provides exactly that ability.
+
+		The typical use case will be to use `this.processing( true );` at the start of an action function and `that.processing( false );` inside a complete callback (where `that = this`).
+	</description>
+
+	<example title="Show button index 1 as processing"><![CDATA[
+
+var table = $('#myTable').DataTable();
+table.button( 1 ).processing( true );
+
+]]></example>
+
+	<example title="Use the processing method inside an action function"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table
+	.button( 0 )
+	.action( function () {
+		this.processing( true );
+
+		// Do something...
+
+		this.processing( false );
+	} );
+
+]]></example>
+</dt-api>

@@ -1,0 +1,25 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Daarto - @ViewBag.Title</title>
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    @{ await Html.RenderPartialAsync("_MainStylesPartial"); }
+    @(await RenderSectionAsync("Css", false))
+</head>
+<body>
+    <div class="app app-header-fixed">
+        @{ await Html.RenderPartialAsync("_MainLayoutHeader"); }
+        @{ await Html.RenderPartialAsync("_MainLayoutSideMenu"); }
+        <div id="content" class="app-content" role="main">
+            <div class="app-content-body">
+                @RenderBody()
+            </div>
+        </div>
+        @{ await Html.RenderPartialAsync("_MainLayoutFooter"); }
+    </div>
+    @{ await Html.RenderPartialAsync("_MainScriptsPartial"); }
+    @(await RenderSectionAsync("Scripts", false))
+</body>
+</html>

@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-button library="Buttons">
+	<name>pageLength</name>
+	<summary>Button collection that will control the DataTables' page length</summary>
+	<since>1.1.0</since>
+
+	<description>
+		It is quite common to have four table control and information elements around a DataTable - one in each corner. DataTables' default display as a page length control in the top left, which where Buttons are often inserted, resulting in the page length list being dropped to keep the control elements limited to four.
+
+		The default page length list could of course be inserted back into the document by simply adding the `l` option to the `dt-init dom` configuration, but it might look visually confusing.
+
+		As a result Buttons offers this `b-button pageLength` button type as part of its core software which functions as a direct replacement to the DataTables default length list. This allows page length control to be retained while enjoying full styling integration with Buttons.
+
+		This button will read the configuration used for the DataTables `dt-init lengthMenu` configuration option, so the same configuration can be used for this buttons as well as DataTables' default page length control.
+	</description>
+
+	<extend>collection</extend>
+
+	<option type="string|object|function" name="text" default="{'-1': 'Show all rows', _: 'Show %d rows'}">
+		The button's display text. By default this is a function that uses the object shown, where the `%d` value is replaced by the result from `dt-api page.len()` (i.e. the current page length). The text can be configured using this option (see `b-init buttons.buttons.text`) or the `buttons.pageLength` option of the DataTables `dt-init language` object.
+	</option>
+
+	<option type="string" name="className" default="buttons-collection buttons-page-length">
+		The button's class name. See `b-init buttons.buttons.className` for details.
+	</option>
+
+	<option type="function" name="action">
+		Show the collection to allow page length selection.
+	</option>
+
+
+	<example title="DataTables initialisation: Show the `pageLength` button with default options"><![CDATA[
+
+$('#myTable').DataTable( {
+	dom: 'Bfrtip',
+	buttons: [ 'pageLength' ]
+} );
+
+]]></example>
+
+	<example title="Page length button with `dt-init lengthMenu` specified"><![CDATA[
+
+$('#myTable').DataTable( {
+	dom: 'Bfrtip',
+	lengthMenu: [
+		[ 10, 25, 50, -1 ],
+		[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+	],
+	buttons: [
+		'pageLength'
+	]
+} );
+
+]]></example>
+
+	<example title="Custom language string for the collection button (note the use of an object to allow the `-1` value (i.e. show all) to be specified as a language string)"><![CDATA[
+
+$('#myTable').DataTable( {
+	dom: 'Bfrtip',
+	language: {
+		buttons: {
+			pageLength: {
+				_: "Afficher %d éléments",
+				-1: "Tout afficher"
+			}
+		}
+	},
+	buttons: [
+		'pageLength'
+	]
+} );
+
+]]></example>
+</dt-button>

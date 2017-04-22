@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="ajax" order="7">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons jszip pdfmake vfsfonts buttons-html5">
+<![CDATA[
+
+$(document).ready(function() {
+	var buttonCommon = {
+		exportOptions: {
+			format: {
+				body: function ( data, row, column, node ) {
+					// Strip $ from salary column to make it numeric
+					return column === 5 ?
+						data.replace( /[$,]/g, '' ) :
+						data;
+				}
+			}
+		}
+	};
+
+	$('#example').DataTable( {
+        ajax: '../../../../examples/ajax/data/objects.txt',
+        columns: [
+            { data: 'name' },
+            { data: 'position' },
+            { data: 'office' },
+            { data: 'extn' },
+            { data: 'start_date' },
+            { data: 'salary' }
+        ],
+		dom: 'Bfrtip',
+		buttons: [
+			$.extend( true, {}, buttonCommon, {
+				extend: 'copyHtml5'
+			} ),
+			$.extend( true, {}, buttonCommon, {
+				extend: 'excelHtml5'
+			} ),
+			$.extend( true, {}, buttonCommon, {
+				extend: 'pdfHtml5'
+			} )
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Format output data - export options</title>
+
+<info><![CDATA[
+
+Buttons has two different methods that can be used to format the data exported differently from the data that is shown in the table: [orthogonal options](outputFormat-orthogonal.html) and formatting functions as shown in this example. They both achieve basically the same thing in different ways: namely modification of the output data.
+
+Formatting functions for export buttons are specified by assigning a function to one (or more) of the `format` object of the `exportOptions` object. Three formatting functions can be used: `header`, `footer` and `body`. This is the primarily advantage of using formatting functions over orthogonal data - the header and footer can also be formatted using this method (of course orthogonal and this formatting function method can both be used together if you prefer!).
+
+This example uses a `body` formatting function to remove the `$` and `,` characters from the final column to make it a numeric value in the output data. Since this is common to all three export buttons used, the function is placed into an object that is reused by each button - simply to save repeating the same code! This is not required, but it can be a useful technique.
+
+]]></info>
+
+</dt-example>
+

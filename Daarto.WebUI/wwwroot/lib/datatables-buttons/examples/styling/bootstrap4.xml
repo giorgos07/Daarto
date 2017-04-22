@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="2" framework="bootstrap4">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons jszip pdfmake vfsfonts buttons-html5 buttons-print buttons-colvis">
+<![CDATA[
+
+$(document).ready(function() {
+	var table = $('#example').DataTable( {
+		lengthChange: false,
+		buttons: [ 'copy', 'excel', 'pdf', 'colvis' ]
+	} );
+
+	table.buttons().container()
+		.appendTo( '#example_wrapper .col-md-6:eq(0)' );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Bootstrap 4</title>
+
+<info><![CDATA[
+
+This example shows DataTables and the Buttons extension being used with the [Bootstrap 4](http://v4-alpha.getbootstrap.com/) framework providing the styling.
+
+Please note that Bootstrap 4 is still in alpha at the time this example was published and as such the integration may need to change as Bootstrap continues its development. Bootstrap 4 integration will only be made available with the DataTables downloader once a stable version of Bootstrap 4 has been released. Until then the integration files must be installed from source.
+
+Note that for ease of implementation, the `b-init buttons` option is specified as `true` to use the default options, and the `b-api buttons().container()` method then used to insert the buttons into the document. It is possible to use the `dt-init dom` option to insert the buttons like in the DataTables styled examples, but the default `dt-init dom` option used for Bootstrap styling is quite complex and would need to be fully restated.
+
+]]></info>
+
+</dt-example>
+

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>buttons().destroy()</name>
+	<summary>Destroy one or more button instances and remove from the document</summary>
+	<since>1.0.0</since>
+
+	<type type="function">
+		<signature>buttons().destroy()</signature>
+		<returns type="DataTables.Api">
+			DataTables API instance.
+		</returns>
+		<description>
+			Destroy the selected button instances, removing the container and all button elements from the document.
+		</description>
+	</type>
+
+	<description>
+		This method provides the ability to "destroy" one or more instances of the Buttons class. The destroy action will remove all DOM elements that is controls from the document and release any event handlers it holds.
+
+		When using the `b-api buttons()` selector method, the second argument (the buttons selector) is effectively ignored when processing this method. Only the button instances are used.
+
+		This method is invoked automatically if the DataTable `dt-api destroy()` method is called on the host DataTable.
+	</description>
+
+	<example title="Destroy all button instances"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.buttons().destroy();
+
+]]></example>
+
+	<example title="Destroy button instance 0 only"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.buttons( 0, null ).destroy();
+
+]]></example>
+</dt-api>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-button library="Buttons">
+	<name>copy</name>
+	<summary>Copy table data to clipboard button</summary>
+	<since>1.0.0</since>
+
+	<requires>
+		* Buttons' _HTML5 export button_ plug-in.
+	</requires>
+
+	<requires>
+		* Buttons' _Flash export button_ plug-in **and / or**
+		* Buttons' _HTML5 export button_ plug-in
+	</requires>
+
+	<description>
+		This button type serves as a proxy that will automatically detect if the `b-button copyHtml5` or `b-button copyFlash` buttons can be used based on the browser's capabilities and the libraries available on the page.
+
+		This is provided as there is no API in HTML5 that allows a copy to clipboard action when clicking a button. Flash however does provide that option, giving a potentially more desirable interface to the end user.
+
+		The order of selection, in priority order is:
+
+		* `b-button copyHtml5`
+		* `b-button copyFlash`
+
+		If the requirements of both buttons are not satisfied, no button will be presented to the end user. For the requirements of each button type, please refer to its own documentation.
+
+		The options available to the HTML5 and Flash buttons are common between them to ensure that no additional logic is required by the developer based on which button type is selected - e.g. if you set the `exportOptions` option, it will be used by the HTML5 and Flash button types.
+	</description>
+
+
+	<option type="string" name="text" default="Copy">
+		The button's display text. The text can be configured using this option (see `b-init buttons.buttons.text`) or the `buttons.copy` option of the DataTables `dt-init language` object.
+	</option>
+
+	<option type="string" name="className" default="buttons-copy">
+		The button's class name. See `b-init buttons.buttons.className` for details.
+	</option>
+
+	<option type="function" name="action">
+		Display a dialogue box that the user can use to copy table data to clipboard
+	</option>
+
+	<option type="string" name="fieldSeparator" default="\t">
+		The character(s) used to separate fields in the plain text representation of the table that is copied to the system's clipboard.		
+	</option>
+
+	<option type="string" name="fieldBoundary" default="">
+		The character(s) used to enclose each field in the plain text representation of the table that is copied to the system's clipboard. This is automatically added at the start and end of each cell's data.
+	</option>
+
+	<option type="string" name="newline" default="\n">
+		The character(s) used to separate the lines of data. Please note that on Windows client's the default is `\r\n`. All other platforms have a default or `\n` only.
+	</option>
+
+	<option type="object" name="exportOptions" default="{}">
+		Select the data to be gathered from the DataTable for export. This includes options for which columns, rows, ordering and search. Please see the `b-api buttons.exportData()` method for full details - the object given by this parameter is passed directly into that action to gather the required data.
+	</option>
+
+	<option type="boolean" name="header" default="true">
+		Indicate if the table header should be included in the exported data or not.
+	</option>
+
+	<option type="boolean" name="footer" default="false">
+		Indicate if the table footer should be included in the exported data or not.
+	</option>
+
+	<option type="function" name="customize" default="undefined" since="1.1.1">
+		Function that can be used to modify the contents of the exported data. The function takes two parameters, the data as configured by the button and the button's configuration object. The value that the function returns is the value that will be used for the export.
+
+		This can be particularly useful if you wish to add a company header or footer, description data or any other information to the exported data.
+	</option>
+
+
+	<example title="DataTables initialisation: Use the `b-button copy` button type to automatically select between the Flash and HTML button options."><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		'copy'
+	]
+} );
+
+]]></example>
+
+	<example title="DataTables initialisation: Use the `exportOptions` to copy only the current DataTable page"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		{
+			extend: 'copy',
+			text: 'Copy current page',
+			exportOptions: {
+				modifier: {
+					page: 'current'
+				}
+			}
+		}
+	]
+} );
+
+]]></example>
+</dt-button>

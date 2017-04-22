@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="4">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-print select">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'print',
+				text: 'Print all'
+			},
+			{
+				extend: 'print',
+				text: 'Print selected',
+				exportOptions: {
+					modifier: {
+						selected: true
+					}
+				}
+			}
+		],
+		select: true
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Export options - row selector</title>
+
+<info><![CDATA[
+
+The `b-button print` button provides a lot of flexibility in the selection of the data that is to be exported. The `exportOptions` object can be used to determine what columns and rows are included in the printed data. A DataTables `-type selector-modifier` object can be given using the `exportOptions.modifier` option and has the ability to determine the order of the print table and if filtering rows are included, among other actions.
+
+In this example the [Select extension](https://datatables.net/extensions/select) for DataTables is used to give the end user the ability to select rows by clicking on them. Two print buttons are utilised in this example to demonstrate the `exportOptions` option:
+
+* The first button will print all rows (after filtering)
+* The second button will print only the selected rows.
+
+]]></info>
+
+</dt-example>
+

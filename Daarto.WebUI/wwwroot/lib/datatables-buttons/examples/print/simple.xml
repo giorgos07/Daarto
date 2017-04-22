@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="1">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-print">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			'print'
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Print button</title>
+
+<info><![CDATA[
+
+This simple example shows Buttons configured with the `b-button print` button type only. The print button will open a new window in the end user's browser and, by default, automatically trigger the print function allowing the end user to print the table. The window will be closed once the print is complete, or has been cancelled.
+
+]]></info>
+
+</dt-example>
+

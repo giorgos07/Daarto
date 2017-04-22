@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="8">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'collection',
+				text: 'Table control',
+				autoClose: true,
+				buttons: [
+					{
+						text: 'Toggle start date',
+						action: function ( e, dt, node, config ) {
+							dt.column( -2 ).visible( ! dt.column( -2 ).visible() );
+						}
+					},
+					{
+						text: 'Toggle salary',
+						action: function ( e, dt, node, config ) {
+							dt.column( -1 ).visible( ! dt.column( -1 ).visible() );
+						}
+					}
+				]
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Auto close collection</title>
+
+<info><![CDATA[
+
+Buttons' collections will remain on screen when a sub-button is activated by default, but this behaviour isn't always desirable and can be controlled through the use of the `autoClose` option as shown in this example.
+
+In every other regard it is identical to the [collections example](collections.html) but in this case the collection will close automatically when one of the sub-buttons is selected.
+
+]]></info>
+
+</dt-example>
+

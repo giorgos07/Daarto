@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="10">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons jszip buttons-html5">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [ {
+			extend: 'excelHtml5',
+			customize: function ( xlsx ){
+				var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+				// jQuery selector to add a border
+				$('row c[r*="10"]', sheet).attr( 's', '25' );
+			}
+		} ]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Excel - Customise borders</title>
+
+<info><![CDATA[
+
+The Excel export button saves to an XLSX file and the data can be customised before exporting the file using the `customize` method of the `b-button excelHtml5` button type.
+
+This example demonstrates how to manipulate the file using this method to add a styling attribute to a row in the XML used to create the XSLX file. The object passed into the `customize` method contains the XSLX's file structure and the worksheet can be accessed as shown. A jQuery selector is then used to select the cells in row 10 and a border added. More complex logic (such as conditionally adding borders based on cell content) could of course be used.
+
+The style added (index `25` in this case) is defined by the default styles included by Buttons. The full list of styles available and further information about the `customize` method are detailed in the `b-button excelHtml5` documentation.
+
+]]></info>
+
+</dt-example>

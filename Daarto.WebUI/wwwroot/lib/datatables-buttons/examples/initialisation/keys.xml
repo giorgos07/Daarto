@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="5">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				text: 'Button <u>1</u>',
+				key: '1',
+				action: function ( e, dt, node, config ) {
+					alert( 'Button 1 activated' );
+				}
+			},
+			{
+				text: 'Button <u><i>alt</i> 2</u>',
+				key: {
+					altKey: true,
+					key: '2'
+				},
+				action: function ( e, dt, node, config ) {
+					alert( 'Button 2 activated' );
+				}
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Keyboard activation</title>
+
+<info><![CDATA[
+
+Keyboard navigation is essential for fast navigation of a table operations and also for good accessibility. Buttons provides the ability to give each button a key binding - i.e. a key combination that when pressed will activate the button's action.
+
+The key binding can be given as a single character if you wish to listen for an unmodified key press, or as an object if you wish it to only be activated when a modifier key such as shift, alt, etc, is pressed.
+
+Only when there is no element on the page that has focus will Buttons act on a key press. This means that if you search for (for example) 1 in the DataTables search box, it will not activate _Button 1_ in this example. Having said that, adding a modifier key, such as shift or alt can often be useful to prevent accidental triggering of a button.
+
+This example shows two buttons; the first will be activated if `1` is pressed on the keyboard. The second requires `alt + 2` to be pressed.
+
+]]></info>
+
+</dt-example>
+

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.buttons.available</name>
+	<summary>Ensure that any requirements have been satisfied before initialising a button</summary>
+	<since>1.0.0</since>
+
+	<default value="">
+		Default function depends upon the button type. Please refer to the button type documentation.
+	</default>
+
+	<type type="function">
+		<signature>available( dt, config )</signature>
+		<scope>
+			`window`
+		</scope>
+		<parameter type="DataTables.Api" name="dt">
+			A DataTables API instance for the host DataTable
+		</parameter>
+		<parameter type="object" name="config">
+			The button's configuration object
+		</parameter>
+		<returns type="boolean">
+			A boolean value should be returned from the function - `true` to indicate that the buttons requirements are available, `false` to indicate that they are not.
+		</returns>
+		<description>
+			This function can be used to determine if the end user's web-browser has the required functions and libraries available for the button to function correctly. If the function returns `false` as these requirements have not been satisfied, the button simply will not be shown to the end user.
+		</description>
+	</type>
+
+	<description>
+		A number of buttons types, particularly the file export buttons, can depend upon certain APIs being available in the web-browser and external third-party libraries having been loaded. For example the `b-button pdfHtml5` button type depends upon the `FileReader` API and also the `makePdf` library, while the `b-button pdfFlash` button depends upon Adobe Flash being available.
+
+		This method provides button developers with the ability to ensure that any dependencies their buttons might have are satisfied before the button is shown to the end user. If the function returns `false`, the button is simply not shown to the end user.
+	</description>
+
+	<example title="Ensure that the `FileReader` API is available"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: {
+		buttons: [
+			{
+				text: 'FileReader available',
+				available: function ( dt, config ) {
+					return window.FileReader !== undefined;
+				}
+			}
+		]
+	}
+} );
+
+]]></example>
+</dt-option>

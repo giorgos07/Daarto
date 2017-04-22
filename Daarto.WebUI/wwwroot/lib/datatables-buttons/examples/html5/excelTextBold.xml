@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="8">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons jszip buttons-html5">
+<![CDATA[
+
+$(document).ready( function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [ {
+			extend: 'excelHtml5',
+			customize: function( xlsx ) {
+				var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+				$('row c[r^="C"]', sheet).attr( 's', '2' );
+			}
+		} ]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Excel - Bold text</title>
+
+<info><![CDATA[
+
+The Excel export button saves to an XLSX file and the data can be customised before exporting the file using the `customize` method of the `b-button excelHtml5` button type.
+
+This example demonstrates how to manipulate the generated file by making the text in the third column (_C_) bold using the styling options that are built into the created spreadsheet. jQuery is used to select the required cells (XSLX files are just a collection of XML files after all!) and then add a styling attribute.
+
+The style added (index `2` in this case) is defined by the default styles included by Buttons. The full list of styles available and further information about the `customize` method are detailed in the `b-button excelHtml5` documentation.
+
+]]></info>
+
+</dt-example>

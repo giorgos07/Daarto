@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example order="0">
+
+<title lib="Buttons">Print</title>
+
+<info><![CDATA[
+
+This set of examples shows how the `b-button print` button type can be used and customised to display a printable version of the DataTable.
+
+]]></info>
+
+</dt-example>

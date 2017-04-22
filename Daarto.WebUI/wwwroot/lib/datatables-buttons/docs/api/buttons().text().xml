@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>buttons().text()</name>
+	<summary>Get / set the text for the selected buttons</summary>
+	<since>1.0.0</since>
+
+	<type type="function">
+		<signature>buttons().text()</signature>
+		<returns type="DataTables.Api">
+			A DataTables API instance where the result set contains the text from the selected buttons.
+		</returns>
+		<description>
+			Get the display text for the selected buttons.
+
+			Note that if the button's text option is specified as a function, this method will execute that function and return the result, so a string is always returned.
+		</description>
+	</type>
+
+	<type type="function">
+		<signature>buttons().text( set )</signature>
+		<parameter type="string|function" name="set">
+			Text to display in the selected buttons. This is written to the buttons as HTML, so HTML tags can be used and will be displayed rendered in the buttons.
+
+			A function can also be defined, which will be executed whenever Buttons updates the button display text and the result used as the text to be displayed in the button. Please refer to `b-init buttons.buttons.text` for the function signature.
+		</parameter>
+		<returns type="DataTables.Api">
+			DataTables API instance with the selected buttons in the result set, available for chaining further operations on the buttons.
+		</returns>
+		<description>
+			Set the display text for the selected buttons
+		</description>
+	</type>
+
+	<description>
+		This method provides the ability to dynamically get and set the display text of one or more buttons. This can be useful if an interaction (such as row selection) changes the behaviour of a button, to let the end user know what that change in behaviour is.
+	</description>
+
+	<example title="Get the text for all buttons"><![CDATA[
+
+var table = $('#myTable').DataTable();
+var buttonText = table.buttons().text();
+
+console.log( buttonText.toArray() );
+
+]]></example>
+
+	<example title="Set text for all disabled buttons with HTML"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.buttons( '.disabled' ).text( '<b>Not available</b>' );
+
+]]></example>
+
+	<example title="Use a function to display the text"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.buttons( [0,1] ).text( function ( dt, button, config ) {
+	return dt.i18n( 'buttons.input', 'Input' );
+} );
+
+]]></example>
+</dt-api>

@@ -1,0 +1,38 @@
+﻿@model LoginViewModel
+
+@{
+    Layout = "_BasicLayout";
+    ViewBag.Title = "Login";
+}
+
+<div class="wrapper text-center">
+    <strong>Log in to get in touch</strong>
+</div>
+<form asp-controller="account" asp-action="login" name="form" class="form-validation" method="post">
+    <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+    @if (ViewBag.Response != null)
+    {
+        var response = (LoginResponseViewModel)ViewBag.Response;
+
+        <div class="@(response.Succeeded ? "text-success" : "text-danger") wrapper text-center">
+            @response.Description
+        </div>
+    }
+    <div class="form-group">
+        <input asp-for="Email" type="text" placeholder="Email" class="form-control no-border" required />
+        <span asp-validation-for="Email" class="help-block m-b-none"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="Password" type="password" placeholder="Password" class="form-control no-border" required />
+        <span asp-validation-for="Password" class="help-block m-b-none"></span>
+    </div>
+    <button type="submit" class="btn btn-lg btn-primary btn-block">Log in</button>
+    <div class="text-center m-t m-b">
+        <a asp-controller="account" asp-action="forgot-password">Forgot password?</a>
+    </div>
+    <div class="line line-dashed"></div>
+    <p class="text-center">
+        <small>Do not have an account?</small>
+    </p>
+    <a asp-controller="account" asp-action="register" class="btn btn-lg btn-default btn-block">Create an account</a>
+</form>

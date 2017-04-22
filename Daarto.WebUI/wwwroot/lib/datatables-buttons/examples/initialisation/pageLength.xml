@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="12">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		lengthMenu: [
+			[ 10, 25, 50, -1 ],
+			[ '10 rows', '25 rows', '50 rows', 'Show all' ]
+		],
+		buttons: [
+			'pageLength'
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Page length</title>
+
+<info><![CDATA[
+
+Buttons are often inserted into the document where DataTables default page length `-tag select` width would go (top left), to provide controls or table information at each of the four corners of the table. However, you may wish to keep the length list, which you can do by adding the `l` option back into `dt-init dom`, or for improved styling integration you can use the `b-button pageLength` button.
+
+The `b-button pageLength` button acts in exactly the same way as the default length list and will inherit the options specified by the `dt-init lengthMenu` option.
+
+This example shows the `b-button pageLength` button being used with `dt-init lengthMenu` to specify page lengths of 10, 25, 50 and all rows, with language strings used for the buttons.
+
+]]></info>
+
+</dt-example>
+

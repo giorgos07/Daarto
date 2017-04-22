@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="2">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-flash">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			'copyFlash',
+			{
+				extend: 'csvFlash',
+				fieldSeparator: '\t',
+				extension: '.tsv'
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Tab separated values</title>
+
+<info><![CDATA[
+
+The `b-button copyFlash` and `b-button csvFlash` buttons have the option to specify the character (or more generally a full string) that separates the values between fields. By default this is a tab character for the copy button, but the _Comma_ Separated Values button uses a comma.
+
+The `fieldSeparator` option is used to specify the field separator  - in this example the exported file is a tab separated values file. The file extension has also been set to reflect this, although that is optional as most spreadsheet applications will read TSV files without issue.
+
+]]></info>
+
+</dt-example>
+

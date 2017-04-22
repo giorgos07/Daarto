@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="1">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-flash jszip pdfmake vfsfonts buttons-html5 buttons-print">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			'copy', 'csv', 'excel', 'pdf', 'print'
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Basic initialisation</title>
+
+<info><![CDATA[
+
+Buttons can be initialised very easily though the `b-init buttons` object which can be given as an array of the buttons that you wish to display. The `-string B` option in the `dt-init dom` parameter will instruct DataTables where the buttons should be placed in the document - in this case, at the top left (CSS also plays a part).
+
+The simplest method of using buttons is to use [predefined button types](https://datatables.net/reference/buttons) which can be displayed simply by using their name in the `b-init buttons` array. Each button can also be [extended](custom.html) to provide customisation of that button.
+
+This example shows the `b-button copy`, `b-button csv`, `b-button excel`, `b-button pdf` and `b-button print` buttons being used to display data export options for the DataTable.
+
+]]></info>
+
+</dt-example>
+

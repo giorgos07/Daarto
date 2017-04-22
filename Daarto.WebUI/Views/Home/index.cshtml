@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Welcome";
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Daarto</title>
+    <environment names="Development">
+        <link rel="stylesheet" type="text/css" href="~/lib/bootstrap/dist/css/bootstrap.css" asp-append-version="true" />
+        <link rel="stylesheet" type="text/css" href="~/css/cover.css" asp-append-version="true" />
+    </environment>
+    <environment names="Staging,Production">
+        <link rel="stylesheet" type="text/css" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true" />
+        <link rel="stylesheet" type="text/css" href="~/css/cover.css" asp-append-version="true" />
+    </environment>
+</head>
+<body>
+    <div class="site-wrapper">
+        <div class="site-wrapper-inner">
+            <div class="cover-container">
+                <div class="masthead clearfix">
+                    <div class="inner">
+                        <h3 class="masthead-brand">Daarto</h3>
+                        <nav>
+                            <ul class="nav masthead-nav">
+                                <li class="active">
+                                    <a asp-controller="home" asp-action="index">Home</a>
+                                </li>
+                                @if (!User.Identity.IsAuthenticated)
+                                {
+                                    <li>
+                                        <a asp-controller="account" asp-action="login">Login</a>
+                                    </li>
+                                }
+                                @if (User.IsInRole("Administrator"))
+                                {
+                                    <li>
+                                        <a asp-area="administration" asp-controller="home" asp-action="index">Administration</a>
+                                    </li>
+                                }
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+                <div class="inner cover">
+                    <h1>ASP.NET Core Identity</h1>
+                    <p class="lead">
+                        This application is built in order to show how to create your own ASP.NET Core Identity provider by using SQL Server
+                        and <a href="https://github.com/StackExchange/Dapper" target="_blank">Dapper</a> ORM. Feel free to use as a base for
+                        your own projects, if you like.
+                    </p>
+                    <p class="lead">
+                        <a href="https://docs.microsoft.com/en-us/aspnet/core/" class="btn btn-lg btn-default" target="_blank">Learn more</a>
+                    </p>
+                </div>
+                <div class="mastfoot">
+                    <div class="inner">
+                        <p>
+                            Cover template for <a href="http://getbootstrap.com">Bootstrap</a>,
+                            by <a href="https://twitter.com/mdo">@@mdo</a>.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

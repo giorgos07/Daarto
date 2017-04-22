@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-button library="Buttons">
+	<name>columnsToggle</name>
+	<summary>A set of Buttons to toggle the visibility of individual columns</summary>
+	<since>1.0.0</since>
+
+	<requires>
+		* Buttons' _Column visibility button_ plug-in
+	</requires>
+
+	<description>
+		This button type actually creates multiple buttons in a Button instance, one button for each column that has been selected (or all columns if no selector is given). Each button is automatically given the same title as the header text for that column, and gives the ability to toggle the visibility of each column.
+
+		The `b-button columnsToggle` button type differs from the `b-button colvis` type in that it does not extend the `b-button collection` type (although it could be assigned to a collection's `buttons` attribute if you wished). The buttons for each column are automatically expanded where this button is included.
+	</description>
+
+	<extend>columnToggle</extend>
+
+	<option type="column-selector" name="columns" default="undefined">
+		Columns selector that defines the columns to include in the column visibility button set. By default this is `-type undefined` which results in all columns being selected, but any of the `-type column-selector` options can be used to define a custom button set.
+	</option>
+
+	<option type="boolean" name="visibility" default="undefined">
+		The visibility value to set for the selected column(s). `true` will display the column, `false` will hide it and `undefined` will toggle its current state.
+	</option>
+
+
+	<example title="DataTables initialisation: Show a button for every column"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [ 'columnsToggle' ]
+} );
+
+]]></example>
+
+
+	<example title="DataTables initialisation: Show buttons for columns with the class name 'toggle' only"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [ {
+		extend: 'columnsToggle',
+		columns: '.toggle'
+	} ]
+} );
+
+]]></example>
+
+	<example title="Direct initialisation: Show a button for every column in a collection (this is the same as the `colvis` button type)"><![CDATA[
+
+new $.fn.dataTable.Buttons( table, {
+	buttons: [
+		{
+			extend: 'collection',
+			buttons: [ 'columnsToggle' ]
+		}
+	]
+} );
+
+]]></example>
+</dt-button>

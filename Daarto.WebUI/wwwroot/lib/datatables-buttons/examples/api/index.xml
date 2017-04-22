@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example order="0">
+
+<title lib="Buttons">API</title>
+
+<info><![CDATA[
+
+The Buttons API is tightly integrated with DataTables own API, building on the same style and interaction. With the API it is possible to manipulate individual buttons and groups of buttons, altering their characteristics and behaviour.
+
+The examples in this section show how the Buttons API can be used.
+
+]]></info>
+
+</dt-example>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-button library="Buttons">
+	<name>columnToggle</name>
+	<summary>A single button that will toggle the visibility of one or more columns</summary>
+	<since>1.0.0</since>
+
+	<requires>
+		* Buttons' _Column visibility button_ plug-in
+	</requires>
+
+	<description>
+		The `b-buttons columnToggle` button type is very similar to the `b-buttons columnsToggle` button, but instead of being expanded to show a single button for each column in the table, it is a single button that will toggle the visibility of one or more columns in the table (based on the `columns` parameter).
+
+		For multiple columns, the button should be given a title using the `b-init buttons.buttons.text` option, which can also be used for a single column control button, although it will automatically be given the column's title text if not otherwise supplied.
+	</description>
+
+	<extend>columnVisibility</extend>
+
+	<option type="string" name="text" default="Defined by the column title">
+		The button's display text. By default this will use the header text of the column that this button controls the visibility of (or the first column title if it controls multiple columns). The text can be configured using this option (see `b-init buttons.buttons.text`).
+	</option>
+
+	<option type="string" name="className" default="buttons-columnVisibility">
+		The button's class name. See `b-init buttons.buttons.className` for details.
+	</option>
+
+	<option type="function" name="action">
+		Set the columns visibility.
+	</option>
+
+	<option type="column-selector" name="columns" default="undefined">
+		Columns selector that defines the column(s) to include in the column visibility button set. By default this is `-type undefined` which results in all columns being selected, but any of the `-type column-selector` options can be used to define a custom button set.
+	</option>
+
+	<option type="boolean" name="visibility" default="undefined">
+		The visibility value to set for the selected column(s). `true` will display the column, `false` will hide it and `undefined` will toggle its current state.
+	</option>
+
+
+	<example title="DataTables initialisation: Toggle the visibility of column index 1 only"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [ {
+		extend: 'columnToggle',
+		columns: 1
+	} ]
+} );
+
+]]></example>
+
+
+	<example title="DataTables initialisation: Two buttons, which toggle the visibility of all columns with the class `primary` and `secondary`"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		{
+			extend: 'columnToggle',
+			columns: '.primary'
+		},
+		{
+			extend: 'columnToggle',
+			columns: '.secondary'
+		}
+	]
+} );
+
+]]></example>
+
+	<example title="Direct initialisation: A single button that will toggle the visibility of columns with an index greather than 4"><![CDATA[
+
+new $.fn.dataTable.Buttons( table, {
+	buttons: [
+		{
+			extend: 'columnToggle',
+			columns: ':gt(4)'
+		}
+	]
+} );
+
+]]></example>
+</dt-button>

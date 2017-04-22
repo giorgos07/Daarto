@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="7">
+
+<css lib="datatables buttons" />
+<js lib="jquery datatables buttons buttons-colvis">
+<![CDATA[
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'colvisGroup',
+				text: 'Office info',
+				show: [ 1, 2 ],
+				hide: [ 3, 4, 5 ]
+			},
+			{
+				extend: 'colvisGroup',
+				text: 'HR info',
+				show: [ 3, 4, 5 ],
+				hide: [ 1, 2 ]
+			},
+			{
+				extend: 'colvisGroup',
+				text: 'Show all',
+				show: ':hidden'
+			}
+		]
+	} );
+} );
+]]>
+</js>
+
+<title lib="Buttons">Column groups</title>
+
+<info><![CDATA[
+
+When working with column visibility you may wish to present a control to the end user that provides the ability to set various columns to both show and hide at the same time - allowing grouping to occur. The `b-button colvisGroup` button type provides this ability for Buttons. The `show` and `hide` parameters of this button are both `dt-type column-selector` types defining the columns in the table that should be shown or hidden respectively. If a column is not defined in either, its visibility is not altered.
+
+This example shows three uses of the `b-button colvisGroup` button type:
+
+* Grouping - show columns 0, 1, 2 and hide the others
+* Grouping - show columns 0, 2, 3, 4 and hide the others
+* Show all
+
+]]></info>
+
+</dt-example>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>buttons().container()</name>
+	<summary>Get the container element for a single Buttons instance</summary>
+	<since>1.0.0</since>
+
+	<type type="function">
+		<signature>buttons().container()</signature>
+		<returns type="jQuery">
+			jQuery instance that contains the container element for the selected button instance.
+		</returns>
+		<description>
+			Get a jQuery instance that contains a reference to the button container instance.
+		</description>
+	</type>
+
+	<description>
+		The `b-init buttons` method of creating a new button set provides the ability to add only a single set of buttons at a time. However, Buttons has the ability to attach multiple sets of buttons to a single DataTable. This is done by creating additional button sets through the `new $.fn.dataTable.Buttons()` interface. Once created, the buttons can be accessed via the DataTables API as normal.
+
+		This method is very similar to the `b-api buttons().containers()` method, in that it provides the ability to access a container element for a selected buttons instance and then insert it into the document using standard jQuery methods. However, in this case only a single Buttons instance will be included in the result. If the selector were to match multiple instances, only the first instance will be used.
+
+		When using the `b-api buttons()` selector method, the second argument (the buttons selector) is effectively ignored when processing this method. Only the button instances are used.
+	</description>
+
+	<example title="Insert buttons which are created using `new $.fn.dataTable.Buttons()` into the document"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+new $.fn.dataTable.Buttons( table, {
+	name: 'commands',
+	buttons: ...
+} );
+
+table.buttons( 0, null ).containers().appendTo( 'body' );
+
+]]></example>
+</dt-api>

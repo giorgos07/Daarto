@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="3">
+
+<css lib="datatables buttons" />
+<js lib="jquery datatables buttons buttons-colvis">
+<![CDATA[
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [ 'colvis' ],
+		language: {
+			buttons: {
+				colvis: 'Change columns'
+			}
+		}
+	} );
+} );
+]]>
+</js>
+
+<title lib="Buttons">Internationalisation</title>
+
+<info><![CDATA[
+
+Like all buttons available through the Buttons extension for DataTables, the button text can be modified - to suit your needs. This is always possible using the `b-init buttons.buttons.text` option and each button type can also make use of the DataTables `dt-init language` configuration options.
+
+In this case the `language.buttons.colvis` option is used to specify the text shown in the collection button.
+
+]]></info>
+
+</dt-example>

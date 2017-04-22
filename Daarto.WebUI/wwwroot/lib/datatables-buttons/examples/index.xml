@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example order="0">
+
+<title lib="Buttons">Buttons for DataTables</title>
+
+<info><![CDATA[
+
+The Buttons extension for DataTables provides a common set of options, API methods and styling to display buttons on a page that will interact with a DataTable. The core library provides the based framework upon which plug-ins can built.
+
+There are four plug-ins that are part of the core Buttons software providing various utilities:
+
+* HTML5 export buttons - Copy to clipboard; Save to Excel, CSV and PDF
+* Flash export buttons - Copy to clipboard; Save to Excel, CSV and PDF for older browsers
+* Print view
+* Column visibility buttons
+
+Other extensions for DataTables also provide buttons - [Editor](https://editor.datatables.net) for example make the `e-button create`, `e-button edit` and `e-button remove` buttons available.
+
+The examples presented here give an introduce to how Buttons can be used, the API and its various core plug-in buttons.
+
+]]></info>
+
+</dt-example>

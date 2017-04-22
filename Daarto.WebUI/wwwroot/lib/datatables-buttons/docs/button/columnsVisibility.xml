@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-button library="Buttons">
+	<name>columnsVisibility</name>
+	<summary>A set of Buttons to set the visibility of individual columns</summary>
+	<since>1.0.0</since>
+
+	<requires>
+		* Buttons' _Column visibility button_ plug-in
+	</requires>
+
+	<description>
+		This button type actually creates multiple buttons in a Button instance, one button for each column that has been selected (or all columns if no selector is given). Each button is automatically given the same title as the header text for that column, and gives the ability to control the visibility of each column through the button's `visibility` option.
+
+		This button type is included for completeness in the base set of column visibility buttons, but the `b-button columnsToggle` and `b-button columnVisibility` are generally more likely to be useful.
+	</description>
+
+	<extend>columnVisibility</extend>
+
+	<option type="column-selector" name="columns" default="undefined">
+		Columns selector that defines the columns to include in the column visibility button set. By default this is `-type undefined` which results in all columns being selected, but any of the `-type column-selector` options can be used to define a custom button set.
+	</option>
+
+	<option type="boolean" name="visibility" default="undefined">
+		Control if the columns should be shown or hidden when the button is activated.
+	</option>
+
+
+	<example title="DataTables initialisation: Individual button collections to show / hide columns"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		{
+			extend: 'collection',
+			text: 'Show columns',
+			buttons: [ 'columnsVisibility' ],
+			visibility: true
+		},
+		{
+			extend: 'collection',
+			text: 'Hide columns',
+			buttons: [ 'columnsVisibility' ],
+			visibility: false
+		}
+	]
+} );
+
+]]></example>
+</dt-button>

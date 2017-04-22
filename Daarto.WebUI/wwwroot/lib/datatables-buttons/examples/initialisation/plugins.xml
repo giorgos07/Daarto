@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="9">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons">
+<![CDATA[
+
+
+$.fn.dataTable.ext.buttons.alert = {
+	className: 'buttons-alert',
+
+	action: function ( e, dt, node, config ) {
+		alert( this.text() );
+	}
+};
+
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'alert',
+				text: 'My button 1'
+			},
+			{
+				extend: 'alert',
+				text: 'My button 2'
+			},
+			{
+				extend: 'alert',
+				text: 'My button 3'
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Plug-ins</title>
+
+<info><![CDATA[
+
+While it is quite simple to [create a custom button](custom.html) with Buttons, if you have a complex button that you wish to reuse the logic from for multiple buttons you may wish to define a plug-in button type. This is simply done by attaching your new button to the `$.fn.dataTable.ext.buttons` object. Give the button the name that you wish to use to refer to it in the `b-init buttons.buttons.extend` option. The object assigned should contain whatever parameters you require for your button.
+
+This simple example shows an `alert` button type being defined which is then used for three different buttons. Each has custom text, but the `action` method is shared between them.
+
+]]></info>
+
+</dt-example>
+

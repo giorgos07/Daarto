@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.buttons.extend</name>
+	<summary>Define which button type the button should be based on</summary>
+	<since>1.0.0</since>
+
+	<default value="undefined"/>
+	<type type="string">
+		<description>
+			Define the existing button type to extend. This need not be a built-in button type, it can be any that has been defined by the time that Buttons is initialised.
+		</description>
+	</type>
+
+	<description>
+		When creating buttons you may often wish to customise an existing button type, for example modifying the display text, while still making use of the functionality that the button offers, without rewriting a whole lot of code! This `extends` option provides exactly that ability.
+
+		The buttons created can extend multiple existing button types - for example a customised button might extend any built in button type, and that customised button might itself be extended during initialisation to set the button text.
+
+		The `extends` option is not required, however, if it is not provided, the `b-init buttons.buttons.text` and `b-init buttons.buttons.action` options must be defined.
+	</description>
+
+	<example title="DataTables initialisation: Two buttons, one with customisations"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: {
+		buttons: [
+			'copy',
+			{ extend: 'excel', text: 'Save as Excel' }
+		]
+	}
+} );
+
+]]></example>
+
+	<example title="Instance initialisation: Two buttons, one with customisations"><![CDATA[
+
+new $.fn.dataTable.Buttons( table, {
+	buttons: [
+		'copy',
+		{ extend: 'excel', text: 'Save as Excel' }
+	]
+} );
+
+]]></example>
+</dt-option>

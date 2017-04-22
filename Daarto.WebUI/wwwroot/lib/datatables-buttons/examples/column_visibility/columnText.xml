@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="3">
+
+<css lib="datatables buttons" />
+<js lib="jquery datatables buttons buttons-colvis">
+<![CDATA[
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [ {
+			extend: 'colvis',
+			columnText: function ( dt, idx, title ) {
+				return (idx+1)+': '+title;
+			}
+		} ]
+	} );
+} );
+]]>
+</js>
+
+<title lib="Buttons">Customisation of column button text</title>
+
+<info><![CDATA[
+
+At times it can be useful to control the text that is used for the display of each button in the `-button colvis` list. The `columnText` option of the `-button colvis` button type provides exactly that ability, as a callback function.
+
+The example below shows the column number being prefixed to the column title. As this is a function, virtually any logic could be used (performing an action only on column indexes higher than 3 for example). You also have access to the DataTables API instance, so you can use `dt.column( idx ).node()` to get the header `-tag th/td` element if needed.
+
+]]></info>
+
+</dt-example>

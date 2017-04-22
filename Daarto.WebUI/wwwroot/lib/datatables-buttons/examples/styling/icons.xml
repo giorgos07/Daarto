@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="6">
+
+<css lib="datatables buttons font-awesome"/>
+<js lib="jquery datatables buttons jszip pdfmake vfsfonts buttons-html5">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend:    'copyHtml5',
+				text:      '<i class="fa fa-files-o"></i>',
+				titleAttr: 'Copy'
+			},
+			{
+				extend:    'excelHtml5',
+				text:      '<i class="fa fa-file-excel-o"></i>',
+				titleAttr: 'Excel'
+			},
+			{
+				extend:    'csvHtml5',
+				text:      '<i class="fa fa-file-text-o"></i>',
+				titleAttr: 'CSV'
+			},
+			{
+				extend:    'pdfHtml5',
+				text:      '<i class="fa fa-file-pdf-o"></i>',
+				titleAttr: 'PDF'
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Icons</title>
+
+<info><![CDATA[
+
+This example shows how the `b-init buttons.buttons.text` option can be used to show an icon in the button instead of regular text. Note also that the `b-init buttons.buttons.titleAttr` option is used to specify a tooltip title for the button, which can improve accessibility, letting users know what the button does when they hover their mouse over the button.
+
+[Font Awesome](http://fortawesome.github.io/) is used to provide the icons uses here, but any image / font can be used as suits your requirements.
+
+]]></info>
+
+</dt-example>
+

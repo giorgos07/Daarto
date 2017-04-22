@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="7">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-colvis">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'collection',
+				text: 'Table control',
+				buttons: [
+					{
+						text: 'Toggle start date',
+						action: function ( e, dt, node, config ) {
+							dt.column( -2 ).visible( ! dt.column( -2 ).visible() );
+						}
+					},
+					{
+						text: 'Toggle salary',
+						action: function ( e, dt, node, config ) {
+							dt.column( -1 ).visible( ! dt.column( -1 ).visible() );
+						}
+					},
+					'colvis'
+				]
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Multi-level collections</title>
+
+<info><![CDATA[
+
+As of Buttons 1.1, basic options for displaying a collection inside a collection is possible simply by using a collection button in the `buttons` array for another collection. This [Inception](http://www.imdb.com/title/tt1375666/) like behaviour basically means that multi-level collections are possible.
+
+It is worth noting that only a single collection can be shown at a time, so the display of any sub-collection will replace the display of the existing collection.
+
+This example shows a custom collection button (matching the [simple collection example](collections.html)) with the addition of a column visibility button, which when activated will show another collection of buttons, this time controlling the column visibility.
+
+]]></info>
+
+</dt-example>
+

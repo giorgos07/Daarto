@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-button library="Buttons">
+	<name>colvisRestore</name>
+	<summary>Restore the visibility of column to their original state</summary>
+	<since>1.0.0</since>
+
+	<requires>
+		* Buttons' _Column visibility button_ plug-in
+	</requires>
+
+	<description>
+		This `b-button colvisRestore` button type provides a single click button that will restore the visibility state of the columns to match that when the button was created. This works by reading the state as the button is created (which is generally during the initialisation of the table) and then restoring those values when activated by the end user.
+	</description>
+
+	<option type="string" name="text" default="CSV">
+		The button's display text. The text can be configured using this option (see `b-init buttons.buttons.text`) or the `buttons.colvisRestore` option of the DataTables `dt-init language` object.
+	</option>
+
+	<option type="string" name="className" default="buttons-colvisRestore">
+		The button's class name. See `b-init buttons.buttons.className` for details.
+	</option>
+
+	<option type="function" name="action">
+		Restores the columns visibility.
+	</option>
+
+
+	<example title="DataTables initialisation: Show column visibility and restore buttons"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [ 
+		'colvis',
+		'colvisRestore'
+	]
+} );
+
+]]></example>
+
+</dt-button>

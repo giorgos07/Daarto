@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="3">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons jszip pdfmake vfsfonts buttons-html5">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'excelHtml5',
+				title: 'Data export'
+			},
+			{
+				extend: 'pdfHtml5',
+				title: 'Data export'
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">File name</title>
+
+<info><![CDATA[
+
+By default the name of the file created by the  `b-button excelHtml5`, `b-button csvHtml5` and `b-button pdfHtml5` button types will automatically be taken from the document's `-tag title` element. It is also possible to set the file name to a specific value using the `title` option of these three button types.
+
+This example shows the `title` option being set for the `b-button excelHtml5` and `b-button pdfHtml5` buttons.
+
+]]></info>
+
+</dt-example>
+

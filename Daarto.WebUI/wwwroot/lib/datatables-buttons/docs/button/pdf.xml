@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-button library="Buttons">
+	<name>pdf</name>
+	<summary>Create and save a PDF file that contains the data from the table</summary>
+	<since>1.0.0</since>
+
+	<requires>
+		* Buttons' _Flash export button_ plug-in **and / or**
+		* Buttons' _HTML5 export button_ plug-in
+	</requires>
+
+	<description>
+		This button type serves as a proxy that will automatically detect if the `b-button pdfHtml5` or `b-button pdfFlash` buttons can be used based on the browser's capabilities and the libraries available on the page.
+
+		This is provided as an option since the HTML5 button type requires a reasonably modern browser which may not always be available to the end user.
+
+		The order of selection, in priority order is:
+
+		* `b-button pdfHtml5`
+		* `b-button pdfFlash`
+
+		If the requirements of both buttons are not satisfied, no button will be presented to the end user. For the requirements of each button type, please refer to its own documentation.
+
+		The options available to the HTML5 and Flash buttons are common between them to ensure that no additional logic is required by the developer based on which button type is selected - e.g. if you set the `message` option, it will be used by the HTML5 and Flash button types. The sole exception to this is the `customize` option which can be used for HTML5 buttons only. It will be ignored by the Flash PDF generator.
+	</description>
+
+
+	<option type="string" name="text" default="PDF">
+		The button's display text. The text can be configured using this option (see `b-init buttons.buttons.text`) or the `buttons.copy` option of the DataTables `dt-init language` object.
+	</option>
+
+	<option type="string" name="className" default="buttons-pdf">
+		The button's class name. See `b-init buttons.buttons.className` for details.
+	</option>
+
+	<option type="function" name="action">
+		Create and save a PDF file.
+	</option>
+
+	<option type="object" name="exportOptions" default="{}">
+		Select the data to be gathered from the DataTable for export. This includes options for which columns, rows, ordering and search. Please see the `b-api buttons.exportData()` method for full details - the object given by this parameter is passed directly into that action to gather the required data.
+	</option>
+
+	<option type="boolean" name="header" default="true">
+		Indicate if the table header should be included in the exported data or not.
+	</option>
+
+	<option type="boolean" name="footer" default="false">
+		Indicate if the table footer should be included in the exported data or not.
+	</option>
+
+	<option type="string|function" name="filename" default="*">
+		File name to give the created file (plus the extension defined by the `extension` option). The special character `*` is automatically replaced with the value read from the host document's `-tag title` tag.
+	</option>
+
+	<option type="string|function" name="title" default="*">
+		Document title (appears above the table in the generated PDF). The special character `*` is automatically replaced with the value read from the host document's `-tag title` tag.
+	</option>
+
+	<option type="string" name="extension" default=".pdf">
+		The extension to give the created file name.
+	</option>
+
+	<option type="string" name="orientation" default="portrait">
+		Paper orientation for the created PDF. This can be `-string portrait` or `-string landscape`.
+	</option>
+
+	<option type="string" name="pageSize" default="A4">
+		Paper size for the created PDF. This can be `-string A3`, `-string A4`, `-string A5`, `-string LEGAL`, `-string LETTER` or `-string TABLOID`.
+	</option>
+
+	<option type="string|function" name="message" default="">`
+		Optional description message that will be shown above the table in the created PDF.
+
+		As well as a string value, a function may also be assigned to the `message` property. This function will be executed when the button needs to display the message and the returned value from the function will be used. The function is passed in three parameters:
+
+		* `-type DataTables.Api` - The DataTable API instance
+		* `-type jQuery` - jQuery object for the button node
+		* `-type object` - Configuration object for the button.
+	</option>
+
+	<option type="function" name="customize" default="null">
+		A function that can be used to customise the PDFMake document definition object for the `b-button pdfHtml5` button. The document object is passed in as the only parameter to this function and should be manipulated as required. A return value is not expected or used.
+
+		Please refer to the [PDFMake documentation](http://pdfmake.org/#/gettingstarted) for information on how to manipulate this object and the options available for the generated PDF.
+	</option>
+
+
+	<example title="DataTables initialisation: Use the `b-button pdf` button type to automatically select between the Flash and HTML button options."><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		'pdf'
+	]
+} );
+
+]]></example>
+
+	<example title="DataTables initialisation: Use the `exportOptions` to save only the data shown on the current DataTable page"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		{
+			extend: 'pdf',
+			text: 'Save current page',
+			exportOptions: {
+				modifier: {
+					page: 'current'
+				}
+			}
+		}
+	]
+} );
+
+]]></example>
+</dt-button>

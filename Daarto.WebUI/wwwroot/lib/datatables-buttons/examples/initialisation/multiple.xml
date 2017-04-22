@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="11">
+
+<css lib="datatables buttons">
+	div.dt-buttons {
+		clear: both;
+	}
+</css>
+<js lib="jquery datatables buttons">
+<![CDATA[
+
+$(document).ready(function() {
+	var table = $('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				text: 'Button 1',
+				action: function ( e, dt, node, config ) {
+					alert( 'Button 1 clicked on' );
+				}
+			}
+		]
+	} );
+
+	new $.fn.dataTable.Buttons( table, {
+		buttons: [
+			{
+				text: 'Button 2',
+				action: function ( e, dt, node, conf ) {
+					alert( 'Button 2 clicked on' );
+				}
+			},
+			{
+				text: 'Button 3',
+				action: function ( e, dt, node, conf ) {
+					alert( 'Button 3 clicked on' );
+				}
+			}
+		]
+	} );
+
+	table.buttons( 1, null ).container().appendTo(
+		table.table().container()
+	);
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Multiple button groups</title>
+
+<info><![CDATA[
+
+[Buttons' ability to have new instances constructed](new.html) arbitrarily gives it the ability to have multiple button instances created for a single DataTable. This can be useful if you wish to display button groups with different functionality (file export, editing, etc).
+
+In this example the `b-init buttons` option is used to construct the first buttons set. The `new $.fn.dataTable.Buttons()` constructor is then used to create a second and finally the API used to insert this into the document.
+
+]]></info>
+
+</dt-example>
+

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="1">
+
+<css lib="datatables buttons select"/>
+<js lib="jquery datatables buttons select">
+<![CDATA[
+
+$(document).ready(function() {
+	var table = $('#example').DataTable( {
+		dom: 'Bfrtip',
+		select: true,
+		buttons: [
+			{
+				text: 'Row selected data',
+				action: function ( e, dt, node, config ) {
+					alert(
+						'Row data: '+
+						JSON.stringify( dt.row( { selected: true } ).data() )
+					);
+				},
+				enabled: false
+			},
+			{
+				text: 'Count rows selected',
+				action: function ( e, dt, node, config ) {
+					alert( 'Rows: '+ dt.rows( { selected: true } ).count() );
+				},
+				enabled: false
+			}
+		]
+	} );
+
+	table.on( 'select', function () {
+		var selectedRows = table.rows( { selected: true } ).count();
+
+		table.button( 0 ).enable( selectedRows === 1 );
+		table.button( 1 ).enable( selectedRows > 0 );
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Enable / disable</title>
+
+<info><![CDATA[
+
+It can often be useful to be able to dynamically enable and disable buttons based on the document state and other components in the table. A typical example of this is to enable a button that will take action on a selected row in the table, only when there is a row selected! If there is no row selected, the button should not take any action when clicked upon (i.e. it is disabled).
+
+This example makes use of the [Select extension](https://datatables.net/extensions/select) for DataTables to provide row selection. The `se-event select` event it listened for to know when the row selection has changed and then update the button's enabled / disabled state through the `b-api button().enable()` method.
+
+The `b-api button()` method is a selector method that will use the information given to it to select the buttons that the subsequent methods will take action on. There is also a `b-api buttons()` method that can be used to select multiple buttons (the DataTables API makes [significant use of this plural / singular distinction](https://datatables.net/manual/api#Plural-/-Singular)).
+
+The `b-type button-selector` used in this example is a simple index selector - button 1 and button 2. Based on the number of rows selected the enablement state is adjusted. The first button is enabled when there is only one row selected, the second when one or more rows are selected.
+
+Note that the Select library provides a number of button types such as `se-button selected` and `se-button selectedSingle` that provide this enable / disabled option without the additional code shown in this example.
+
+]]></info>
+
+</dt-example>
+

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>button().active()</name>
+	<summary>Get / set the active state of the selected button</summary>
+	<since>1.0.0</since>
+
+	<type type="function" since="1.1.1">
+		<signature>button().active()</signature>
+		<parameter type="boolean" name="state">
+			Get the button's current active state.
+		</parameter>
+		<returns type="boolean">
+			`true` if currently active, otherwise `false`.
+		</returns>
+		<description>
+			Get the active state for the selected button.
+		</description>
+	</type>
+
+	<type type="function">
+		<signature>button().active( state )</signature>
+		<parameter type="boolean" name="state">
+			Set the active state (`true`) or remove (`false`).
+		</parameter>
+		<returns type="DataTables.Api">
+			DataTables API instance with the selected button in the result set, available for chaining further operations on the button.
+		</returns>
+		<description>
+			Set the active state for the selected button.
+		</description>
+	</type>
+
+	<description>
+		Buttons can be placed into an "active" state which is purely a styling function to visually show to the end user that the button is _active_ (i.e. whatever operation it performs is currently active). This can be useful if you have a number of different modes of operation that the user can select from, but only one can be active at a time.
+
+		More than one button can be "active" at any one time and the active state of each button does not effect the active state of any other button.
+
+		This method can be used to dynamically change the active state for the selected button.
+	</description>
+
+	<example title="Show button index 0 as active"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.button( 0 ).active( true );
+
+]]></example>
+
+	<example title="Toggle between buttons"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.button( 0 ).action( function () {
+	this.active( true );
+	table.button( 1 ).active( false );
+
+	// ... set button index 0's mode of operation
+} );
+
+table.button( 1 ).action( function () {
+	this.active( true );
+	table.button( 0 ).active( false );
+
+	// ... set button index 1's mode of operation
+} );
+
+]]></example>
+</dt-api>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="4">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-html5">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			'copyHtml5'
+		],
+		language: {
+			buttons: {
+				copyTitle: 'Ajouté au presse-papiers',
+				copyKeys: 'Appuyez sur <i>ctrl</i> ou <i>\u2318</i> + <i>C</i> pour copier les données du tableau à votre presse-papiers. <br><br>Pour annuler, cliquez sur ce message ou appuyez sur Echap.',
+				copySuccess: {
+					_: '%d lignes copiées',
+					1: '1 ligne copiée'
+				}
+			}
+		}
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Copy button internationalisation</title>
+
+<info><![CDATA[
+
+The `b-button copyHtml5` button type operates by immediately copying the content's of the DataTable to the user's clipboard via the `execCommand` method. For older browsers that don't support this ability, the table's data is copied to a hidden text area and the user is invited to use their system clipboard to copy the data (i.e. _ctrl/cmd + c_).
+
+The messages shown to the end user can be customised using the `dt-init language` configuration option of DataTables. The following options are available:
+
+* `language.buttons.copyTitle` - the title text of the info box
+* `language.buttons.copySuccess` - message to display when the copy is complete
+* `language.buttons.copyKey` - instructions on how to copy to clipboard for older browsers.
+
+This example uses these parameters to set French language strings for the copy message (with apologies to our native language French speaking friends! This is Google translated text - if you have an better translation, please let me know!).
+
+]]></info>
+
+</dt-example>
+

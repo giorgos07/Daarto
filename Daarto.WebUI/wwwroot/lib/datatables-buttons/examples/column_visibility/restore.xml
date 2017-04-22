@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="4">
+
+<css lib="datatables buttons" />
+<js lib="jquery datatables buttons buttons-colvis">
+<![CDATA[
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'colvis',
+				postfixButtons: [ 'colvisRestore' ]
+			}
+		],
+		columnDefs: [
+			{
+				targets: -1,
+				visible: false
+			}
+		]
+	} );
+} );
+]]>
+</js>
+
+<title lib="Buttons">Restore column visibility</title>
+
+<info><![CDATA[
+
+The `b-button colvisRestore` provides a single click button that will restore the table's column visibility to the same as when the DataTable was initialised.
+
+This example shows the `b-button colvis` button collection augmented with the `b-button colvisRestore` button type through the `postfixButtons` option to add the restore button to the end of the column visibility collection.
+
+]]></info>
+
+</dt-example>

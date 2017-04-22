@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="4">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons">
+<![CDATA[
+
+$(document).ready(function() {
+	var table = $('#example').DataTable();
+
+	new $.fn.dataTable.Buttons( table, {
+		buttons: [
+			{
+				text: 'Button 1',
+				action: function ( e, dt, node, conf ) {
+					console.log( 'Button 1 clicked on' );
+				}
+			},
+			{
+				text: 'Button 2',
+				action: function ( e, dt, node, conf ) {
+					console.log( 'Button 2 clicked on' );
+				}
+			}
+		]
+	} );
+
+	table.buttons( 0, null ).container().prependTo(
+		table.table().container()
+	);
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Group selection</title>
+
+<info><![CDATA[
+
+Multiple button sets can coexist together sharing the same DataTable as a host. When using the API you need the ability to select one, or more, of those groups, and thus the buttons in them to be able to take whatever action is required. This is provided through the `b-type button-group-selector` data type of the `b-api button()` and `b-api buttons()` methods.
+
+The group selector, and the individual button selector (`b-type button-selector`) give the ability to select any button or buttons in any group or groups of buttons. Actions can also be taken on a whole group of buttons.
+
+This example shows Buttons being constructed using the `new $.fn.dataTable.Buttons` construct and then the container node that holds all of the created buttons obtained via the `b-api buttons().container()` method. Note that the function is called with two parameters: `0` and `null`. The `0` is the `b-type button-group-selector` option (i.e. select BUttons instance 0) and the second parameter is the `b-type button-selector` option. This is important as if a single parameter is passed into the `b-api button()` or `b-api buttons()` methods it is treated as a `b-type button-selector`.
+
+]]></info>
+
+</dt-example>
+

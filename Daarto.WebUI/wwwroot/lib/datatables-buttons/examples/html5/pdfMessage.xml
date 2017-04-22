@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="11">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons pdfmake vfsfonts buttons-html5">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'pdfHtml5',
+				message: 'PDF created by PDFMake with Buttons for DataTables.'
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">PDF - message</title>
+
+<info><![CDATA[
+
+It can often be useful to include description text in the print view to provide summary information about the table that will be included in the generated PDF. The `message` option of the `b-button pdfHtml5` button type provides this ability.
+
+In the example here a simple string is used - for more complex options, please see the [PDF image](pdfImage.html) example for complete customisation control.
+
+]]></info>
+
+</dt-example>
+

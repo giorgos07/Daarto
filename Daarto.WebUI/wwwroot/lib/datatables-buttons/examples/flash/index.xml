@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example order="0">
+
+<title lib="Buttons">Flash export buttons</title>
+
+<info><![CDATA[
+
+The Flash export buttons provide an option for legacy browsers (IE9-) to create and save files on the client-side, without any server interaction required.
+
+The HTML5 button types are preferred over the Flash buttons as they do not require Adobe Flash and are generally more configurable, however, not all browsers provide the functionality required for those buttons.
+
+If making use of these buttons in browsers which do not have Flash installed and enabled these buttons will not appear on the end user's page (no errors will be generated).
+
+The examples in this section explore the options available for the Flash export buttons.
+
+]]></info>
+
+</dt-example>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="1">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-flash">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			'copyFlash',
+			'csvFlash',
+			'excelFlash',
+			'pdfFlash'
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Flash export buttons</title>
+
+<info><![CDATA[
+
+The Flash export buttons plug-in for Buttons provides four export buttons:
+
+* `b-button copyFlash` - Copy to clipboard
+* `b-button csvFlash` - Save to CSV file
+* `b-button excelFlash` - Save to XLSX file
+* `b-button pdfFlash` - Save to PDF file
+
+This example demonstrates these four button types with their default options. The other examples in this section demonstrate some of the options available.
+
+Please note that the HTML5 button types are preferred over the Flash buttons as they do not require Adobe Flash and are generally more configurable, however, not all browsers provide the functionality required for those buttons.
+
+The `b-button copy`, `b-button excel`, `b-button csv` and `b-button pdf` button types may also use the HTML5 button types noted here, providing a Flash fallback for older browsers (IE9-).
+
+]]></info>
+
+</dt-example>
+

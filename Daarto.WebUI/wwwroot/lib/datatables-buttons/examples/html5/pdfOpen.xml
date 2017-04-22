@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="14">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons pdfmake vfsfonts buttons-html5">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'pdfHtml5',
+				download: 'open'
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">PDF - open in new window</title>
+
+<info><![CDATA[
+
+
+
+Please refer to the [PDFMaker documentation](http://pdfmake.org/#/gettingstarted) for full details of how the PDF can be customised.
+
+]]></info>
+
+</dt-example>
+

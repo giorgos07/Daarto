@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-type library="Buttons">
+	<name>button-group-selector</name>
+	<summary>Button group selector (multiple button instances)</summary>
+
+	<description>
+<![CDATA[
+
+The Buttons extension for DataTables can have multiple instances of the `$.fn.dataTable.Buttons` object created and attached to a single DataTable, giving the ability to display different button sets to the end user. For example, you could display identical buttons both above and below the table, or show entirely different button sets in two different locations around the table if your design calls for it.
+
+As a result of this multi-instance behaviour, the `b-api buttons()` and `b-api button()` methods provide the option to select buttons from one or more button instances that are attached to a DataTable.
+
+### Options
+
+The button group selector can be given in a number of different forms to ensure that the API is flexible for your use case:
+
+* No selector - Select all button instances
+* `-type integer` - Instance index selector
+* `-type string` - Instance name selector (set by `b-init buttons.name`)
+* `-type array` - Array containing any combination of the above options
+
+
+## No selector
+
+If no button group selector is given (i.e. `-type undefined`), all buttons instances that are available to the tables in the DataTables API context are selected (i.e. an API instance that contains a reference to multiple tables is fully supported).
+
+###### Disable all buttons on the page:
+
+```js
+var allTables = $.fn.dataTable.tables();
+$( allTables ).DataTable().buttons().disable();
+```
+
+###### Enable all buttons using an existing DataTables instance:
+
+```js
+table.buttons().enable();
+```
+
+
+## integer
+
+The Button instances are stored in an array that is attached to each DataTable. As a result they can be accessed by index.
+
+Please note that the index of each instance can be changed if the `b-api buttons().destroy()` method is used to remove a Buttons instance - as such, using the string selector for instance names is often preferable. As new Buttons instances are created, they are always pushed onto the end of the array.
+
+###### Select the first button instance and disable the second button
+
+```js
+var table = $('#myTable').DataTable();
+
+table.buttons( 0, 1 ).disable();
+```
+
+
+## string
+
+Each Button instance can be given a name using the `b-init buttons.name` option to allow it to be individually selected without being required to track instance indexes as you would with an integer selector. Additionally, instance names do not need to be unique, so a single name can refer to multiple Button instances.
+
+In addition to being able to select a single instance with a string, multiple instances can be selected using a comma separator (in much the same way as multiple elements can be selected using a comma in CSS or jQuery selectors).
+
+###### Table with two button sets; enable button index 0 from the `main` instance
+
+```js
+var table = $('#myTable').DataTable( {
+	buttons: {
+		name: 'main'
+	}
+} );
+
+new $.fn.dataTable.Buttons( table, {
+	name: 'commands',
+	buttons: ...
+} );
+
+table.buttons( 'main', 0 ).enable();
+```
+
+
+###### Using a comma to select two button instances
+
+```js
+var table = $('#myTable').DataTable();
+
+new $.fn.dataTable.Buttons( table, {
+	name: 'export',
+	buttons: ...
+} );
+
+new $.fn.dataTable.Buttons( table, {
+	name: 'commands',
+	buttons: ...
+} );
+
+// Note the use of `null` in the second parameter to act as the button selector
+// since `buttons()` with a single parameter will treat the first parameter as
+// a button selector. See the `buttons()` documentation for full details.
+table
+	.buttons( 'export, commands', null )
+	.containers()
+	.appendTo( '#panel' );
+```
+
+
+## array
+
+As an array, the button group selector and select one or more button instances allowing you to operate on multiple selected instances with a single API call. If the same instance is selected multiple times using this method, it will automatically be reduced to a single selection.
+
+###### Same as the comma string selector example above, but using an array of strings
+
+```js
+table
+	.buttons( ['export', 'commands'], null )
+	.containers()
+	.appendTo( '#panel' );
+```
+
+
+
+]]>
+	</description>
+</dt-type>

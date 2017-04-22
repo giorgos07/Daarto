@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-button library="Buttons">
+	<name>excelHtml5</name>
+	<summary>Create and save an Excel XLSX file that contains the data from the table (HTML5)</summary>
+	<since>1.0.0</since>
+
+	<requires>
+		* Buttons' _HTML5 export button_ plug-in.
+		* [JSZip](https://stuk.github.io/jszip/)
+		* A browser that supports local file saving (IE10+, Chrome, Firefox, Opera)
+	</requires>
+
+	<description>
+	<![CDATA[
+		This button provides the end user with the ability to save the table's data into a locally created Excel XLSX file.
+
+		At this time, although an XLSX file is created, data formatting, colours, etc are not retained. Only the raw data from the table is included in the exported file. For complete control over the generated file, a custom button could be constructed using the [SheetJS](http://sheetjs.com/) library.
+
+		This button requires a reasonably modern browser in order to operate (IE8 and 9 are not supported). For older browsers, the `b-button excelFlash` button provides similar file creation and save options using the Flash plug-in. The `b-button excel` button can be used to automatically select between this and the `b-button excelFlash` buttons based on the browser's capabilities.
+
+		In addition to this, the [JSZip](https://stuk.github.io/jszip/) library must also be available on the page. This MIT licensed library provides the ability to create a ZIP file in the browser, which is required to build a valid XLSX file.
+
+
+		## Browser support
+
+		The API methods used by this button are supported in the following browsers. If the browser being used does not support the requirements for this button, it simply will not be displayed.
+
+		* Internet Explorer 10+
+		  * IE9 and older are not supported as they do not support the `FileReader` or XML parsing APIs available in newer browsers.
+		* Edge: Yes
+		* Chrome: Yes
+		* Opera: Yes
+		* Safari: Yes (tech preview 18+) Safari 10.0.x and earlier are _not_ supported.
+
+
+		## Customisation
+
+		< ## XSLX file format
+		< 
+		< It is important to note that Buttons does not provide any kind of abstraction for the XSLX XML! If you want to modify the output Excel file you need to understand the [XML used for the spreadsheet](https://msdn.microsoft.com/en-us/library/aa140066(office.10).aspx). If you require an abstraction layer, consider creating a custom button that uses [js-xslx](https://github.com/SheetJS/js-xlsx).
+
+		The Excel file that Buttons creates is intentionally quite simple - the default styling is:
+
+		* _Calibri_ font, size 11 (matching Excel default)
+		* Header and footer are bold
+		* Column widths are auto sized to fit their contents (min: _5_, max: _52_)
+
+		However, you may wish to add additional information or formatting to the document to suit your output requirements. This ability is provided by the `customize` option of this button type.
+
+		The `customize` method is passed a single parameter - an object with the following structure (note that `xml` is simply a place holder to represent an XML document - each XML document is of course different):
+
+		```js
+		{
+			"_rels": {
+				".rels": xml
+			},
+			"xl": {
+				"_rels": {
+					"workbook.xml.rels": xml
+				},
+				"workbook.xml": xml,
+				"styles.xml": xml,
+				"worksheets": {
+					"sheet1.xml": xml
+				}
+
+			},
+			"[Content_Types].xml": xml
+		}
+		```
+
+		If you've developed with XSLX files before you will notice that this object's structure mimics the file structure of the XSLX file. When zipped this file structure will create an XSLX file - which is exactly what this button type does. The `customize` method provides you with the ability to modify any of the XML documents inside it, and even to add extra files (these are automatically detected in the structure and will be included in the zip).
+
+		As an example, let's modify the text shown in cell _A1_:
+
+		```js
+		customize: function ( xslx ) {
+			var sheet = xlsx.xl.worksheets['sheet1.xml'];
+
+			$('c[r=A1] t', sheet).text( 'Custom text' );
+		}
+		```
+
+		On line two we get the XML document used for the spreadsheet's data. Then on line four a little bit of jQuery is used to select the correct cell's text node (the `r` attribute of the `-tag c` element is where the cell will be shown and the `-tag t` element is the text node). Then set the text for the cell. You could just as readily use DOM methods if you prefer.
+
+		We can use the a similar method to customize the styling of the cells in the document. This is done by adding the `s` attribute to the `-tag c` element(s), where the attribute value is the style index you wish to use. The XSLX file created by Buttons has a number of built in styles which are documented below.
+
+		This is only a brief summary of how to customise the XSLX files. Full details of the XSLX file format and its features are outside the scope of this documentation. Please refer to the [Microsoft](https://msdn.microsoft.com/en-us/library/aa140066(office.10).aspx) and [Office Open XML](http://officeopenxml.com/SSstyles.php) documentation for details.
+
+
+		### Built in styles
+
+		The following indexes are available form the styles that are predefined in the Editor XSLX style file. These indexes can be applied to any cells in the generated spreadsheet, altering their appearance.
+
+		* `0` - Normal text
+		* `1` - White text
+		* `2` - Bold
+		* `3` - Italic
+		* `4` - Underline
+		* `5` - Normal text, grey background
+		* `6` - White text, grey background
+		* `7` - Bold, grey background
+		* `8` - Italic, grey background
+		* `9` - Underline, grey background
+		* `10` - Normal text, red background
+		* `11` - White text, red background
+		* `12` - Bold, red background
+		* `13` - Italic, red background
+		* `14` - Underline, red background
+		* `15` - Normal text, green background
+		* `16` - White text, green background
+		* `17` - Bold, green background
+		* `18` - Italic, green background
+		* `19` - Underline, green background
+		* `20` - Normal text, blue background
+		* `21` - White text, blue background
+		* `22` - Bold, blue background
+		* `23` - Italic, blue background
+		* `24` - Underline, blue background
+		* `25` - Normal text, thin black border
+		* `26` - White text, thin black border
+		* `27` - Bold, thin black border
+		* `28` - Italic, thin black border
+		* `29` - Underline, thin black border
+		* `30` - Normal text, grey background, thin black border
+		* `31` - White text, grey background, thin black border
+		* `32` - Bold, grey background, thin black border
+		* `33` - Italic, grey background, thin black border
+		* `34` - Underline, grey background, thin black border
+		* `35` - Normal text, red background, thin black border
+		* `36` - White text, red background, thin black border
+		* `37` - Bold, red background, thin black border
+		* `38` - Italic, red background, thin black border
+		* `39` - Underline, red background, thin black border
+		* `40` - Normal text, green background, thin black border
+		* `41` - White text, green background, thin black border
+		* `42` - Bold, green background, thin black border
+		* `43` - Italic, green background, thin black border
+		* `44` - Underline, green background, thin black border
+		* `45` - Normal text, blue background, thin black border
+		* `46` - White text, blue background, thin black border
+		* `47` - Bold, blue background, thin black border
+		* `48` - Italic, blue background, thin black border
+		* `49` - Underline, blue background, thin black border
+		* `50` - Left aligned text (since 1.2.2)
+		* `51` - Centred text (since 1.2.2)
+		* `52` - Right aligned text (since 1.2.2)
+		* `53` - Justified text (since 1.2.2)
+		* `54` - Text rotated 90° (since 1.2.2)
+		* `55` - Wrapped text (since 1.2.2)
+		* `56` - Percentage integer value (automatically detected and used by buttons - since 1.2.3)
+		* `57` - Dollar currency values (automatically detected and used by buttons - since 1.2.3)
+		* `58` - Pound currency values (automatically detected and used by buttons - since 1.2.3)
+		* `59` - Euro currency values (automatically detected and used by buttons - since 1.2.3)
+		* `60` - Percentage with 1 decimal place (automatically detected and used by buttons - since 1.2.3)
+		* `61` - Negative numbers indicated by brackets (automatically detected and used by buttons - since 1.2.3)
+		* `62` - Negative numbers indicated by brackets - 2 decimal places (automatically detected and used by buttons - since 1.2.3)
+		* `63` - Numbers with thousand separators (automatically detected and used by buttons - since 1.2.3)
+		* `64` - Numbers with thousand separators - 2 decimal places (automatically detected and used by buttons - since 1.2.3)
+		* `65` - Numbers without thousand separators (automatically detected and used by buttons - since 1.2.4)
+		* `66` - Numbers without thousand separators - 2 decimal places (automatically detected and used by buttons - since 1.2.4)
+
+		Notes:
+
+		* Grey is <span style="background:#d9d9d9">#d9d9d9</span>
+		* Red is <span style="background:#d99795">#d99795</span>
+		* Green is <span style="background:#6efce">#6efce</span>
+		* Blue is <span style="background:#c6cfef">#c6cfef</span>
+	]]>
+	</description>
+
+
+	<option type="string" name="text" default="Excel">
+		The button's display text. The text can be configured using this option (see `b-init buttons.buttons.text`) or the `buttons.copy` option of the DataTables `dt-init language` object.
+	</option>
+
+	<option type="string" name="className" default="buttons-excel buttons-html5">
+		The button's class name. See `b-init buttons.buttons.className` for details.
+	</option>
+
+	<option type="function" name="action">
+		Create and save a Excel XLSX file.
+	</option>
+
+	<option type="object" name="exportOptions" default="{}">
+		Select the data to be gathered from the DataTable for export. This includes options for which columns, rows, ordering and search. Please see the `b-api buttons.exportData()` method for full details - the object given by this parameter is passed directly into that action to gather the required data.
+	</option>
+
+	<option type="boolean" name="header" default="true">
+		Indicate if the table header should be included in the exported data or not.
+	</option>
+
+	<option type="boolean" name="footer" default="false">
+		Indicate if the table footer should be included in the exported data or not.
+	</option>
+
+	<option type="string|function" name="filename" default="*">
+		File name to give the created file (plus the extension defined by the `extension` option). The special character `*` is automatically replaced with the value read from the host document's `-tag title` tag.
+	</option>
+
+	<option type="string" name="extension" default=".xlsx">
+		The extension to give the created file name.
+	</option>
+
+	<option type="string" name="sheetName" default="Sheet1">
+		Name for the worksheet in Excel file created. The characters [] \ /: *? : are not allowed and will be removed if present.
+	</option>
+
+	<option type="function" name="customizeData" default="undefined" since="1.1.3">
+		A function that can be used to customise the data that will be saved to the Excel spreadsheet. A single parameter is passed in, an object with `header`, `footer` and `body` parameters, each of which contains the data to be exported. The data in this object should be modified as required - no return values is expected, or used, from this callback.
+	</option>
+
+	<option type="function" name="customize" default="undefined" since="1.2.0">
+		This method can be used to modify the XSLX file that is created by Buttons. A single parameter is passed, an object that contains the XML files and the object structure matches the file system paths for those files in an XSLX file. Customisation of the XSLX file is a complex topic - please refer to the _Customisation_ section above for full details.
+	</option>
+
+
+	<example title="DataTables initialisation: Use the HTML5 Excel button"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		'excelHtml5'
+	]
+} );
+
+]]></example>
+
+	<example title="DataTables initialisation: Use the `b-button excel` button type to automatically select between the Flash and HTML button options."><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		'excel'
+	]
+} );
+
+]]></example>
+
+	<example title="DataTables initialisation: Use the `exportOptions` to save only the data shown on the current DataTable page"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		{
+			extend: 'excelHtml5',
+			text: 'Save current page',
+			exportOptions: {
+				modifier: {
+					page: 'current'
+				}
+			}
+		}
+	]
+} );
+
+]]></example>
+</dt-button>

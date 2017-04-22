@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="2">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				text: 'My button',
+				action: function ( e, dt, node, config ) {
+					this.text( 'My button ('+config.counter+')' );
+					config.counter++;
+				},
+				counter: 1
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Dynamic text</title>
+
+<info><![CDATA[
+
+This example demonstrates Buttons' ability to dynamically set the text of buttons through the `b-api button().text()` method. Here the button's text will be updated to indicate the number of times it has been clicked upon.
+
+There are also two other important aspects of the Buttons API demonstrated here:
+
+1. The `b-init buttons.buttons.action` method is executed in the scope of the `b-api button()` object for the button in question. The result is that the button methods such as `b-api button().text()` are available under `this` - `this.text()` in this case.
+2. The `config` object passed in as the forth parameter to the `action` method is the button configuration. In this example `counter` is set to 1 initially and that parameter can continue to be used by the button (self-referencing effectively).
+
+]]></info>
+
+</dt-example>
+

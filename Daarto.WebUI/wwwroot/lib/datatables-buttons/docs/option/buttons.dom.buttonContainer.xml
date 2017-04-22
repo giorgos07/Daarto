@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.dom.buttonContainer</name>
+	<summary>DOM configuration of a button container element</summary>
+	<since>1.0.0</since>
+
+	<type type="object">
+		<description>
+			Plain object which will can have the properties `tag` and / or `className` set.
+
+			* `tag` - a `-type string` value which defines the HTML tag to use. There should be no spaces or any other formatting - e.g. it should simply be `span`, `div`, `li` etc.
+			* `className` - a `-type string` value which defines the element's class name. Multiple classes can be given using space separation.
+		</description>
+	</type>
+
+	<description>
+		This option provides the ability for each button to be wrapped in another element. This can be useful for cases where the styling framework requires a list of buttons, where the list element is just a container and not the button itself (Zurb Foundation requires this for example).
+
+		By default this option is `null` which means that the button is not wrapped in a container element.
+
+		Please refer to the `b-init buttons.dom` documentation for an overview of the DOM structure that Buttons will create.
+	</description>
+
+	<example title="DataTables initialisation: Use a ul/li/a list of buttons"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: {
+		dom: {
+			container: {
+				tag: 'ul'
+			},
+			buttonContainer: {
+				tag: 'li'
+			},
+			button: {
+				tag: 'a'
+			}
+		}
+	}
+} );
+
+]]></example>
+
+	<example title="Instance initialisation: Use a ul/li/a list of buttons"><![CDATA[
+
+new $.fn.dataTable.Buttons( table, {
+	dom: {
+		container: {
+			tag: 'ul'
+		},
+		buttonContainer: {
+			tag: 'li',
+			className: 'button-item'
+		},
+		button: {
+			tag: 'a'
+		}
+	}
+} );
+
+]]></example>
+</dt-option>

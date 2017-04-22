@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.buttons</name>
+	<summary>List of buttons to be created</summary>
+	<since>1.0.0</since>
+
+	<type type="array">
+		<description>
+			This array defines a list of the buttons that are to be shown in the button collection. There are a variety of options that each element in the array can take including strings, objects and functions. Please see the documentation above for full details. The array can contain multiple of each type.
+		</description>
+	</type>
+	<default value="TBC" />
+
+	<description>
+		The `b-init buttons` array defines the buttons that will appear in the document to the end user. Each element in the array can be one of:
+
+		* `-type string` - The name of a built-in button type or plug-in button type. This is the equivalent of using `{ extend: ... }`.
+		* `-type object` - A custom button or a customisation of an existing button type. The `extend` property (see `b-init buttons.buttons.extend`) can be defined to tell Buttons which button type to base the button on, and any of the configuration options you wish to customise. Alternatively, if the `extend` option is not given, use the `text` and `action` options to define a button. Buttons has only a few built in configuration options for each button, but the various button types may provide additional options. Please refer to the documentation for each button type for information on the further options they provide. The built-in options are:
+		  * `b-init buttons.buttons.action` - Function describing the action to take on activation
+		  * `b-init buttons.buttons.className` - Button class name
+		  * `b-init buttons.buttons.enabled` - Initial enabled state
+		  * `b-init buttons.buttons.extend` - Based extends object
+		  * `b-init buttons.buttons.init` - Button initialisation callback function
+		  * `b-init buttons.buttons.key` - Key activation configuration
+		  * `b-init buttons.buttons.name` - Button name for use in selectors
+		  * `b-init buttons.buttons.text` - Visible text
+		* `-type function` - A function that will be executed upon creation of the buttons. The function is passed only a single argument, the DataTables API instance for the host DataTable, and the result value should match the above options, or an array of the above options.
+	</description>
+
+	<example title="DataTables initialisation: `b-init buttons` as an array using basic types"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [ 'copy', 'csv', 'print' ]
+} );
+
+]]></example>
+
+	<example title="DataTables initialisation: Two buttons, one with customisations"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: {
+		buttons: [
+			'copy',
+			{ extend: 'excel', text: 'Save as Excel' }
+		]
+	}
+} );
+
+]]></example>
+
+	<example title="DataTables initialisation: A fully custom button"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: {
+		buttons: [
+			'copy',
+			{
+				text: 'My button',
+				action: function ( dt ) {
+					console.log( 'My custom button!' );
+				}
+			}
+		]
+	}
+} );
+
+]]></example>
+
+	<example title="Instance initialisation: Using the buttons array"><![CDATA[
+
+new $.fn.dataTable.Buttons( table, {
+	buttons: [
+		'copy',
+		{ extend: 'excel', text: 'Save as Excel' }
+	]
+} );
+
+]]></example>
+</dt-option>

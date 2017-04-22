@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.dom.collection</name>
+	<summary>DOM configuration of the collection display</summary>
+	<since>1.0.0</since>
+
+	<type type="object">
+		<description>
+			Plain object which will can have the properties `tag` and / or `className` set.
+
+			* `tag` - a `-type string` value which defines the HTML tag to use. There should be no spaces or any other formatting - e.g. it should simply be `div`, `aside`, etc.
+			* `className` - a `-type string` value which defines the element's class name. Multiple classes can be given using space separation.
+		</description>
+	</type>
+
+	<description>
+	<![CDATA[
+		This option controls the HTML tag that is used for the element that is displayed when a collection button is triggered. It in turn contains the sub-buttons of the collection.
+
+		Please refer to the `b-init buttons.dom` documentation for an overview of the DOM structure that Buttons will create. In this specific case, this option controls the `<div class="dt-button-collection">...</div>` tag that is shown in the example HTML there.
+	]]>
+	</description>
+
+	<example title="DataTables initialisation: Use an `aside` tag for the collection display"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: {
+		dom: {
+			collection: {
+				tag: 'aside'
+			}
+		}
+	}
+} );
+
+]]></example>
+
+	<example title="Instance initialisation: Use an `aside` tag for the collection display"><![CDATA[
+
+new $.fn.dataTable.Buttons( table, {
+	buttons: {
+		dom: {
+			collection: {
+				tag: 'aside'
+			}
+		}
+	]
+} );
+
+]]></example>
+</dt-option>

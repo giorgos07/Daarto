@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>buttons.exportData()</name>
+	<summary>Obtain data from the DataTable that is suitable for exporting</summary>
+	<since>1.0.0</since>
+
+	<type type="function">
+		<signature>buttons.exportData( [ options ] )</signature>
+		<parameter type="object" name="options" default="undefined">
+			<![CDATA[
+
+			This option is used to define what data will be read from the table, and how that data will be modified (if at all) to be suitable for export.
+
+			The object can have the following properties:
+
+			* `-type row-selector` `rows` - The row selector to use. Default - all rows
+			* `-type column-selector` `columns` - The column selector to use. Default - all columns
+			* `-type selector-modifier` `modifier` - How the ordering and search state of the table should be applied. Default - `{search: 'applied', order: 'applied'}`
+			* `-type string` `orthogonal` - What [orthogonal data type](https://datatables.net/manual/orthogonal-data) to request when getting the data for a cell. Default `-string display` - i.e. the data shown in the table.
+			* `-type boolean` `stripHtml` - Indicate if HTML should be stripped from the read data if there is any (`true`) or not (`false`). Default - `true`.
+			* `-type boolean` `stripNewlines` - Indicate if newline characters should be stripped from the read data if there are any (`true`) or not (`false`). Default - `true`.
+			* `-type boolean` `decodeEntities` - Indicate if HTML entities should be decoded (`true`) or not (`false`) - for example `&gt;` would become `>`. For larger tables you may wish to disable this option as it can decrease performance. Default - `true`.
+			* `-type boolean` `trim` - Indicate if the read data should have white space trimmed from the start and end of the value (`true`) or not (`false`). Default - `true`.
+			* `-type object` `format` (since 1.1.0) - Container object for the cell formatting functions that the export will use
+			  * `-type function` `format.header` - Function that will be used to format the data in the header cells - default function will strip HTML tags. The returned value is used in the exported data for the column headers. Three arguments are passed in:
+			    1. The cell's innerHTM
+			    2. Cell's column index.
+			    3. The cell node (since Buttons 1.2.2)
+			  * `-type function` `format.footer` - Function that will be used to format the data in the footer cells. - default function will strip HTML tags. The returned value is used in the exported data for the column footer. Three arguments are passed in:
+			    1. The cell's innerHTML
+			    2. Cell's column index
+			    3. The cell node (since Buttons 1.2.2)
+			  * `-type function` `format.body` - Function that will be used to format the data from the table's body cells - default function will strip HTML tags. The returned value is used in the exported data for each cell. Four arguments are passed in:
+			    1. The cell's innerHTML
+			    2. Cell's row index
+			    3. Cell's column index
+			    4. The cell node (since Buttons 1.2.2)
+			  ]]>
+		</parameter>
+		<description>
+			Obtain data from a DataTable that is suitable for exporting by saving into a file or copying to clipboard.
+		</description>
+		<returns type="object">
+			An object which has three parameters:
+
+			* `header` - An array of header data for the selected columns
+			* `footer` - An array of footer data for the selected columns
+			* `body` - An array of arrays, which each inner array representing a row, and its items being the cells for the selected columns.
+		</returns>
+	</type>
+
+	<description>
+		It is relatively common to wish to use _Buttons_ to obtain the data from a DataTable so it can be exported in some form (copy to clipboard, save to Excel, etc). As this operation can be required by a number of plug-in button types, Buttons provides this method for DataTables to quickly and easily obtain data from a DataTable in a form that is suitable for export.
+
+		In essence this method will return an object that contains header, footer and body information from the table. It is then up to the caller to decide how to export that data - for example with a CSV file you would join the items for each row using commas and then join the rows with new lines.
+	</description>
+
+	<example title="Get all data in the table for export"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+var data = table.buttons.exportData();
+// Do something with the 'data' variable
+
+]]></example>
+
+	<example title="Export only selected rows (with the _Select_ extension)"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+var data = table.buttons.exportData( {
+	modifier: {
+		selected: true
+	}
+} );
+// Do something with the 'data' variable
+
+]]></example>
+
+	<example title="Get the data for the visible columns only"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+var data = table.buttons.exportData( {
+	columns: ':visible'
+} );
+// Do something with the 'data' variable
+
+]]></example>
+
+	<example title="Format the header cells - adding the column index"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+var data = table.buttons.exportData( {
+	format: {
+		header: function ( data, columnIdx ) {
+			return columnIdx +': '+ data;
+		}
+	}
+} );
+// Do something with the 'data' variable
+
+]]></example>
+</dt-api>

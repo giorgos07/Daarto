@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons</name>
+	<summary>Buttons configuration object</summary>
+	<since>1.0.0</since>
+
+	<type type="array">
+		<description>
+			The majority of button configurations are not concerned with the DOM configuration and other options that Buttons presents, but rather just with what buttons are presented and how they are individually constructed. As such, to provide a short-cut this option can be provided as an array. This array will be mapped automatically to the `b-init buttons.buttons` option.
+
+			For example the following two configurations are functionally identical:
+
+			```js
+			// Using `buttons` as an array
+			$('#myTable').DataTable( {
+				buttons: [ 'copy', 'csv', 'excel' ]
+			} );
+			```
+
+			```js
+			// Using `buttons.buttons`
+			$('#myTable').DataTable( {
+				buttons: {
+					buttons: [ 'copy', 'csv', 'excel' ]
+				}
+			} );
+			```
+		</description>
+	</type>
+
+	<type type="boolean">
+		<description>
+			As a boolean `true` value, this option will trigger the creation of a Buttons instance with the default values (as defined by `$.fn.dataTable.Buttons.defaults`).
+		</description>
+	</type>
+
+	<type type="object">
+		<description>
+			As an object this option provides the ability to configure a single instance of the DataTables Buttons extension that will be created when the DataTable is initialised. For the full range of parameters that are available to be used in this object, please refer to the remainder of the Buttons initialisation reference.
+		</description>
+	</type>
+
+	<description>
+		This option provides the ability to have a Buttons instance created automatically when a new DataTable is created. The button collection can then be inserted into the DataTables controlled DOM by using the `B` option in the `dt-init dom` parameter, or through the `b-api buttons().container()` API method.
+	</description>
+
+	<example title="Creation of Buttons using defaults and insertion by `dt-init dom`"><![CDATA[
+
+$('#example').DataTable( {
+	dom: 'B<"clear">lfrtip',
+	buttons: true
+} );
+
+]]></example>
+
+	<example title="Creation of Buttons with array configuration of buttons and insertion by `dt-init dom`"><![CDATA[
+
+$('#example').DataTable( {
+	dom: 'B<"clear">lfrtip',
+	buttons: [ 'copy', 'csv', 'excel' ]
+} );
+
+]]></example>
+
+	<example title="Creation of Buttons with object configuration and insertion by `dt-init dom`"><![CDATA[
+
+$('#example').DataTable( {
+	dom: 'B<"clear">lfrtip',
+	buttons: {
+		name: 'primary',
+		buttons: [ 'copy', 'csv', 'excel' ]
+	}
+} );
+
+]]></example>
+
+	<example title="Creation of Buttons using defaults are API insertion to the DOM"><![CDATA[
+
+var table = $('#example').DataTable( {
+	buttons: true
+} );
+
+table
+	.buttons()
+	.container()
+	.appendTo( '#controlPanel' );
+
+]]></example>
+</dt-option>

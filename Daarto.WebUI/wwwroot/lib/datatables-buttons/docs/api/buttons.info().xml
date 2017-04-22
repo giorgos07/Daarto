@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>buttons.info()</name>
+	<summary>Display and hide an information for the end user in a modal box</summary>
+	<since>1.0.0</since>
+
+	<type type="function">
+		<signature>buttons.info( title [, message [, time ]] )</signature>
+		<parameter type="string|boolean" name="title">
+			Message title. This will be shown in a `-tag h2` element. If you do not wish to display a title message, set this option to be an empty string - the `-tag h2` element will not be used.
+
+			This parameter can also be used to remove the information message by passing `false` to this parameter.
+		</parameter>
+		<parameter type="string" name="message" default="undefined">
+			Message to show to the end user. This is shown in a `-tag div` element.
+		</parameter>
+		<parameter type="integer" name="time" default="undefined">
+			When set the message will be removed automatically after this amount of time. The unit of time is milliseconds.
+
+			If not given, or the value is 0, the message will be shown indefinitely until hidden with this method (`false` in the first parameter).
+		</parameter>
+		<description>
+			Display / hide an information message to the end user to indicate that something has happened.
+		</description>
+		<returns type="DataTables.Api">
+			DataTables API instance for chaining.
+		</returns>
+	</type>
+
+	<description>
+		When using _Buttons_ you may find you wish to indicate to the end user that an action has been performed when a button has been clicked on. This might be a simple information message stating what has happened based on the button action, or can be more complex and potentially include complex data input / output. For example, in the copy to clipboard button this is used to inform the user that the copy has occurred - otherwise they wouldn't know as the action happens without user notification.
+
+		This method provides a very simple way to display a modal box presenting the end user with information.
+
+		Although specifically designed for use with Buttons, this method can be used externally to the Buttons actions should you wish to display a message to the end user.
+	</description>
+
+	<example title="Display a notification message for 3 seconds"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.buttons.info( 'Notification', 'This is a notification message!', 3000 );
+
+]]></example>
+
+	<example title="Set a button's action to show a loading message, and then a done message when an Ajax process completes"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.button( 0 ).action( function () {
+	table.buttons.info( 'Please wait', 'Processing data...' );
+
+	$.ajax( {
+		...
+		success: function () {
+			table.buttons.info( 'Complete', 'Data processing complete', 2000 );
+		}
+	} );
+} );
+
+]]></example>
+</dt-api>

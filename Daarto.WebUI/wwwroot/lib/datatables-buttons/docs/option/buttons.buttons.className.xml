@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.buttons.className</name>
+	<summary>Set the class name for the button</summary>
+	<since>1.0.0</since>
+
+	<default value="undefined"/>
+
+	<type type="string">
+		<description>
+			The class name for the button. Multiple classes can be added by using simple space separation between names.
+		</description>
+	</type>
+
+	<description>
+		The ability to set a class name for a button can be useful both for styling the button and also for selection and manipulation via the API (`b-api buttons()` for example). This option provides exactly that ability.
+
+		The class name defined here is added to the class name defined by `b-init buttons.buttons.className`, so the button will likely have two or more class names assigned to it.
+
+		Please note that most buttons will define their own class name so they will be style-able without being required to add a custom class name using you are extending an existing button. Please refer to the documentation for each button type for their default class name.
+
+		Additionally, if you extend a button that has its own class name defined, any classes you set will automatically be appended to the extended button's class. It will _not_ overwrite the original class.
+	</description>
+
+	<example title="DataTables initialisation: Set class name"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: {
+		buttons: [
+			{ extend: 'copy', className: 'copyButton' },
+			{ extend: 'excel', className: 'excelButton' }
+		]
+	}
+} );
+
+]]></example>
+
+	<example title="Instance initialisation: Disable a button on initialisation"><![CDATA[
+
+new $.fn.dataTable.Buttons( table, {
+	buttons: [
+		{ extend: 'copy', className: 'copyButton' },
+		{ extend: 'excel', className: 'excelButton' }
+	]
+} );
+
+]]></example>
+</dt-option>

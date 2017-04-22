@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.buttons.enabled</name>
+	<summary>Set a button's initial enabled state</summary>
+	<since>1.0.0</since>
+
+	<default value="true" />
+
+	<type type="boolean">
+		<description>
+			A boolean flag to indicate the initial enabled state of the button upon initialisation:
+
+			* `false` - disabled
+			* `true` - enabled
+
+			An undefined value is the same as `true`.
+		</description>
+	</type>
+
+	<description>
+		This option provides the ability to set the initial enabled state of a button using a boolean value. It is most likely to be of use when using the API methods that can control the button's enabled state after initialisation:
+
+		* `b-api buttons().enable()` / `b-api button().enable()`
+		* `b-api buttons().disable()` / `b-api button().disable()`
+	</description>
+
+	<example title="DataTables initialisation: Disable a button on initialisation"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: {
+		buttons: [
+			'copy',
+			{ extend: 'excel', enabled: false }
+		]
+	}
+} );
+
+]]></example>
+
+	<example title="Instance initialisation: Disable a button on initialisation"><![CDATA[
+
+new $.fn.dataTable.Buttons( table, {
+	buttons: [
+		'copy',
+		{ extend: 'excel', enabled: false }
+	]
+} );
+
+]]></example>
+</dt-option>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="5">
+
+<css lib="datatables buttons" />
+<js lib="jquery datatables buttons buttons-colvis">
+<![CDATA[
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		columnDefs: [
+			{
+				targets: 1,
+				className: 'noVis'
+			}
+		],
+		buttons: [
+			{
+				extend: 'colvis',
+				columns: ':not(.noVis)'
+			}
+		]
+	} );
+} );
+]]>
+</js>
+
+<title lib="Buttons">Select columns</title>
+
+<info><![CDATA[
+
+The `b-button colvis` button type provides a `columns` option to allow you to select what columns should be included in the column visibility control list. This option is a `dt-type column-selector` and thus a number of methods to select the columns included are available including jQuery selectors and data index selectors.
+
+This example shows a jQuery selector being used to exclude the first column in the table - note that the _Name_ column is not included in the column visibility list.
+
+]]></info>
+
+</dt-example>

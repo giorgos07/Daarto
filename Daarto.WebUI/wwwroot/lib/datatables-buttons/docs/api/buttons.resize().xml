@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>buttons.resize()</name>
+	<summary>Resize all Flash buttons once a table has been made visible</summary>
+	<since>1.0.0</since>
+
+	<requires>
+		Flash buttons plug-in for Buttons
+	</requires>
+
+	<type type="function">
+		<signature>buttons.resize()</signature>
+		<description>
+			Resize the Flash movie clips to take account of the current button dimensions.
+		</description>
+		<returns type="DataTables.Api">
+			Unmodified DataTable API instance for chaining
+		</returns>
+	</type>
+
+	<description>
+		If the Flash export buttons (`b-button copyFlash`, `b-button csvFlash`, etc) are being used and the table is initialised when hidden, or the Buttons instance is constructed using the `new $.fn.dataTable.Buttons()` method, the Flash movie clips will have 0 pixels height and width. The result is that there is nothing for the end user to click on when the buttons are finally made visible for them to click on. This is particularly common in a tabbed interface.
+
+		This method can be invoked to have the Flash buttons adjust their size to fit the HTML button, thus presenting a clickable target to the end user.
+
+		The `dt-api $.fn.dataTable.tables()` method can be particularly useful with this method as it provides an easy way to access existing DataTables.
+	</description>
+
+	<example title="Resize the buttons"><![CDATA[
+
+$.fn.dataTable.tables( { api: true } )
+	.buttons.resize();
+
+]]></example>
+
+	<example title="Resize the buttons when made visible in a Bootstrap tab"><![CDATA[
+
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+	$.fn.dataTable.tables( { api: true } )
+		.buttons.resize();
+})
+
+]]></example>
+</dt-api>

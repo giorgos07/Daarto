@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="1">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons jszip pdfmake vfsfonts buttons-html5">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'copyHtml5',
+                exportOptions: {
+                 columns: ':contains("Office")'
+                }
+            },
+			'excelHtml5',
+			'csvHtml5',
+			'pdfHtml5'
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">HTML5 export buttons</title>
+
+<info><![CDATA[
+
+The HTML5 export buttons plug-in for Buttons provides four export buttons:
+
+* `b-button copyHtml5` - Copy to clipboard
+* `b-button csvHtml5` - Save to CSV file
+* `b-button excelHtml5` - Save to XLSX file - requires [JSZip](https://stuk.github.io/jszip/)
+* `b-button pdfHtml5` - Save to PDF file - requires [PDFMake](http://pdfmake.org/)
+
+This example demonstrates these four button types with their default options. The other examples in this section demonstrate some of the options available.
+
+Please note that the `b-button copy`, `b-button excel`, `b-button csv` and `b-button pdf` button types may also use the HTML5 button types noted here, providing a Flash fallback for older browsers (IE9-).
+
+]]></info>
+
+</dt-example>
+

@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="3">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-flash">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'excelFlash',
+				filename: 'Data export'
+			},
+			{
+				extend: 'pdfFlash',
+				filename: 'Data export'
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">File name</title>
+
+<info><![CDATA[
+
+By default the name of the file created by the  `b-button excelFlash`, `b-button csvFlash` and `b-button pdfFlash` button types will automatically be taken from the document's `-tag title` element. It is also possible to set the file name to a specific value using the `filename` option of these three button types.
+
+This example shows the `filename` option being set for the `b-button excelFlash` and `b-button pdfFlash` buttons.
+
+]]></info>
+
+</dt-example>
+

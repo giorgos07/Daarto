@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="8">
+
+<css lib="datatables buttons" />
+<js lib="jquery datatables buttons buttons-colvis">
+<![CDATA[
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		stateSave: true,
+		buttons: [
+			'colvis'
+		]
+	} );
+} );
+]]>
+</js>
+
+<title lib="Buttons">State saving</title>
+
+<info><![CDATA[
+
+Button's column visibility module works seamlessly with DataTables' state saving option (`dt-init stateSave`). All you need to do is enable both the column visibility buttons and state saving, as shown in this example.
+
+To demonstrate this ability, simple hide a few columns and then refresh the table. The columns you selected to be hidden will remain hidden and the button states will reflect this.
+
+]]></info>
+
+</dt-example>

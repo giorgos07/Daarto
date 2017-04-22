@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>buttons().remove()</name>
+	<summary>Remove and delete the selected buttons</summary>
+	<since>1.0.0</since>
+
+	<type type="function">
+		<signature>buttons().remove()</signature>
+		<returns type="DataTables.Api">
+			DataTables API instance.
+		</returns>
+		<description>
+			Remove the selected buttons from the display. These buttons are destroyed and can no longer be used once removed.
+		</description>
+	</type>
+
+	<description>
+		This method provides the ability to dynamically remove one or more buttons from a table after initialisation. The inverse of this method is `b-api button().add()` which can be used to add a new button dynamically.
+
+		**Important**: This method will effect the indexes of other buttons in the instances. If you are using index based selectors for the buttons, please ensure that you take this into account for API interactions after calling this method.
+	</description>
+
+	<example title="Remove all buttons with the class `.export`"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.buttons( '.export' ).remove();
+
+]]></example>
+</dt-api>

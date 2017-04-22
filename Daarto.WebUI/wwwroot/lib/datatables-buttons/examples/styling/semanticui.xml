@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="5" framework="semanticui">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons jszip pdfmake vfsfonts buttons-html5 buttons-print buttons-colvis">
+<![CDATA[
+
+$(document).ready(function() {
+	var table = $('#example').DataTable( {
+		lengthChange: false,
+		buttons: [ 'copy', 'excel', 'pdf', 'colvis' ]
+	} );
+
+	table.buttons().container()
+		.appendTo( $('div.eight.column:eq(0)', table.table().container()) );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Semantic UI styling</title>
+
+<info><![CDATA[
+
+This example shows DataTables and the Buttons extension being used with the [Semantic UI](http://semantic-ui.com/) framework providing the styling. The DataTables / Semantic UI integration provides seamless integration for DataTables to be used in a Semantic UI page.
+
+Note that for ease of implementation, the `b-init buttons` option is specified with a basic set of buttons, and the `b-api buttons().container()` method then used to insert the buttons into the document. It is possible to use the `dt-init dom` option to insert the buttons like in the DataTables styled examples, but the default `dt-init dom` option used for Semantic UI styling is quite complex and would need to be fully restated.
+
+]]></info>
+
+</dt-example>
+

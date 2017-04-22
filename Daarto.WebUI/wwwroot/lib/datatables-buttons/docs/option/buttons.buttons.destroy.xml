@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.buttons.destroy</name>
+	<summary>Function that is called when the button is destroyed</summary>
+	<since>1.0.0</since>
+
+	<default value="">
+		Default function depends upon the button type. Please refer to the button type documentation
+	</default>
+
+	<type type="function">
+		<signature>destroy( dt, node, config )</signature>
+		<scope>
+			DataTables API instance for the selected button - i.e. `b-api button()` for the button in question
+		</scope>
+		<parameter type="DataTables.Api" name="dt">
+			A DataTables API instance for the host DataTable
+		</parameter>
+		<parameter type="jQuery" name="node">
+			jQuery instance for the button node in question
+		</parameter>
+		<parameter type="object" name="config">
+			The button's configuration object
+		</parameter>
+		<returns>
+			No return value is required or expected. No action is taken upon any value that is returned.
+		</returns>
+		<description>
+			The function given here is called when the button is destroyed either by a call to `b-api buttons().remove()`, when the Buttons instance is destroyed (`b-api buttons().destroy()`) or when the host DataTable is destroyed (`dt-api destroy()`). It is provided to allow authors to removed events from the button preventing memory leaks.
+		</description>
+	</type>
+
+	<description>
+		This function is provided to allow button authors to be able to assign custom events to the host DataTable or the button's DOM node, and then cleanly remove those events when a button is destroyed, ensuring that there are no memory leaks.
+
+		Of particular interest when using this method and the `b-init buttons.buttons.init` option to attach events, will be the `b-init buttons.buttons.namespace` option (accessible as the `namespace` parameter of the third parameter passed into this function). The `namespace` option is a unique namespacing string for every button, allowing events to be correctly removed without accidentally also removing other events.
+	</description>
+
+	<example title="Button which has mouse enter / leave (hover) event listeners"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: {
+		buttons: [
+			{
+				text: '',
+				init: function ( e, dt, node, config ) {
+					node.on( 'mouseenter'+config.namespace, function () {
+						console.log( 'Mouse enter' );
+					} );
+
+					node.on( 'mouseleave'+config.namespace, function () {
+						console.log( 'Mouse leave' );
+					} );
+				},
+				destroy: function ( dt, node, config ) {
+					node.off( 'mouseenter'+config.namespace );
+					node.off( 'mouseleave'+config.namespace );
+				}
+			}
+		]
+	}
+} );
+
+]]></example>
+</dt-option>

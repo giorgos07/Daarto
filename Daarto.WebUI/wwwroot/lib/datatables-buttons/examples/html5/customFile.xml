@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="15">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-html5">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				text: 'JSON',
+				action: function ( e, dt, button, config ) {
+					var data = dt.buttons.exportData();
+
+					$.fn.dataTable.fileSave(
+						new Blob( [ JSON.stringify( data ) ] ),
+						'Export.json'
+					);
+				}
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Custom file (JSON)</title>
+
+<info><![CDATA[
+
+Buttons uses the excellent [FileSaver.js](https://github.com/eligrey/FileSaver.js/) by Eli Grey in order to be able to create and download files on the client-side (i.e. for the CSV and Excel button types). Buttons' built in FileSaver.js is exposed via `b-api $.fn.dataTable.fileSave()` when the HTML5 button types file is loaded, and it can be used to easily create your own custom files.
+
+This example makes use of `b-api buttons.exportData()` to get data from the host DataTable and then create a file with JSON data in it using the `b-api $.fn.dataTable.fileSave()` method.
+
+Please note that Safari and IE9- are not currently supported. Safari support should be available with the next version of Safari.
+
+]]></info>
+
+</dt-example>
+

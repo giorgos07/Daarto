@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.name</name>
+	<summary>Set a name for the instance for the group selector</summary>
+	<since>1.0.0</since>
+
+	<type type="string">
+		<description>
+			The name to set for the Buttons instance
+		</description>
+	</type>
+	<default value="main"/>
+
+	<description>
+		As multiple Buttons instances can be attached to a single DataTable, it can be useful to be able to select each instance individually. This option provides the ability to set a name for the instance so it can later be selected using the `b-type button-group-selector` option of the `b-api buttons()` and `b-api button()` API methods.
+
+		The instance name _does not need to be unique_. If a group selector is given that matches multiple instances, all matching instances will be selected.
+	</description>
+
+	<example title="DataTables initialisatioin: Setting the name in the DataTables `b-init buttons` option"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: {
+		name: 'primary'
+	}
+) );
+
+]]></example>
+
+	<example title="Instance initialisation: Setting the name"><![CDATA[
+
+new $.fn.dataTables.Buttons( table, {
+	name: 'primary'
+} );
+
+]]></example>
+</dt-option>

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.buttons.init</name>
+	<summary>Initialisation function that can be used to add events specific to this button</summary>
+	<since>1.0.0</since>
+
+	<default value="">
+		Default function depends upon the button type. Please refer to the button type documentation
+	</default>
+
+	<type type="function">
+		<signature>init( dt, node, config )</signature>
+		<scope>
+			DataTables API instance for the selected button - i.e. `b-api button()` for the button in question
+		</scope>
+		<parameter type="DataTables.Api" name="dt">
+			A DataTables API instance for the host DataTable
+		</parameter>
+		<parameter type="jQuery" name="node">
+			jQuery instance for the button node that was clicked on
+		</parameter>
+		<parameter type="object" name="config">
+			The button's configuration object
+		</parameter>
+		<returns>
+			No return value is required or expected. No action is taken upon any value that is returned.
+		</returns>
+		<description>
+			The function given here is called when the button is built (or re-built) and can therefore be used to attach custom events to the host DataTable (or any other object) which are specific to this button.
+		</description>
+	</type>
+
+	<description>
+		This function provides the ability to button plug-in authors to run custom code when a button is initialised. This can be useful for attaching event handlers to the host DataTable that will update the button. For example, the buttons provided by the _Select_ extension for DataTables make use of this to create buttons types which are only active when there is one or more item in the DataTable selected.
+	</description>
+
+	<example title="Enable / disable based on there being selected rows (from the _Select_ extension)"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: {
+		buttons: [
+			{
+				text: 'Enabled only with selected item',
+				init: function ( dt, node, config ) {
+					var that = this;
+
+					dt.on( 'select.dt.DT deselect.dt.DT', function () {
+						that.enable( dt.rows( { selected: true } ).any() );
+					} );
+
+					this.disable();
+				}
+			}
+		]
+	}
+} );
+
+]]></example>
+</dt-option>

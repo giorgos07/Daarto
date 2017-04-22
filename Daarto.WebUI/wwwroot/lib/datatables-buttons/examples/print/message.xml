@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="2">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-print">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'print',
+				message: 'This print was produced using the Print button for DataTables'
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Custom message</title>
+
+<info><![CDATA[
+
+It can often be useful to include description text in the print view to provide summary information about the table that will be included in the hard printed copy. The `message` option of the `b-button print` button type provides this ability.
+
+In the example here a simple string is used, but complex HTML could be used if required.
+
+]]></info>
+
+</dt-example>
+

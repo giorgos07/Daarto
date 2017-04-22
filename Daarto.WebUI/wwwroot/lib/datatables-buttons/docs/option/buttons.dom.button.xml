@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.dom.button</name>
+	<summary>DOM configuration for individual button elements</summary>
+	<since>1.0.0</since>
+
+	<type type="object">
+		<description>
+			Plain object which will can have the following properties set:
+
+			* `tag` - a `-type string` value which defines the HTML tag to use. There should be no spaces or any other formatting - e.g. it should simply be `span`, `div`, `a` etc.
+			* `className` - a `-type string` value which defines the element's class name. Multiple classes can be given using space separation.
+			* `disabled` - The class name to assign to the button when the button is in the _disabled_ state.
+			* `active` - The class name to assign to the button when the button is in the _active_ state.
+		</description>
+	</type>
+
+	<description>
+	<![CDATA[
+		This option controls the HTML tag that is used to create each individual button. With this option the tag type and class name can be specified using the `tag` and `className` properties of this object.
+
+		Please refer to the `b-init buttons.dom` documentation for an overview of the DOM structure that Buttons will create. In this specific case, this option controls the `<a class="dt-button">...</a>` that is shown in the example HTML there.
+	]]>
+	</description>
+
+	<example title="DataTables initialisation: Use an `input` for the button display"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: {
+		dom: {
+			button: {
+				tag: 'input'
+			}
+		}
+	}
+} );
+
+]]></example>
+
+	<example title="Instance initialisation: Use a `button` tag for the button display with a class name"><![CDATA[
+
+new $.fn.dataTable.Buttons( table, {
+	buttons: {
+		dom: {
+			button: {
+				tag: 'button',
+				className: 'btn'
+			}
+		}
+	]
+} );
+
+]]></example>
+</dt-option>

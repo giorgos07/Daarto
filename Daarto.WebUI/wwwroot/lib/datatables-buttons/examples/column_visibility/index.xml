@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="0">
+
+<title lib="BUttons">Column visibility examples</title>
+
+<js lib="jquery" />
+<info><![CDATA[
+
+The column visibility plug-in for the DataTables Buttons extension provides a suite of buttons that can be used to very easily control the visibility of columns in a table.
+
+]]></info>
+
+</dt-example>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="3">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-print buttons-colvis">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'print',
+				exportOptions: {
+					columns: ':visible'
+				}
+			},
+			'colvis'
+		],
+		columnDefs: [ {
+			targets: -1,
+			visible: false
+		} ]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Export options - column selector</title>
+
+<info><![CDATA[
+
+The `exportOptions.columns` option of the `b-button print` button provides the ability to select only certain columns (using a `dt-type column-selector`). In this example only the visible columns are used for the printing.
+
+The column visibility buttons (`b-button colvis`) are included in this example so the column visibility can be easily changed. Additionally, the last column in the table is hidden by default (`dt-init columns.visible`).
+
+]]></info>
+
+</dt-example>
+

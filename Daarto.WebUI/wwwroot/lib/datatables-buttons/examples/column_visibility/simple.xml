@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="1">
+
+<css lib="datatables buttons" />
+<js lib="jquery datatables buttons buttons-colvis">
+<![CDATA[
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			'colvis'
+		]
+	} );
+} );
+]]>
+</js>
+
+<title lib="Buttons">Basic column visibility</title>
+
+<info><![CDATA[
+
+The column visibility plug-in for Buttons provides a set of buttons that can be used to easily give the end user the ability to set the visibility of columns.
+
+The primary button type for column visibility controls is the `b-button colvis` type which adds a collection (`b-button collection`) of buttons, one for each of the columns in the table, with the end user having the ability to toggle these columns.
+
+]]></info>
+
+</dt-example>

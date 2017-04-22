@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example order="0">
+
+<title lib="Buttons">HTML5 export buttons</title>
+
+<info><![CDATA[
+
+The HTML5 export buttons make use of the local file saving features of modern browsers (IE10+, Chrome, Safari, Firefox and Opera) to create files on the client-side and then download them without any server interaction required.
+
+Browsers which do not support the required APIs for these button types have the option of using the Flash button alternatives, otherwise the buttons will not appear on the end user's page (no errors will be generated if this is the case).
+
+The examples in this section explore the options available for the HTML5 export buttons.
+
+]]></info>
+
+</dt-example>

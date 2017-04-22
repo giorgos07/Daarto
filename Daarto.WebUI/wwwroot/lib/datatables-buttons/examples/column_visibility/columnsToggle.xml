@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="6">
+
+<css lib="datatables buttons" />
+<js lib="jquery datatables buttons buttons-colvis">
+<![CDATA[
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			'columnsToggle'
+		]
+	} );
+} );
+]]>
+</js>
+
+<title lib="Buttons">Visibility toggle buttons</title>
+
+<info><![CDATA[
+
+The `b-button colvis` type will insert the buttons into a `b-button collection` button automatically, but you may wish to have the column visibility buttons as buttons that are always visible. This is possible using the `b-button columnsToggle` button type, as shown in this example.
+
+]]></info>
+
+</dt-example>

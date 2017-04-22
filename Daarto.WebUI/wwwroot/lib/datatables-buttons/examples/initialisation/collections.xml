@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="6">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'collection',
+				text: 'Table control',
+				buttons: [
+					{
+						text: 'Toggle start date',
+						action: function ( e, dt, node, config ) {
+							dt.column( -2 ).visible( ! dt.column( -2 ).visible() );
+						}
+					},
+					{
+						text: 'Toggle salary',
+						action: function ( e, dt, node, config ) {
+							dt.column( -1 ).visible( ! dt.column( -1 ).visible() );
+						}
+					}
+				]
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Collections</title>
+
+<info><![CDATA[
+
+The `b-button collection` button provides the ability to show a list of buttons when activated. The buttons it will display in the sub-list are defined by its `buttons` property which can take all of the same button options as the `b-init buttons.buttons` array (which the exception of another collection - collections cannot be nested).
+
+Button collections can be useful for grouping functionality of button types - for example one collection could provide file export options, another table editing and a third column visibility controls.
+
+This simple example shows a collection with two custom buttons. These buttons simply toggle the visibility of the final two columns in the table (if you require full column visibility control, check out the `b-button colvis` button type).
+
+]]></info>
+
+</dt-example>
+

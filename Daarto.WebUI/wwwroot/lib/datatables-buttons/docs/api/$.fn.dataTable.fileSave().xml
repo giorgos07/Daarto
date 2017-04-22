@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>$.fn.dataTable.fileSave()</name>
+	<summary>Save a file that has been created on the client-side</summary>
+	<since>1.2.0</since>
+
+	<requires>
+		* Buttons 1.2.0+
+		* Buttons' _HTML5 buttons_ plug-in
+	</requires>
+
+	<type type="function">
+		<signature>fileSave( data, filename [, disableAutoBOM )</signature>
+		<param type="Blob" name="data">
+			Data to be saved. Note that not all browser's support _Blob_ data types. For those that don't [Blob.js](https://github.com/eligrey/Blob.js) can be used.
+		</param>
+		<param type="string" name="filename">
+			File name to save
+		</param>
+		<param type="boolean" name="disableAutoBOM" default="false">
+			Disable FileSaver's automatic Byte Order Mark (BOM).
+		</param>
+		<description>
+			Create and download a file on the client-side using information passed to this method.
+		</description>
+	</type>]
+
+	<description>
+		Buttons makes use of Eli Grey's outstanding [FileSaver.js](https://github.com/eligrey/FileSaver.js/) library in order to be able to provide its client-side file creation and download methods. This method exposes Button's built in FileSaver.js so you can use it in other applications, or for custom buttons.
+
+		For full details of how to use FileSaver, please [refer to the FileSaver.js documentation](https://github.com/eligrey/FileSaver.js/).
+
+		Please note that Safari currently has very limited support for creating files on the client-side [due to this Webkit bug 156056](https://bugs.webkit.org/show_bug.cgi?id=156056). Additionally, IE9 and earlier are not supported. Again, for full details, please [refer to the FileSaver.js documentation](https://github.com/eligrey/FileSaver.js/) - this method simply exposes that library!
+	</description>
+
+	<example title="Set a simple action function for button index 0"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.button( 0 ).action( function( e, dt, button, config ) {
+	console.log( 'Button '+this.text()+' activated' );
+	this.disable();
+} );
+
+]]></example>
+</dt-api>

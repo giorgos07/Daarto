@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.buttons.titleAttr</name>
+	<summary>Button `title` attribute text</summary>
+	<since>1.1.0</since>
+
+	<default value="No default value (i.e. undefined)" />
+
+	<type type="string">
+		<description>
+			A plain text string that will be set as the `title` attribute for the button. Browsers will display this text when the mouse is hovered over the button and screenreaders can use it to improve accessibility.
+		</description>
+	</type>
+
+	<type type="function" since="1.3.0">
+		<signature>titleAttr( dt, node, config )</signature>
+		<parameter type="DataTables.Api" name="dt">
+			A DataTables API instance for the host DataTable
+		</parameter>
+		<parameter type="jQuery" name="node">
+			jQuery instance for the button node
+		</parameter>
+		<parameter type="object" name="config">
+			The button's configuration object
+		</parameter>
+		<returns>
+			The string to be displayed for the buttons visual text
+		</returns>
+		<description>
+			The `b-init buttons.buttons.titleAttr` buttons option can be defined as a function that will be executed when Buttons requires the text for the button's title attribute. This provides the ability for plug-in authors to make use of `dt-api i18n()` to easily provide internationalisation support for the text shown in buttons. It could also potentially be used for other complex interactions.
+		</description>
+	</type>
+
+	<description>
+		This option provides the ability to set the [`title` attribute](https://developer.mozilla.org/en-US/docs/Web/HTML/Global_attributes/title) for the button. This can be used to provide a detailed description of the button, or a simple text name if you choose to display an icon in the button rather than text (using the `b-init buttons.buttons.text` option).
+
+		Browser's will show the text given in the `title` attribute in a tooltip that will be displayed when the user hovers their mouse over the button, and accessibility software such as screenreaders can use it to better inform users what a button does.
+	</description>
+
+	<example title="Copy button with a Font Awesome icon and title text"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		{
+			extend:    'copyHtml5',
+			text:      '<i class="fa fa-files-o"></i>',
+			titleAttr: 'Copy'
+		}
+	}
+} );
+
+]]></example>
+</dt-option>

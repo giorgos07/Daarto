@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="12">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons pdfmake vfsfonts buttons-html5">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'pdfHtml5',
+				orientation: 'landscape',
+				pageSize: 'LEGAL'
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">PDF - page size and orientation</title>
+
+<info><![CDATA[
+
+The page size and orientation of the `b-button pdfHtml5` button type can be set using the `orientation` and `pageSize` options. By default these values are `-string portrait` and `-string A4`, but are easily customised as shown in this example which uses a landscape layout and US legal paper size.
+
+For a full list of the options available for these parameters, please refer to the `b-button pdfHtml5` documentation.
+
+]]></info>
+
+</dt-example>
+

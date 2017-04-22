@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>buttons().active()</name>
+	<summary>Set the active state for the selected buttons</summary>
+	<since>1.0.0</since>
+
+	<type type="function" since="1.1.1">
+		<signature>buttons().active()</signature>
+		<parameter type="boolean" name="state">
+			Get the current active state of the buttons.
+		</parameter>
+		<returns type="DataTables.Api">
+			API instance which contains `true` if currently active, otherwise `false` for each selected button in the result set.
+		</returns>
+		<description>
+			Get the active state for the selected buttons.
+		</description>
+	</type>
+
+	<type type="function">
+		<signature>buttons().active( state )</signature>
+		<parameter type="function" name="state">
+			Set the active state (`true`) or remove (`false`).
+		</parameter>
+		<returns type="DataTables.Api">
+			DataTables API instance with the selected buttons in the result set, available for chaining further operations on the buttons.
+		</returns>
+		<description>
+			Set the active state for the selected button.
+		</description>
+	</type>
+
+	<description>
+		Buttons can be placed into an "active" state which is purely a styling function to visually show to the end user that the button is _active_ (i.e. whatever operation it performs is currently active). This can be useful if you have a number of different modes of operation that the user can select from, but only one can be active at a time.
+
+		This method can be used to dynamically change the active state for the selected buttons.
+	</description>
+
+	<example title="Remove the active state from all buttons"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.buttons().active( false );
+
+]]></example>
+</dt-api>

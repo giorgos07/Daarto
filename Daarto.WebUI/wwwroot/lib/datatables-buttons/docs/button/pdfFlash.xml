@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-button library="Buttons">
+	<name>pdfFlash</name>
+	<summary>Create and save a PDF file that contains the data from the table (Adobe Flash - deprecated)</summary>
+	<since>1.0.0</since>
+
+	<deprecated>
+		<version>1.2.0</version>
+		<description>
+			As Flash is now [being expunged](http://arstechnica.co.uk/information-technology/2016/05/chrome-flash-click-to-play-html5-by-default/) from all browsers, the Flash buttons are only suitable for use in old browsers. As such, they will no longer see new features developed for them after Buttons 1.2.0. They will be removed from the distribution in the next major release.
+		</description>
+	</deprecated>
+
+	<requires>
+		* Buttons' _Flash export button_ plug-in.
+		* Adobe Flash
+	</requires>
+
+	<description>
+		This button will create and save a PDF file from the table's data.
+
+		Please note that this button has a number of restrictions:
+
+		* It **does not support UTF8**. For UTF-8 support please using the `b-button pdfHtml5` button.
+		* Adobe Flash must be installed.
+		* The action for this button _cannot_ be activated using the `b-api button().trigger()` method due to the security restrictions of Flash
+		* The created file save dialogue must be shown and the file cannot be automatically opened.
+		* Adding images etc to the PDF is possible through the [AlivePDF API](http://alivepdf.bytearray.org/alivepdf-asdoc/) which this button uses to create the PDF, but it is difficult and the Flash SWF must be recompiled.
+
+		The `b-button pdfHtml5` method provides much greater flexibility and thus button is considered to be sunsetted, but is still provided for use with older browsers that do not support the APIs required for the `b-button pdfHtml5` button type.
+
+		[Adobe Flash](https://get.adobe.com/flashplayer/) is required for this button to operate. If Flash is not installed, or disabled, in the end user's browser this button will not appear. For a non-Flash alternative please see the `b-button excelHtml5` button type. Additionally the `b-button excel` will automatically select between this button and `b-button excelHtml5` depending on the features of the browser.
+	</description>
+
+
+	<option type="string" name="text" default="PDF">
+		The button's display text. The text can be configured using this option (see `b-init buttons.buttons.text`) or the `buttons.copy` option of the DataTables `dt-init language` object.
+	</option>
+
+	<option type="string" name="className" default="buttons-pdf buttons-flash">
+		The button's class name. See `b-init buttons.buttons.className` for details.
+	</option>
+
+	<option type="function" name="action">
+		Create and save a PDF file.
+	</option>
+
+	<option type="object" name="exportOptions" default="{}">
+		Select the data to be gathered from the DataTable for export. This includes options for which columns, rows, ordering and search. Please see the `b-api buttons.exportData()` method for full details - the object given by this parameter is passed directly into that action to gather the required data.
+	</option>
+
+	<option type="boolean" name="header" default="true">
+		Indicate if the table header should be included in the exported data or not.
+	</option>
+
+	<option type="boolean" name="footer" default="false">
+		Indicate if the table footer should be included in the exported data or not.
+	</option>
+
+	<option type="string|function" name="filename" default="*">
+		File name to give the created file (plus the extension defined by the `extension` option). The special character `*` is automatically replaced with the value read from the host document's `-tag title` tag.
+	</option>
+
+	<option type="string|function" name="title" default="*">
+		Document title (appears above the table in the generated PDF). The special character `*` is automatically replaced with the value read from the host document's `-tag title` tag.
+	</option>
+
+	<option type="string" name="extension" default=".pdf">
+		The extension to give the created file name.
+	</option>
+
+	<option type="string" name="orientation" default="portrait">
+		Paper orientation for the created PDF. This can be `-string portrait` or `-string landscape`.
+	</option>
+
+	<option type="string" name="pageSize" default="A4">
+		Paper size for the created PDF. This can be `-string A3`, `-string A4`, `-string A5`, `-string LEGAL`, `-string LETTER` or `-string TABLOID`.
+	</option>
+	
+	<option type="string|function" name="message" default="">`
+		Optional description message that will be shown above the table in the created PDF.
+
+		As well as a string value, a function may also be assigned to the `message` property. This function will be executed when the button needs to display the message and the returned value from the function will be used. The function is passed in three parameters:
+
+		* `-type DataTables.Api` - The DataTable API instance
+		* `-type jQuery` - jQuery object for the button node
+		* `-type object` - Configuration object for the button.
+	</option>
+
+	<example title="DataTables initialisation: Use the Flash PDF button"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		'pdfFlash'
+	]
+} );
+
+]]></example>
+
+	<example title="DataTables initialisation: Use the `b-button pdf` button type to automatically select between the Flash and HTML button options."><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		'pdf'
+	]
+} );
+
+]]></example>
+
+	<example title="DataTables initialisation: Use the `exportOptions` to save only the data shown on the current DataTable page"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		{
+			extend: 'pdfFlash',
+			text: 'Save current page',
+			exportOptions: {
+				modifier: {
+					page: 'current'
+				}
+			}
+		}
+	]
+} );
+
+]]></example>
+</dt-button>

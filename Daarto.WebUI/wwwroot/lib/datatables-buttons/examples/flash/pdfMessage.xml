@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="5">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-flash">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'pdfFlash',
+				message: 'PDF created by Buttons for DataTables.'
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">PDF message</title>
+
+<info><![CDATA[
+
+It can often be useful to include description text in the print view to provide summary information about the table that will be included in the generated PDF. The `message` option of the `b-button pdfFlash` button type provides this ability. It is a simple string and cannot contain any formatting information. If you require control over the styling of the exported PDF, please refer to the `b-button pdfHtml5` button type.
+
+]]></info>
+
+</dt-example>
+

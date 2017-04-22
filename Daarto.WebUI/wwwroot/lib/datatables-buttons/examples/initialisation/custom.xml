@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="3">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				text: 'My button',
+				action: function ( e, dt, node, config ) {
+					alert( 'Button activated' );
+				}
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Custom button</title>
+
+<info><![CDATA[
+
+Fundamentally, each button is described by an object - this object is read by Buttons and displayed as appropriate. There are a number of parameters that Buttons will automatically look for in the button description object such as `b-init buttons.buttons.text` and `b-init buttons.buttons.action` which are the two fundamental parameters (button text and the action to take when activated).
+
+All parameters (including these two, although to make the button useful they will need to be specified!) are optional, and each plug-in button type can also specify its own parameters (for example the `b-button pdfHtml5` button type uses `message` to display a custom message in the generated PDF).
+
+This example shows a single button that is specified using the `b-init buttons.buttons.text` and `b-init buttons.buttons.action` parameters only - it simply shows an alert when activated, but any Javascript function could be run when the button is activated.
+
+]]></info>
+
+</dt-example>
+

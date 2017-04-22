@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="7">
+
+<css lib="datatables buttons">
+	button {
+		margin: 1em;
+		padding: 1em;
+	}
+</css>
+<js lib="jquery datatables buttons buttons-flash">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').wrap('<div id="hide" style="display:none"/>');
+
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			'copyFlash',
+			'csvFlash',
+			'excelFlash',
+			'pdfFlash'
+		]
+	} );
+
+	$('#vis').one( 'click', function () {
+		$('#hide').css( 'display', 'block' );
+	} );
+
+	$('#resize').on( 'click', function () {
+		$.fn.dataTable.tables( { visible: true, api: true } ).buttons.resize();
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Hidden initialisation</title>
+
+<info><![CDATA[
+
+When Flash buttons are created the Flash movie clip inside of them (which provides the export action) is automatically sized to fit the button. However, if the table is initialised while hidden the buttons will have zero height and width. As a result, when the table is made visible the Flash movies must be resized to fit the buttons. This is done using the `b-api buttons.resize()` method (note that this method is only available when the Flash export buttons plug-in for Buttons is installed).
+
+This example shows a table that is initially hidden. If you make it visible and click the export buttons nothing will happen. Click the _Resize buttons_ option and the export buttons will start to operate.
+
+A resize is often required when the table is hidden in a tab when initialised - for example if using Bootstrap tabs you might use:
+
+```js
+$('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+	$.fn.dataTable.tables( { visible: true, api: true } ).buttons.resize();
+})
+```
+
+]]></info>
+
+<demo-html>
+	<button id="vis">Make table visible</button>
+	<button id="resize">Resize buttons</button>
+</demo-html>
+
+</dt-example>
+

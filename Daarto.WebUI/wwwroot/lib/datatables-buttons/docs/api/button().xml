@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>button()</name>
+	<summary>Select a single button</summary>
+	<since>1.0.0</since>
+
+	<type type="function">
+		<signature>button( [ groupSelector, ] buttonSelector )</signature>
+		<parameter type="button-group-selector" name="groupSelector" default="undefined">
+			Button group (instance) selector. Provides the ability to select a button from a specific instance of the Buttons class.
+
+			By default this is `-type undefined` resulting in all instances attached to the DataTable being selected.
+		</parameter>
+		<parameter type="button-selector" name="buttonSelector">
+			Selector to obtain the button that should be acted upon.
+		</parameter>
+		<returns type="DataTables.Api">
+			DataTables API instance where the result set contains information about the selected button so operations can be chained.
+		</returns>
+		<description>
+			Select a single button from the button instances attached to a DataTable.
+		</description>
+	</type>
+
+	<description>
+		Like the [core DataTables API](https://datatables.net/reference/api), Buttons provides a plural / singular API where operations can be performed on a single button, or multiple. With Buttons it is likely that your typical use of the API will use a single button thought this method, but `b-api buttons()` can also be useful for certain operations.
+
+		The Buttons extension provides a powerful set of selector options so you can select which buttons to perform actions upon. This is very similar to the core DataTables `dt-api row()`, `dt-api column()` and `dt-api cell()` which provide the ability to select elements from the table, and more generally like jQuery selectors, so you will be immediately familiar with this interface.
+
+		Using the `b-type button-selector` parameter it is possible to select the button that you wish to perform an operation on (for example changing the display text or enabling and disabling the button).
+
+		Additionally, as it is possible to have multiple instances of the Buttons extension attached to a single DataTable, the `b-type button-group-selector` option can be optionally included to select a button from a specific button set, or searching over multiple sets.
+
+		**Important:** If the selectors used result in more that one button being selected, this method will automatically truncate the result to the first button found only.
+	</description>
+
+	<example title="Disable the button at index position 2"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.button( 2 ).disable();
+
+]]></example>
+
+	<example title="Change the text for collection button with index 3-1"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.button( '3-1' ).text( 'Not available' );
+
+]]></example>
+
+	<example title="Select and disable button index 1 from button instance index 0"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.buttons( 0, 1 ).disable();
+
+]]></example>
+
+	<example title="Enable the button with the name `csv` from instance index 1"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table.buttons( 1, 'csv:name' ).enable();
+
+]]></example>
+</dt-api>

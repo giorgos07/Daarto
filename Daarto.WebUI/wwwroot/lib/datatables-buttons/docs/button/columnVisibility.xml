@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-button library="Buttons">
+	<name>columnVisibility</name>
+	<summary>A single button that controls the visibility of one or more columns</summary>
+	<since>1.0.0</since>
+
+	<requires>
+		* Buttons' _Column visibility button_ plug-in
+	</requires>
+
+	<description>
+		This button type creates a single button that can control the visibility of one or more columns in a DataTale (its counterpart `b-buttons columnsVisibility` will be expanded to a single button for each column). This provides the ability to have show all / hide all buttons that control all of the table's columns or a subset of those columns.
+
+		For multiple columns, the button should be given a title using the `b-init buttons.buttons.text` option, which can also be used for a single column control button, although it will automatically be given the column's title text if not otherwise supplied.
+	</description>
+
+	<extend>columnToggle</extend>
+
+	<option type="column-selector" name="columns" default="undefined">
+		Columns selector that defines the column(s) to include in the column visibility button set. By default this is `-type undefined` which results in all columns being selected, but any of the `-type column-selector` options can be used to define a custom button set.
+	</option>
+
+	<option type="boolean" name="visibility" default="undefined">
+		Control if the columns should be shown or hidden when the button is activated.
+	</option>
+
+
+	<example title="DataTables initialisation: Show all / hide all buttons"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		{
+			extend: 'columnVisibility',
+			text: 'Show all',
+			visibility: true
+		},
+		{
+			extend: 'columnVisibility',
+			text: 'Hide all',
+			visibility: false
+		}
+	]
+} );
+
+]]></example>
+
+	<example title="Direct initialisation: Show / hide columns with the class `secondary`"><![CDATA[
+
+new $.fn.dataTable.Buttons( table, {
+	buttons: [
+		{
+			extend: 'columnVisibility',
+			text: 'Show secondary',
+			visibility: true,
+			columns: '.secondary'
+		},
+		{
+			extend: 'columnVisibility',
+			text: 'Hide secondary',
+			visibility: false,
+			columns: '.secondary'
+		}
+	]
+} );
+
+]]></example>
+</dt-button>

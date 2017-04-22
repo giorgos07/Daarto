@@ -1,0 +1,39 @@
+﻿@model RegisterViewModel
+
+@{
+    Layout = "_BasicLayout";
+    ViewBag.Title = "Register";
+}
+
+<div class="wrapper text-center">
+    <strong>Sign up to find interesting thing</strong>
+</div>
+<form asp-controller="account" asp-action="register" name="form" class="form-validation" method="post">
+    <input type="hidden" name="returnUrl" value="@ViewData["ReturnUrl"]" />
+    @if (ViewBag.Response != null)
+    {
+        var response = (RegisterResponseViewModel)ViewBag.Response;
+
+        <div class="@(response.Succeeded ? "text-success" : "text-danger") wrapper text-center">
+            @response.Description
+        </div>
+    }
+    <div class="form-group">
+        <input asp-for="Email" placeholder="Email" class="form-control no-border" required />
+        <span asp-validation-for="Email" class="help-block m-b-none"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="Password" type="password" placeholder="Password" class="form-control no-border" required />
+        <span asp-validation-for="Password" class="help-block m-b-none"></span>
+    </div>
+    <div class="form-group">
+        <input asp-for="PasswordConfirmation" type="password" placeholder="Password" class="form-control no-border" required />
+        <span asp-validation-for="PasswordConfirmation" class="help-block m-b-none"></span>
+    </div>
+    <button type="submit" class="btn btn-lg btn-primary btn-block">Sign up</button>
+    <div class="line line-dashed"></div>
+    <p class="text-center">
+        <small>Already have an account?</small>
+    </p>
+    <a asp-controller="account" asp-action="login" class="btn btn-lg btn-default btn-block">Log in</a>
+</form>

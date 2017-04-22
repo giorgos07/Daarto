@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="4">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-flash">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			'copyFlash'
+		],
+		language: {
+			buttons: {
+				copyTitle: 'Copier au clipboard',
+				copySuccess: {
+					_: 'Copiés %d rangs',
+					1: 'Copié 1 rang'
+				}
+			}
+		}
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Copy button internationalisation</title>
+
+<info><![CDATA[
+
+The `b-button copyFlash` will immediately copy the exported data from the DataTable to the user's clipboard. To let the user know that something has happened the button will show a message on the page stating that this has occurred.
+
+The message shown to the end user can be customised using the `dt-init language` configuration option of DataTables. Specifically the `buttons.copyTitle` and `buttons.copyInfo` options can be set.
+
+This example uses these parameters to set French language strings for the copy message.
+
+]]></info>
+
+</dt-example>
+

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="3">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons">
+<![CDATA[
+
+$(document).ready(function() {
+	var counter = 1;
+
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				text: 'Add new button',
+				action: function ( e, dt, node, config ) {
+					dt.button().add( 1, {
+						text: 'Button '+(counter++),
+						action: function () {
+							this.remove();
+						}
+					} );
+				}
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Adding and removing buttons dynamically</title>
+
+<info><![CDATA[
+
+The `b-api button().add()` and `b-api button().remove()` methods provide the ability to dynamically add and remove buttons from the list. The `b-api button().add()` method takes two parameters: firstly the insertion point for where the new button should appear, and secondly a button definition (which can be an object, a string or a function) and displays that button.
+
+This example shows a button that when activated will add new buttons to the list. These buttons, when activated, will then be removed. Although this example lacks practical utility, it does demonstrate the API methods.
+
+]]></info>
+
+</dt-example>
+

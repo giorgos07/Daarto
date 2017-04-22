@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="8">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-flash">
+<![CDATA[
+
+$.fn.dataTable.Buttons.swfPath = '../../swf/flashExport.swf';
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			'copyFlash',
+			'csvFlash',
+			'excelFlash',
+			'pdfFlash'
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">SWF file location</title>
+
+<info><![CDATA[
+
+The Flash export buttons use a Flash `-path swf` file to provide their export options. By default, for convenience, the SWF is loaded from the [DataTables CDN](//cdn.datatables.net). However, you can easily set the location of the file to be loaded using the `$.fn.dataTable.Buttons.swfPath` parameter.
+
+This example shows the `-path swf` file being given a specific URL that it should be loaded from.
+
+]]></info>
+
+</dt-example>
+

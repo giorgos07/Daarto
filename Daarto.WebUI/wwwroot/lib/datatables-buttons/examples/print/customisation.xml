@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-example table-type="html" order="6">
+
+<css lib="datatables buttons"/>
+<js lib="jquery datatables buttons buttons-print">
+<![CDATA[
+
+$(document).ready(function() {
+	$('#example').DataTable( {
+		dom: 'Bfrtip',
+		buttons: [
+			{
+				extend: 'print',
+				customize: function ( win ) {
+					$(win.document.body)
+						.css( 'font-size', '10pt' )
+						.prepend(
+							'<img src="http://datatables.net/media/images/logo-fade.png" style="position:absolute; top:0; left:0;" />'
+						);
+
+					$(win.document.body).find( 'table' )
+						.addClass( 'compact' )
+						.css( 'font-size', 'inherit' );
+				}
+			}
+		]
+	} );
+} );
+
+]]>
+</js>
+
+<title lib="Buttons">Customisation of the print view window</title>
+
+<info><![CDATA[
+
+If you wish to customise the print view document, this can be done through the `customize` method of the `b-button print` button type. This is a callback function that is executed when the print view document has been created, and gives you the ability to modify it to suit your needs. The function is given a single parameter - the `window` object for the print view document.
+
+This simple example shows:
+
+* How an image can be inserted into the print view document using jQuery
+* The document's font-size can be adjusted to be suitable for printing
+* A class added to the table to improve its layout for printing
+* The font-size of the table set to match the main document's font-size.
+
+]]></info>
+
+</dt-example>
+

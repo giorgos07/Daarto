@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-button library="Buttons">
+	<name>print</name>
+	<summary>Button show a printable view of the table's data</summary>
+	<since>1.0.0</since>
+
+	<requires>
+		* Buttons' _Print_ plug-in.
+	</requires>
+
+	<description>
+		The print view button will take a copy of the data displayed in a table (based on the selector options given in the `exportOptions` parameter) and construct a new, temporary, table that is shown in a new window. The browser's `print` command is then automatically invoked (although this can be disabled - see the `autoPrint` option below) and finally the window closed when the print action has been completed or cancelled by the end user.
+
+		The constructed table does not retain the full information from the original table (table row and cell classes are not copied across for example), but the stylesheets from the original document are copied to the print document so the basic styling of the table can be retained.
+
+		Customisation of the printed view is available through the `title` and `message` options for simple description strings and through the `customize` option for complete control over the generated document (allowing, for example images to be added, etc).
+	</description>
+
+
+	<option type="string" name="text" default="Print">
+		The button's display text. The text can be configured using this option (see `b-init buttons.buttons.text`) or the `buttons.print` option of the DataTables `dt-init language` object.
+	</option>
+
+	<option type="string" name="className" default="buttons-print">
+		The button's class name. See `b-init buttons.buttons.className` for details.
+	</option>
+
+	<option type="function" name="action">
+		Show the print view
+	</option>
+
+	<option type="string" name="title" default="*">
+		The title to be shown for the print view document. This is shown in an H1 tag. If given as the value `*`, that value is automatically replaced with the value read from the host document's `-tag title` tag.
+	</option>
+
+	<option type="string|function" name="message" default="">
+		Description message that can be shown in the print view document. This can include HTML.
+
+		As well as a string value, a function may also be assigned to the `message` property. This function will be executed when the button needs to display the message and the returned value from the function will be used. The function is passed in three parameters:
+
+		* `-type DataTables.Api` - The DataTable API instance
+		* `-type jQuery` - jQuery object for the button node
+		* `-type object` - Configuration object for the button.
+	</option>
+
+	<option type="object" name="exportOptions" default="{}">
+		Select the data to be gathered from the DataTable for export. This includes options for which columns, rows, ordering and search. Please see the `b-api buttons.exportData()` method for full details - the object given by this parameter is passed directly into that action to gather the required data.
+	</option>
+
+	<option type="boolean" name="header" default="true">
+		Indicate if the table header should be included in the print view or not.
+	</option>
+
+	<option type="boolean" name="footer" default="false">
+		Indicate if the table footer should be included in the print view or not.
+	</option>
+
+	<option type="boolean" name="autoPrint" default="true">
+		Indicate if the browser's `window.print()` method should be called when the print view page has been displayed:
+
+		* `true` - `window.print()` will be called and then immediately upon completion the `window.close()` function will be closed to hide the print view document.
+		* `false` - No action is taken once the print view document has been created. The window is not automatically closed.
+	</option>
+
+	<option type="function" name="customize" default="null">
+		Function that is executed when the window that contains the print view document has been displayed. This function accepts a single parameter:
+
+		1. `-type object` `window` - The window object for the new window. As such the document body can be accessed using `window.document.body` and manipulated using jQuery / DOM methods as any element can be.
+
+		No return value is expected or acted upon.
+	</option>
+
+
+	<example title="DataTables initialisation: Show a print button"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		'print'
+	]
+} );
+
+]]></example>
+
+	<example title="DataTables initialisation: Disable auto display of the print dialogue box"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		{
+			extend: 'print',
+			text: 'Print current page',
+			autoPrint: false
+		}
+	]
+} );
+
+]]></example>
+
+	<example title="DataTables initialisation: Use the `exportOptions` to print only the current DataTable page"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		{
+			extend: 'print',
+			text: 'Print current page',
+			exportOptions: {
+				modifier: {
+					page: 'current'
+				}
+			}
+		}
+	]
+} );
+
+]]></example>
+</dt-button>

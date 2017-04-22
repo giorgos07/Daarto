@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-type library="Buttons">
+	<name>button-selector</name>
+	<summary>Button selector</summary>
+
+	<description>
+<![CDATA[
+
+The Buttons extension for DataTables provides a flexible API that use the `b-api buttons()` and `b-api button()` methods as its basic access points. Using these two methods you can select one or more buttons, from one or more button groups (instances), and then perform an action on those selected buttons. This is designed to match be behaviour of the [core DataTables API](https://datatables.net/reference/api) for row, column and cell selection to provide a consistent API interface for all DataTables interactions.
+
+### Options
+
+The following options can be used as a button selector for the `b-api buttons()` and `b-api button()` methods:
+
+* No selector - Select all buttons
+* `-type null` - Alias of _No selector_
+* `-type integer` - Select a button based on index
+* `-string {\d}` or `-string {\d}-{\d}` - Button index selector, including sub-buttons (e.g. `-string 2-1`)
+* `-string {string}:name` - Button name selector
+* `-type string` - jQuery selector (performed on the button nodes)
+* `-type node` - DOM element selector
+* `-type jQuery` - DOM element selector
+* `-type array` - Array containing any combination of the above options
+
+
+## No selector
+
+No selector (i.e. `-type undefined` or `-type null`) will select all buttons available in a collection, including any buttons in collections. This provides the ability to perform an operation on all buttons in an instance at the same time.
+
+###### Disable all buttons:
+
+```js
+var table = $('#myTable').DataTable();
+
+table.buttons().disable();
+```
+
+
+## integer
+
+An integer selector will select top level buttons (i.e. those which are always visible - not those in collections) as a simple index counter. Buttons are added and stored by index, thus giving this simple selector option, which can be very useful if you are not dynamically adding and removing buttons (if you are, consider using the button name selector below).
+
+###### Disable the second button only:
+
+```js
+var table = $('#myTable').DataTable();
+
+table.button( 1 ).disable();
+```
+
+
+## {\d} or {\d}-{\d}
+
+As noted above, integer selectors can select top level buttons only, but it is also possible to select buttons that are in collections using indexes as well. In this case the selector given is `{topIndex}-{collectionIndex}` where both indexes are 0 based.
+
+####### Consider for example the button structure:
+
+```js
+buttons: [
+	'add',
+	'edit',
+	'remove',
+	{
+		text: 'Export',
+		buttons: [
+			'csv',
+			'pdf'
+		]
+	}
+]
+```
+
+The top level _Export_ button can be selected using `table.button( 3 )`, while the _CSV_ button can be selected using `table.button( '3-0' )`.
+
+
+## {string}:name
+
+Each button can be given a name using the `b-init buttons.buttons.name` option to allow it to be individually selected without being require to track button indexes as you would with the index selector options above. Additionally, buttons names do not need to be unique, so a single name can refer to multiple buttons.
+
+In addition to being able to select a single button with a string, multiple buttons can be selected using a comma separator (in much the same way as multiple elements can be selected using a comma in CSS or jQuery selectors).
+
+###### Disable a button using a name selector
+
+```js
+var table = $('#example').DataTable( {
+	buttons: [
+		{ extend: 'csv', name: 'csv' }
+	]
+} );
+
+table.buttons( 'csv:name' ).disable();
+```
+
+
+## string
+
+If a string is given as a selector, it will initially be checked to see if it matches one of the selector options above - specifically an index or name selector. If not, the button nodes are collected into a jQuery instance and the selector given run as a filter. This is particularly useful for selecting based on class name (settable using `b-init buttons.buttons.className` and other common DOM properties.
+
+###### Disable a button using a class name selector
+
+```js
+var table = $('#example').DataTable( {
+	buttons: [
+		{ extend: 'csv', className: 'csv' }
+	]
+} );
+
+table.buttons( '.csv' ).disable();
+```
+
+
+## node
+
+Select a button using a DOM element. This can be useful if you are using DOM events with the buttons and only have a node to reference it.
+
+###### Enable a button on mouse enter
+
+```js
+var table = $('#example').DataTable();
+
+$('#content').on( 'mouseenter', 'a.dt-button', function (e) {
+	table.button( this ).enable();
+} );
+```
+
+
+## jQuery
+
+Very similar to the above `node` type (since a jQuery object is an _array-like_ list of DOM nodes), a jQuery instance can be given as a button selector. This can be useful if you have selected the nodes that you want to perform an operation on.
+
+###### Disable buttons which have the class name `csv`
+
+```js
+var table = $('#example').DataTable();
+
+table.buttons( $('a.dt-button.csv') ).disable();
+```
+
+
+## array
+
+Any combination of the above options can be given as selector together, providing a method to select multiple buttons, or to mix selector types, by simply providing the selector options you want in an array. Buttons will automatically remove any duplicates to ensure that whatever actions are requested via the API occur only once for each button.
+
+###### Disable button index 0 and all buttons with the class `csv`
+
+```js
+var table = $('#example').DataTable();
+
+table.buttons( [ 0, '.csv' ] ).disable();
+```
+
+
+
+]]>
+	</description>
+</dt-type>

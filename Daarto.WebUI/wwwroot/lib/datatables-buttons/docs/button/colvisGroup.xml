@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-button library="Buttons">
+	<name>colvisGroup</name>
+	<summary>Show and hide multiple columns</summary>
+	<since>1.0.0</since>
+
+	<requires>
+		* Buttons' _Column visibility button_ plug-in
+	</requires>
+
+	<description>
+		When working with column visibility you may which to present a control to the end use that provides the ability to set various columns to both show and hide at the same time - allowing grouping to occur. The `b-button colvisGroup` button type provides this ability for Buttons. This button provides exactly this option.
+
+		The `show` and `hide` parameters of this button are both `dt-type column-selector` types defining the columns in the table that should be shown or hidden respectively. If a column is not defined in either, its visibility is not altered.
+
+		Please note that unlike most other buttons, the button text (`b-init buttons.buttons.text`) option **is not** predefined as there is no sensible default that could be applied. You **must** set a text property for this button.
+	</description>
+
+	<option type="string" name="className" default="buttons-colvisGroup">
+		The button's class name. See `b-init buttons.buttons.className` for details.
+	</option>
+
+	<option type="function" name="action">
+		Set column visibility.
+	</option>
+
+	<option type="column-selector" name="show" default="[]">
+		Column to make visible
+	</option>
+
+	<option type="column-selector" name="hide" default="[]">
+		Column to remove from the visible display
+	</option>
+
+
+	<example title="DataTables initialisation: Column grouping using class names"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [ 
+		{
+			extend: 'colvisGroup',
+			text: 'Office info',
+			show: '.office',
+			hide: '.hr'
+		},
+		{
+			extend: 'colvisGroup',
+			text: 'HR info',
+			show: '.hr',
+			hide: '.office'
+		}
+	]
+} );
+
+]]></example>
+
+	<example title="DataTables initialisation: Show all / show none buttons"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		{
+			extend: 'colvisGroup',
+			text: 'Show all',
+			show: ':hidden'
+		},
+		{
+			extend: 'colvisGroup',
+			text: 'Show none',
+			hide: ':visible'
+		}
+	]
+} );
+
+]]></example>
+
+</dt-button>

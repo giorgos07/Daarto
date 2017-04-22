@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.dom</name>
+	<summary>Options to control the DOM structure Buttons creates</summary>
+	<since>1.0.0</since>
+
+	<type type="object">
+		<description>
+			Options to control the DOM structure that is created by Buttons. Please refer to the documentation links for each individual property above for details of each option.
+		</description>
+	</type>
+
+	<description>
+	<![CDATA[
+		The markup that is created by Buttons is quite flexible in that you can control the tags used and the class names. You can also optionally control the structure of the markup for the buttons.
+
+		By default the Buttons instance will create DOM of the following structure:
+
+		```html
+		<div class="dt-buttons">
+			<a class="dt-button" tabindex="0" aria-controls="{table-id}">
+				<span>Button 1</span>
+			</a>
+			<a class="dt-button" tabindex="0" aria-controls="{table-id}">
+				<span>Button 2</span>
+			</a>
+			...
+		</div>
+		```
+
+		The `collection` button type, when activated creates the following markup which is attached to the `-tag body` tag of the document.
+
+		```html
+		<div class="dt-button-collection">
+			<a class="dt-button" tabindex="0" aria-controls="{table-id}">
+				<span>Collection button 1</span>
+			</a>
+			<a class="dt-button" tabindex="0" aria-controls="{table-id}">
+				<span>Collection button 2</span>
+			</a>
+			...
+		</div>
+		```
+
+		In all cases the `tabindex` attribute is defined by the `dt-init tabIndex` option of DataTables and the `aria-controls` attribute is automatically added using the `id` of the host table to help improve accessibility.
+
+		The rest of the markup can be controlled using the following options:
+
+		* Container (`<div class="dt-buttons">...</div>` above):
+		  * `b-init buttons.dom.container`
+		* Button (`<a class="dt-button">...</a>` above - common to both the main buttons and those in the collection display):
+		  * `b-init buttons.dom.button`
+		* Button container (note used above, `-type null` by default - common to both the main buttons and those in the collection display):
+		  * `b-init buttons.dom.buttonContainer`
+		* Button liner (`<span>` in the button - common to both the main buttons and those in the collection display):
+		  * `b-init buttons.dom.buttonLiner`
+		* Collection container (`<div class="dt-button-collection">...</div>` above):
+		  * `b-init buttons.dom.collection`
+
+		All options are given as strings, and are generally self explanatory, however, please refer to the documentation for each option for full details.
+	]]>
+	</description>
+
+	<example title="DataTables initialisation: Use a button tag for buttons with no liner"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: {
+		dom: {
+			buttons: {
+				tag: 'button'
+			},
+			buttonLiner: {
+				tag: null
+			}
+		}
+	}
+} );
+
+]]></example>
+
+	<example title="Instance initialisation: Use an input element with no liner for buttons, with a class name set"><![CDATA[
+
+new $.fn.dataTable.Buttons( table, {
+	buttons: {
+		dom: {
+			buttons: {
+				tag: 'input',
+				className: 'table-button'
+			},
+			buttonLiner: {
+				tag: null
+			}
+		}
+	]
+} );
+
+]]></example>
+</dt-option>

@@ -1,0 +1,45 @@
+﻿@model int
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Error - Daarto</title>
+    @{ await Html.RenderPartialAsync("_MainStylesPartial"); }
+</head>
+<body>
+    <div class="app app-header-fixed ">
+        <div class="container w-xxl w-auto-xs">
+            <div class="text-center m-b-lg">
+                <h1 class="text-shadow text-white">@Model</h1>
+            </div>
+            <div class="list-group bg-info auto m-b-sm m-b-lg">
+                <a asp-controller="home" asp-action="index" class="list-group-item">
+                    <i class="fa fa-chevron-right text-muted"></i>
+                    <i class="fa fa-fw fa-mail-forward m-r-xs"></i> Goto application
+                </a>
+                @if (!User.Identity.IsAuthenticated)
+                {
+                    <a asp-controller="account" asp-action="login" class="list-group-item">
+                        <i class="fa fa-chevron-right text-muted"></i>
+                        <i class="fa fa-fw fa-sign-in m-r-xs"></i> Sign in
+                    </a>
+                    <a asp-controller="account" asp-action="register" class="list-group-item">
+                        <i class="fa fa-chevron-right text-muted"></i>
+                        <i class="fa fa-fw fa-unlock-alt m-r-xs"></i> Sign up
+                    </a>
+                }
+            </div>
+            <div class="text-center">
+                <p>
+                    <small class="text-muted">Web app framework base on Bootstrap and AngularJS<br>&copy; @DateTime.Now.Year</small>
+                </p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-event library="BUttons">
+	<name>button-action</name>
+	<summary>A button's action method has been triggered</summary>
+	<since>1.1.2</since>
+
+	<type type="function">
+		<signature>function( e, buttonApi, dataTable, node, config )</signature>
+		<parameter type="object" name="e">
+			jQuery event object
+		</parameter>
+		<parameter type="DataTables.Api" name="buttonApi">
+			DataTables API instance for the selected button - i.e. `b-api button()` for the button in question
+		</parameter>
+		<parameter type="DataTables.Api" name="dt">
+			A DataTables API instance for the host DataTable
+		</parameter>
+		<parameter type="jQuery" name="node">
+			jQuery instance for the button node that was clicked on
+		</parameter>
+		<parameter type="object" name="config">
+			The button's configuration object
+		</parameter>
+		<scope>HTML table element</scope>
+	</type>
+
+	<description>
+		This event is triggered whenever a button's `action` method is triggered by the end user (via keyboard, mouse or touch) or by the API (`b-api button().trigger()`). It provides information about the button that was triggered through the parameters passed to it.
+
+		Note that the event is triggered _after_ the action event. There is no ability to modify the action through this event.
+
+		Please note that, as with all DataTables emitted events, this event is triggered with the `dt` namespace. As such, to listen for this event, you must also use the `dt` namespace by simply appending `.dt` to your event name, as shown in the example below.
+	</description>
+
+	<example title="Show a message with the button name that was activated"><![CDATA[
+
+var table = $('#example').DataTable();
+
+table.on( 'buttons-action', function ( e, buttonApi, dataTable, node, config ) {
+	console.log( 'Button '+buttonApi.text()+' was activated' );
+} );
+
+]]></example>
+</dt-event>

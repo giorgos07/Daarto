@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.buttons.text</name>
+	<summary>The text to show in the button</summary>
+	<since>1.0.0</since>
+
+	<default value="Dependent on button type" />
+
+	<type type="string">
+		<description>
+			An HTML string to be shown inside the button. This is written to the document using `$().html()`, so HTML can be used for additional formatting.
+		</description>
+	</type>
+
+	<type type="function">
+		<signature>text( dt, node, config )</signature>
+		<parameter type="DataTables.Api" name="dt">
+			A DataTables API instance for the host DataTable
+		</parameter>
+		<parameter type="jQuery" name="node">
+			jQuery instance for the button node
+		</parameter>
+		<parameter type="object" name="config">
+			The button's configuration object
+		</parameter>
+		<returns>
+			The string to be displayed for the buttons visual text
+		</returns>
+		<description>
+			The `b-init buttons.buttons.text` buttons option can be defined as a function that will be executed when Buttons requires the text for the button. This provides the ability for plug-in authors to make use of `dt-api i18n()` to easily provide internationalisation support for the text shown in buttons. It could also potentially be used for other complex interactions such as counting the number of selected rows.
+		</description>
+	</type>
+
+	<description>
+		Being able to let your users know what will happen when they activate a button is obviously fundamentally important to the Buttons extension and this option provides exactly that ability.
+	</description>
+
+	<example title="DataTables initialisation: Set the text "><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		{ extend: 'copy', text: 'Copy to clipboard' }
+	}
+} );
+
+]]></example>
+
+	<example title="Instance initialisation: Highlight an action key using HTML"><![CDATA[
+
+new $.fn.dataTable.Buttons( table, {
+	buttons: [
+		{
+			extend: 'print',
+			text: '<em>P</em>rint',
+			key: {
+				key: 'p',
+				altkey: true
+			}
+		}
+	}
+} );
+
+]]></example>
+
+	<example title="Internationalisation using the `dt-api i18n()` method:"><![CDATA[
+
+new $.fn.dataTable.Buttons( table, {
+	buttons: [
+		{
+			extend: 'print',
+			text: function ( dt, button, config ) {
+				return dt.i18n( 'buttons.print', 'Print' );
+			}
+		}
+	}
+} );
+
+]]></example>
+</dt-option>

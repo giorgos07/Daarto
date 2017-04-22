@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-option library="Buttons">
+	<name>buttons.buttons.name</name>
+	<summary>Set a name for each selection</summary>
+	<since>1.0.0</since>
+
+	<type type="string">
+		<description>
+
+		</description>
+	</type>
+	<default value="undefined"/>
+
+	<description>
+		The `b-api buttons()` and `b-api button()` API methods provide the ability to use a `b-type button-selector` to be able to select one or more buttons in one or more Buttons instances. In turn the button selector provides an option to easily select a button by using a predefined name (thus removing any complexities that might occur if using index selection). This option provides the ability to set that name.
+
+		Multiple buttons can share the same name, they need not be unique, but please be aware that they will always be selected together if using a name selector.
+	</description>
+
+	<example title="DataTables initialisation: Set a button's name"><![CDATA[
+
+$('#myTable').DataTable( {
+	buttons: [
+		{ extend: 'copy', name: 'copy' }
+	}
+} );
+
+]]></example>
+
+	<example title="Instance initialisation: Set a button's name"><![CDATA[
+
+new $.fn.dataTable.Buttons( table, {
+	buttons: [
+		{
+			extend: 'print',
+			name: 'printButton'
+		}
+	}
+} );
+
+]]></example>
+</dt-option>

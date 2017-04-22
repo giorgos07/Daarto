@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>button().node()</name>
+	<summary>Get the button node for the selected button</summary>
+	<since>1.0.0</since>
+
+	<type type="function">
+		<signature>button().node()</signature>
+		<returns type="jQuery">
+			A jQuery object that contains the node of the selected button
+		</returns>
+		<description>
+			Get a jQuery object that contains a reference to the node for the selected button.
+		</description>
+	</type>
+
+	<description>
+		It can often be useful to have access to the DOM node of a button so you can manipulate it using directly jQuery or DOM methods. This method provides exactly that option.
+	</description>
+
+	<example title="Set the background colour for button index 0"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table
+	.button( 0 )
+	.nodes()
+	.css( 'background', 'blue' );
+
+]]></example>
+
+	<example title="Add a custom click event handler to a selected button"><![CDATA[
+
+var table = $('#myTable').DataTable();
+
+table
+	.button( 'copy:name' )
+	.nodes()
+	.on( 'click', function ( e ) {
+		console.log( 'Copy button clicked!' );
+	} );
+
+]]></example>
+</dt-api>

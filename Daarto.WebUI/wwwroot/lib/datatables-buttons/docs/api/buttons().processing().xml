@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dt-api library="Buttons">
+	<name>buttons().processing()</name>
+	<summary>Set the processing state for multiple buttons</summary>
+	<since>1.3.0</since>
+
+	<type type="function">
+		<signature>buttons().processing( set )</signature>
+		<parameter type="boolean" name="set">
+			Flag to indicate if the processing state should be enabled (`true`) or disabled (`false`).
+		</parameter>
+		<returns type="DataTables.Api">
+			DataTables API instance with the selected buttons in the result set, available for chaining further operations on the buttons.
+		</returns>
+		<description>
+			Set the processing state for the selected buttons.
+		</description>
+	</type>
+
+	<description>
+		This is an extension of the `-api buttons().processing()` method, which can be used to set the processing state for multiple buttons with a single API call. Care should be taken with this method since it could easily lead to end user confusion if multiple buttons are shown in the processing state at the same time.
+	</description>
+
+	<example title="Set all buttons to show as processing"><![CDATA[
+
+var table = $('#myTable').DataTable();
+table.buttons().processing( true );
+
+]]></example>
+</dt-api>

@@ -1,0 +1,44 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="wwwroot\css\app.css" />
+    <Content Include="wwwroot\css\cover.css" />
+    <Content Include="wwwroot\css\font.css" />
+    <Content Include="wwwroot\favicon.ico" />
+    <Content Include="wwwroot\fonts\sourcesanspro-bold.woff" />
+    <Content Include="wwwroot\fonts\sourcesanspro-light.woff" />
+    <Content Include="wwwroot\fonts\sourcesanspro.woff" />
+    <Content Include="wwwroot\img\a0.jpg" />
+    <Content Include="wwwroot\img\a1.jpg" />
+    <Content Include="wwwroot\img\a2.jpg" />
+    <Content Include="wwwroot\img\a3.jpg" />
+    <Content Include="wwwroot\img\a4.jpg" />
+    <Content Include="wwwroot\img\a5.jpg" />
+    <Content Include="wwwroot\img\a6.jpg" />
+    <Content Include="wwwroot\img\a7.jpg" />
+    <Content Include="wwwroot\img\a8.jpg" />
+    <Content Include="wwwroot\img\bg.jpg" />
+    <Content Include="wwwroot\img\default_profile.png" />
+    <Content Include="wwwroot\img\logo.png" />
+    <Content Include="wwwroot\js\jquery.highlight.js" />
+    <Content Include="wwwroot\js\ui-client.js" />
+    <Content Include="wwwroot\js\ui-nav.js" />
+    <Content Include="wwwroot\js\ui-toggle.js" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity" Version="1.1.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="1.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="1.1.1" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="1.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.BrowserLink" Version="1.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Daarto.DataAccess\Daarto.DataAccess.csproj" />
+    <ProjectReference Include="..\Daarto.IdentityProvider\Daarto.IdentityProvider.csproj" />
+  </ItemGroup>
+</Project>
