@@ -1,88 +1,22 @@
-# Project Title
+# Daarto
 
-One Paragraph of project description goes here
+The main purpose of the project is to demonstrate a custom implementation of [ASP.NET Core Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity) using SQL Server and [Dapper](https://github.com/StackExchange/Dapper), in case you are not a great fan of [Entity Framework](https://docs.microsoft.com/en-us/ef/core/) (like me).
+The application uses ASP.NET Core 1.1 and is built by using [Visual Studio 2017 Community Edition](https://www.visualstudio.com/vs/community/) and [SQL Server 2016 Express Edition](https://www.microsoft.com/en-cy/sql-server/sql-server-editions-express).
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system.
+In order to successfully run the application, the only thing you have to do is re-create the database used, in your local machine. Inside **Daarto.DataAccess** you will find a folder called **DatabaseScripts**. There you will see a file called [GenerateDatabase.sql](https://github.com/giorgos07/Daarto/blob/master/Daarto.DataAccess/DatabaseScripts/GenerateDatabase.sql).
+Execute this T-SQL script in SQL Server Management Studio Query Window and all the required tables, views and stored procedures will be created automatically in a database called **DaartoDb**. Then, inside the same folder run the following scripts in the order displayed below.
 
-### Prerequisites
+* [GenerateRolesTableData.sql](https://github.com/giorgos07/Daarto/blob/master/Daarto.DataAccess/DatabaseScripts/GenerateRolesTableData.sql)
+* [GenerateUsersTableData.sql](https://github.com/giorgos07/Daarto/blob/master/Daarto.DataAccess/DatabaseScripts/GenerateUsersTableData.sql)
+* [GenerateUsersRolesTableData.sql](https://github.com/giorgos07/Daarto/blob/master/Daarto.DataAccess/DatabaseScripts/GenerateUsersRolesTableData.sql)
 
-What things you need to install the software and how to install them
+When running the application use the following credentials to use an administrator's account
 
-```
-Give examples
-```
+* **email:** admin@daarto.com
+* **password:** abc!37KW!
 
-### Installing
+Logging in with the administrator role will give you the ability to access the admin dashboard.
 
-A step by step series of examples that tell you have to get a development env running
-
-Say what the step will be
-
-```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-## Deployment
-
-Add additional notes about how to deploy this on a live system
-
-## Built With
-
-* [Dropwizard](http://www.dropwizard.io/1.0.2/docs/) - The web framework used
-* [Maven](https://maven.apache.org/) - Dependency Management
-* [ROME](https://rometools.github.io/rome/) - Used to generate RSS Feeds
-
-## Contributing
-
-Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c63ec426) for details on our code of conduct, and the process for submitting pull requests to us.
-
-## Versioning
-
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/your/project/tags). 
-
-## Authors
-
-* **Billie Thompson** - *Initial work* - [PurpleBooth](https://github.com/PurpleBooth)
-
-See also the list of [contributors](https://github.com/your/project/contributors) who participated in this project.
-
-## License
-
-This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone who's code was used
-* Inspiration
-* etc
-
+I will try to add more features as i develop the application. If you like my work, feel free to use this project as a starting point for your own applications.
