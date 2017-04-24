@@ -1,0 +1,147 @@
+﻿@model UserProfileViewModel
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">My Profile</h1>
+</div>
+<div class="wrapper-md">
+    <div class="col-sm-12">
+        <div class="panel panel-default">
+            <div class="panel-heading font-bold">Member Information</div>
+            <div class="panel-body">
+                <form asp-area="administration" asp-controller="profile" asp-action="edit" method="post" name="form" id="edit-profile-form" class="form-horizontal">
+                    @if (ViewBag.Response != null)
+                    {
+                        var response = (EditUserProfileResponseViewModel)ViewBag.Response;
+
+                        <div class="@(response.Succeeded ? "text-success" : "text-danger") wrapper text-center">
+                            @response.Description
+                        </div>
+                    }
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label"></label>
+                        <div class="col-lg-10">
+                            <img alt="140x140" class="img-circle" src="@Model.PhotoUrl" style="width: 140px; height: 140px;" />
+                            <div class="progress hidden">
+                                <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">Avatar</label>
+                        <div class="col-lg-10">
+                            <input type="file" id="profile-image-file-input" accept="image/*" style="position: absolute; clip: rect(0 0 0 0);" />
+                            <div class="input-group">
+                                <input type="hidden" asp-for="PhotoName" />
+                                <input asp-for="PhotoName" type="text" class="form-control file-name-input" disabled />
+                                <span id="profile-image-open-dialog" class="input-group-btn" tabindex="0">
+                                    <label class="btn btn-default">
+                                        <span class="glyphicon glyphicon-folder-open"></span> Choose file
+                                    </label>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">First Name</label>
+                        <div class="col-lg-10">
+                            <input asp-for="FirstName" type="text" class="form-control" placeholder="First Name" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">Last Name</label>
+                        <div class="col-lg-10">
+                            <input asp-for="LastName" type="text" class="form-control" placeholder="Last Name" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">Email</label>
+                        <div class="col-lg-10">
+                            <p class="form-control-static text-info">
+                                <a href="mailto:@Model.Email">@Model.Email</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">Phone Number</label>
+                        <div class="col-lg-10">
+                            <input asp-for="PhoneNumber" type="tel" class="form-control" placeholder="Phone Number" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">Address</label>
+                        <div class="col-lg-10">
+                            <input asp-for="Address" type="tel" class="form-control" placeholder="Address" />
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-offset-2 col-lg-10">
+                            <button type="submit" class="btn btn-sm btn-info">Update</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var $openFileDialogButton = $("#profile-image-open-dialog"),
+                $fileInput = $("#profile-image-file-input"),
+                $fileNameInput = $("#PhotoName, .file-name-input"),
+                $avatarImage = $(".img-circle"),
+                $progressWrapper = $(".progress"),
+                $progressBar = $(".progress > .progress-bar");
+
+            function uploadFile(file) {
+                var xhr = new XMLHttpRequest();
+
+                xhr.upload.addEventListener("progress", function (event) {
+                    var progress = Math.floor((event.loaded / event.total) * 100);
+                    $progressWrapper.removeClass("hidden");
+                    $progressBar.css("width", progress + "%").text(progress + "%");
+                }, false);
+
+                xhr.onreadystatechange = function (event) {
+                    if (event.target.readyState === event.target.DONE) {
+                        if (event.target.status !== 200) {
+                            alert("An error occured during file uload. Please try again.");
+                        } else {
+                            var response = JSON.parse(event.target.response);
+                            $fileNameInput.val(response.fileName);
+                            $avatarImage.attr("src", response.fileUrl);
+                        }
+                    }
+                };
+
+                xhr.open("post", "@Url.RouteUrl("defaultRoute", new { controller = "file", action = "upload" })");
+                xhr.setRequestHeader("X-XSRF-TOKEN", Cookies.get("XSRF-TOKEN"));
+                var data = new FormData();
+                data.append("file-1", file);
+                xhr.send(data);
+            }
+
+            $fileInput.on("change", function () {
+                var files = $fileInput[0].files;
+
+                if (files.length > 1) {
+                    alert("Please select only one image.");
+                    return;
+                }
+
+                uploadFile(files[0]);
+            });
+
+            $openFileDialogButton.on("click", function () {
+                $fileInput.val("");
+                $fileInput.click();
+            });
+        });
+    </script>
+}

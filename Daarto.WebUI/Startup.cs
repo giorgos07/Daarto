@@ -49,6 +49,8 @@ namespace Daarto.WebUI
             // Add support for non-distributed memory cache in the application.
             servicesCollection.AddMemoryCache();
 
+            servicesCollection.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
+
             servicesCollection.Configure<IdentityOptions>(configureOptions =>
             {
                 // Password settings.

@@ -5212,6 +5212,15 @@ div.table-responsive > div.dataTables_wrapper > div.row > div[class^="col-"]:fir
     background-color: yellow;
 }
 
+#edit-profile-form .progress {
+    margin-top: 10px;
+    margin-bottom: 0 !important;
+}
+
+#edit-profile-form .glyphicon-folder-open {
+    padding-right: 5px;
+}
+
 @-webkit-keyframes movingbar {
     0% {
         right: 50%;
