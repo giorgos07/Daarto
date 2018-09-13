@@ -1,7 +1,7 @@
 # Daarto
 
-The main purpose of the project is to demonstrate a custom implementation of [ASP.NET Core Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity) using SQL Server and [Dapper](https://github.com/StackExchange/Dapper), in case you are not a great fan of [Entity Framework](https://docs.microsoft.com/en-us/ef/core/) (like me).
-The application uses ASP.NET Core 1.1 and is built by using [Visual Studio 2017 Community Edition](https://www.visualstudio.com/vs/community/) and [SQL Server 2016 Express Edition](https://www.microsoft.com/en-cy/sql-server/sql-server-editions-express).
+The main purpose of the project is to demonstrate a custom implementation of [ASP.NET Core Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity) by using SQL Server and [Dapper](https://github.com/StackExchange/Dapper), in case you are not a great fan of [Entity Framework](https://docs.microsoft.com/en-us/ef/core/) (like me).
+The application uses ASP.NET Core 2.1 and is built by using [Visual Studio 2017 Community Edition](https://www.visualstudio.com/vs/community/) and SQL Local DB.
 
 ## Getting Started
 
