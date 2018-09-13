@@ -2,11 +2,6 @@ USE [master]
 GO
 /****** Object:  Database [DaartoDb]    Script Date: 4/22/2017 6:43:08 PM ******/
 CREATE DATABASE [DaartoDb]
- CONTAINMENT = NONE
- ON  PRIMARY 
-( NAME = N'DaartoDb', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL13.MSSQLSERVER\MSSQL\DATA\DaartoDb.mdf' , SIZE = 8192KB , MAXSIZE = UNLIMITED, FILEGROWTH = 65536KB )
- LOG ON 
-( NAME = N'DaartoDb_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL13.MSSQLSERVER\MSSQL\DATA\DaartoDb_log.ldf' , SIZE = 73728KB , MAXSIZE = 2048GB , FILEGROWTH = 65536KB )
 GO
 ALTER DATABASE [DaartoDb] SET COMPATIBILITY_LEVEL = 130
 GO

@@ -1,29 +1,25 @@
 ﻿using Daarto.IdentityProvider.Entities;
 using Daarto.WebUI.Infrastructure.Services;
 using Daarto.WebUI.Models.AccountViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Options;
 using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 
 namespace Daarto.WebUI.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly string _externalCookieScheme;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IEmailSender _emailSender;
 
-        public AccountController(IOptions<IdentityCookieOptions> identityCookieOptions, UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager, IHostingEnvironment hostingEnvironment, IEmailSender emailSender)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IHostingEnvironment hostingEnvironment, IEmailSender emailSender)
         {
-            _externalCookieScheme = identityCookieOptions.Value.ExternalCookieAuthenticationScheme;
             _userManager = userManager;
             _signInManager = signInManager;
             _hostingEnvironment = hostingEnvironment;
@@ -33,7 +29,7 @@ namespace Daarto.WebUI.Controllers
         [HttpGet]
         public async Task<IActionResult> Login(string returnUrl = null)
         {
-            await HttpContext.Authentication.SignOutAsync(_externalCookieScheme);
+            await _signInManager.SignOutAsync();
 
             // If the user is already authenticated we do not need to display the login page, so we redirect to the landing page.
             if (User.Identity.IsAuthenticated)
@@ -227,10 +223,7 @@ namespace Daarto.WebUI.Controllers
 
         [HttpGet]
         [ActionName("forgot-password")]
-        public ViewResult ForgotPassword()
-        {
-            return View();
-        }
+        public ViewResult ForgotPassword() => View();
 
         private IActionResult RedirectToLocal(string returnUrl)
         {

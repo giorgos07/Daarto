@@ -1,23 +1,24 @@
-﻿using Daarto.IdentityProvider.Entities;
+﻿using Daarto.DataAccess.Abstract;
+using Daarto.DataAccess.Concrete;
+using Daarto.IdentityProvider.Entities;
 using Daarto.IdentityProvider.Stores;
 using Daarto.Services.Abstract;
 using Daarto.Services.Concrete;
+using Daarto.Services.Models;
 using Daarto.WebUI.Infrastructure.Identity;
+using Daarto.WebUI.Infrastructure.Services;
 using Daarto.WebUI.Infrastructure.Settings;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Net.Http.Headers;
 using Newtonsoft.Json.Serialization;
 using System;
-using Daarto.DataAccess.Abstract;
-using Daarto.DataAccess.Concrete;
-using Daarto.Services.Models;
-using Daarto.WebUI.Infrastructure.Services;
 
 namespace Daarto.WebUI
 {
@@ -37,75 +38,64 @@ namespace Daarto.WebUI
 
         // This method gets called by the runtime. Use this method to add services to the container. For more information on how to configure your 
         // application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection servicesCollection)
+        public void ConfigureServices(IServiceCollection services)
         {
             // Add and configure the default identity system that will be used in the application.
-            servicesCollection.AddIdentity<ApplicationUser, ApplicationRole>()
-                              .AddUserManager<ApplicationUserManager>()
-                              .AddRoleManager<ApplicationRoleManager>()
-                              .AddSignInManager<ApplicationSignInManager>()
-                              .AddDefaultTokenProviders();
+            services.AddIdentity<ApplicationUser, ApplicationRole>()
+                    .AddUserManager<ApplicationUserManager>()
+                    .AddRoleManager<ApplicationRoleManager>()
+                    .AddSignInManager<ApplicationSignInManager>()
+                    .AddDefaultTokenProviders();
             
             // Add support for non-distributed memory cache in the application.
-            servicesCollection.AddMemoryCache();
+            services.AddMemoryCache();
 
-            servicesCollection.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
+            services.AddAntiforgery(options => options.HeaderName = "X-XSRF-TOKEN");
 
-            servicesCollection.Configure<IdentityOptions>(configureOptions =>
+            services.Configure<IdentityOptions>(options =>
             {
                 // Password settings.
-                configureOptions.Password.RequireDigit = true;
-                configureOptions.Password.RequiredLength = 6;
-                configureOptions.Password.RequireNonAlphanumeric = true;
-                configureOptions.Password.RequireUppercase = false;
-                configureOptions.Password.RequireLowercase = true;
-
+                options.Password.RequireDigit = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = true;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireLowercase = true;
                 // Lockout settings.
-                configureOptions.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
-                configureOptions.Lockout.MaxFailedAccessAttempts = 6;
-                configureOptions.Lockout.AllowedForNewUsers = true;
-
-                // Cookies settings.
-                configureOptions.Cookies.ApplicationCookie.ExpireTimeSpan = TimeSpan.FromDays(365);
-                configureOptions.Cookies.ApplicationCookie.LoginPath = "/account/login";
-                configureOptions.Cookies.ApplicationCookie.LogoutPath = "/account/log-off";
-                configureOptions.Cookies.ApplicationCookie.AccessDeniedPath = "/account/login";
-                configureOptions.Cookies.ApplicationCookie.CookieName = "daarto-cookie";
-                configureOptions.Cookies.ApplicationCookie.AutomaticAuthenticate = true;
-                configureOptions.Cookies.ApplicationCookie.AuthenticationScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-                configureOptions.Cookies.ApplicationCookie.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(30);
+                options.Lockout.MaxFailedAccessAttempts = 6;
+                options.Lockout.AllowedForNewUsers = true;
                 // User settings.
-                configureOptions.User.RequireUniqueEmail = true;
+                options.User.RequireUniqueEmail = true;
+            });
+
+            // Configure cookie settings.
+            services.ConfigureApplicationCookie(options =>
+            {
+                options.Cookie.HttpOnly = false;
+                options.ExpireTimeSpan = TimeSpan.FromDays(7);
+                options.LoginPath = "/account/login";
+                options.LogoutPath = "/account/log-off";
+                options.AccessDeniedPath = "/account/login";
+                options.SlidingExpiration = true;
             });
 
             // Map appsettings.json file elements to a strongly typed class.
-            servicesCollection.Configure<AppSettings>(Configuration);
-
+            services.Configure<AppSettings>(Configuration);
             // Add services required for using options.
-            servicesCollection.AddOptions();
-
-            // Add and configure MVC services.
-            servicesCollection.AddMvc()
-                              .AddJsonOptions(setupAction =>
-                              {
-                                  // Configure the contract resolver that is used when serializing .NET objects to JSON and vice versa.
-                                  setupAction.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
-                              });
+            services.AddOptions();
 
             // Get the connection string from appsettings.json file.
             string connectionString = Configuration.GetConnectionString("DaartoDbConnection");
-
             // Configure custom services to be used by the framework.
-            servicesCollection.AddTransient<IDatabaseConnectionService>(e => new DatabaseConnectionService(connectionString));
-            servicesCollection.AddTransient<IUserStore<ApplicationUser>, UserStore>();
-            servicesCollection.AddTransient<IRoleStore<ApplicationRole>, RoleStore>();
-            servicesCollection.AddTransient<IEmailSender, MessageServices>();
-            servicesCollection.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
-            servicesCollection.AddSingleton<ICacheManagerService, CacheManagerService>();
-            servicesCollection.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IDatabaseConnectionService>(e => new DatabaseConnectionService(connectionString));
+            services.AddTransient<IUserStore<ApplicationUser>, UserStore>();
+            services.AddTransient<IRoleStore<ApplicationRole>, RoleStore>();
+            services.AddTransient<IEmailSender, MessageServices>();
+            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
+            services.AddSingleton<ICacheManagerService, CacheManagerService>();
+            services.AddTransient<IUserRepository, UserRepository>();
 
-            servicesCollection.AddTransient<IEmailService>(e => new EmailService(new SmtpSettings
+            services.AddTransient<IEmailService>(e => new EmailService(new SmtpSettings
             {
                 From = Configuration["SmtpSettings:From"],
                 Host = Configuration["SmtpSettings:Host"],
@@ -115,6 +105,15 @@ namespace Daarto.WebUI
                 Password = Configuration["SmtpSettings:Password"],
                 UserName = Configuration["SmtpSettings:UserName"]
             }));
+
+            // Add and configure MVC services.
+            services.AddMvc()
+                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                    .AddJsonOptions(setupAction =>
+                    {
+                        // Configure the contract resolver that is used when serializing .NET objects to JSON and vice versa.
+                        setupAction.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+                    });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -126,7 +125,6 @@ namespace Daarto.WebUI
             if (hostingEnvironment.IsDevelopment())
             {
                 applicationBuilder.UseDeveloperExceptionPage();
-                applicationBuilder.UseBrowserLink();
             }
             else
             {
