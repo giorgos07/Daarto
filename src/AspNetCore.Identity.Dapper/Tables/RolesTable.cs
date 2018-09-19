@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.Identity.Dapper
 {
-    public class RolesTable
+    internal class RolesTable
     {
         private SqlConnection _sqlConnection;
 

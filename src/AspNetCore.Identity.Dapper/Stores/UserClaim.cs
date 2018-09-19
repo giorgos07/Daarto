@@ -2,7 +2,7 @@
 
 namespace AspNetCore.Identity.Dapper
 {
-    public class UserClaim
+    internal class UserClaim
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }

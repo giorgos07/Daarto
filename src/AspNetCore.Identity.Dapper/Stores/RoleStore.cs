@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.Identity.Dapper
 {
-    public class RoleStore : IQueryableRoleStore<ApplicationRole>
+    internal class RoleStore : IQueryableRoleStore<ApplicationRole>
     {
         private readonly RolesTable _rolesTable;
 

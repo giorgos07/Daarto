@@ -38,11 +38,15 @@ namespace Daarto.WebUI
         // application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            // Get the connection string from appsettings.json file.
+            string connectionString = Configuration.GetConnectionString("DaartoDbConnection");
+
             // Add and configure the default identity system that will be used in the application.
             services.AddIdentity<ApplicationUser, ApplicationRole>()
                     .AddUserManager<UserManager<ApplicationUser>>()
                     .AddRoleManager<RoleManager<ApplicationRole>>()
                     .AddSignInManager<SignInManager<ApplicationUser>>()
+                    .AddDapperStores(connectionString)
                     .AddDefaultTokenProviders();
 
             // Add support for non-distributed memory cache in the application.
@@ -81,13 +85,11 @@ namespace Daarto.WebUI
             services.Configure<AppSettings>(Configuration);
             // Add services required for using options.
             services.AddOptions();
-
-            // Get the connection string from appsettings.json file.
-            string connectionString = Configuration.GetConnectionString("DaartoDbConnection");
+            
             // Configure custom services to be used by the framework.
             services.AddTransient<IDatabaseConnectionService>(e => new DatabaseConnectionService(connectionString));
-            services.AddTransient<IUserStore<ApplicationUser>, UserStore>();
-            services.AddTransient<IRoleStore<ApplicationRole>, RoleStore>();
+            //services.AddTransient<IUserStore<ApplicationUser>, UserStore>();
+            //services.AddTransient<IRoleStore<ApplicationRole>, RoleStore>();
             services.AddTransient<IEmailSender, MessageServices>();
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
             services.AddSingleton<ICacheManagerService, CacheManagerService>();

@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.Identity.Dapper
 {
-    public class UsersTable
+    internal class UsersTable
     {
         private SqlConnection _sqlConnection;
 
@@ -49,10 +49,10 @@ namespace AspNetCore.Identity.Dapper
                 user.AccessFailedCount
             }), cancellationToken).Result;
 
-            return Task.FromResult(rowsInserted.Equals(1) ? IdentityResult.Success : IdentityResult.Failed(new IdentityError
+            return Task.FromResult(rowsInserted == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError
             {
                 Code = string.Empty,
-                Description = $"The user with email {user.Email} could not be inserted in the dbo.Users table."
+                Description = $"User with email {user.Email} could not be inserted in the database."
             }));
         }
 
@@ -70,7 +70,7 @@ namespace AspNetCore.Identity.Dapper
             return Task.FromResult(rowsDeleted.Equals(1) ? IdentityResult.Success : IdentityResult.Failed(new IdentityError
             {
                 Code = string.Empty,
-                Description = $"The user with email {user.Email} could not be deleted from the dbo.Users table."
+                Description = $"User with email {user.Email} could not be deleted from the database."
             }));
         }
 
@@ -144,10 +144,10 @@ namespace AspNetCore.Identity.Dapper
                 user.Id
             }), cancellationToken).Result;
 
-            return Task.FromResult(rowsUpdated.Equals(1) ? IdentityResult.Success : IdentityResult.Failed(new IdentityError
+            return Task.FromResult(rowsUpdated == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError
             {
                 Code = string.Empty,
-                Description = $"The user with email {user.Email} could not be updated in the dbo.Users table."
+                Description = $"User with email {user.Email} could not be updated."
             }));
         }
 

@@ -2,7 +2,7 @@
 
 namespace AspNetCore.Identity.Dapper
 {
-    public class UserLogin
+    internal class UserLogin
     {
         public Guid UserId { get; set; }
         public string LoginProvider { get; set; }

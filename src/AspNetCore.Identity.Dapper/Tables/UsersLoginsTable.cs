@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace AspNetCore.Identity.Dapper
 {
-    public class UsersLoginsTable
+    internal class UsersLoginsTable
     {
         private readonly SqlConnection _sqlConnection;
 
