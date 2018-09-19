@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Security.Claims;
 
-namespace Daarto.IdentityProvider.Entities
+namespace AspNetCore.Identity.Dapper
 {
-    public class ApplicationUser : ClaimsIdentity
+    public class ApplicationUser
     {
         public Guid Id { get; set; }
         public string FirstName { get; set; }

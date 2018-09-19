@@ -1,5 +1,4 @@
-﻿using Daarto.IdentityProvider.Entities;
-using Dapper;
+﻿using Dapper;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Daarto.IdentityProvider.Tables
+namespace AspNetCore.Identity.Dapper
 {
     public class UsersRolesTable
     {

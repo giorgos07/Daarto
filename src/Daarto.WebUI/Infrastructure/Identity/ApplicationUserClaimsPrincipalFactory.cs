@@ -1,6 +1,5 @@
-﻿using Daarto.IdentityProvider.Entities;
+﻿using AspNetCore.Identity.Dapper;
 using Daarto.WebUI.Infrastructure.Settings;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;

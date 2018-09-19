@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Daarto.IdentityProvider.Entities
+namespace AspNetCore.Identity.Dapper
 {
     public class ApplicationRole
     {

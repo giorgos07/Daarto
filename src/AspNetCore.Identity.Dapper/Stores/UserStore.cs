@@ -1,6 +1,4 @@
-﻿using Daarto.IdentityProvider.Entities;
-using Daarto.IdentityProvider.Tables;
-using Daarto.Services.Abstract;
+﻿using Daarto.Services.Abstract;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -10,7 +8,7 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Daarto.IdentityProvider.Stores
+namespace AspNetCore.Identity.Dapper
 {
     public class UserStore : IQueryableUserStore<ApplicationUser>, IUserEmailStore<ApplicationUser>, IUserLoginStore<ApplicationUser>, IUserPasswordStore<ApplicationUser>,
         IUserPhoneNumberStore<ApplicationUser>, IUserTwoFactorStore<ApplicationUser>, IUserSecurityStampStore<ApplicationUser>,

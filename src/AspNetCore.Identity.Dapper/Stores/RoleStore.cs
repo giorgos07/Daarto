@@ -1,13 +1,11 @@
-﻿using Daarto.IdentityProvider.Entities;
-using Daarto.IdentityProvider.Tables;
-using Daarto.Services.Abstract;
+﻿using Daarto.Services.Abstract;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Daarto.IdentityProvider.Stores
+namespace AspNetCore.Identity.Dapper
 {
     public class RoleStore : IQueryableRoleStore<ApplicationRole>
     {

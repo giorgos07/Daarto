@@ -1,4 +1,4 @@
-﻿using Daarto.IdentityProvider.Entities;
+﻿using AspNetCore.Identity.Dapper;
 using Daarto.WebUI.Infrastructure.Services;
 using Daarto.WebUI.Models.AccountViewModels;
 using Microsoft.AspNetCore.Authorization;

@@ -1,14 +1,12 @@
-﻿using Daarto.DataAccess.Abstract;
+﻿using AspNetCore.Identity.Dapper;
+using Daarto.DataAccess.Abstract;
 using Daarto.DataAccess.Concrete;
-using Daarto.IdentityProvider.Entities;
-using Daarto.IdentityProvider.Stores;
 using Daarto.Services.Abstract;
 using Daarto.Services.Concrete;
 using Daarto.Services.Models;
 using Daarto.WebUI.Infrastructure.Identity;
 using Daarto.WebUI.Infrastructure.Services;
 using Daarto.WebUI.Infrastructure.Settings;
-using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -42,11 +40,11 @@ namespace Daarto.WebUI
         {
             // Add and configure the default identity system that will be used in the application.
             services.AddIdentity<ApplicationUser, ApplicationRole>()
-                    .AddUserManager<ApplicationUserManager>()
-                    .AddRoleManager<ApplicationRoleManager>()
-                    .AddSignInManager<ApplicationSignInManager>()
+                    .AddUserManager<UserManager<ApplicationUser>>()
+                    .AddRoleManager<RoleManager<ApplicationRole>>()
+                    .AddSignInManager<SignInManager<ApplicationUser>>()
                     .AddDefaultTokenProviders();
-            
+
             // Add support for non-distributed memory cache in the application.
             services.AddMemoryCache();
 

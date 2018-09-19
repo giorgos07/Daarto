@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Daarto.IdentityProvider.Entities;
+﻿using AspNetCore.Identity.Dapper;
 using Daarto.WebUI.Areas.Administration.Models;
 using Daarto.WebUI.Infrastructure.Filters;
 using Daarto.WebUI.Infrastructure.Settings;
@@ -7,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using System.Threading.Tasks;
 
 namespace Daarto.WebUI.Areas.Administration.Controllers
 {

@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daarto.WebUI", "src\Daarto.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daarto.Services", "src\Daarto.Services\Daarto.Services.csproj", "{EFA0E794-C1F4-45D2-ABD3-6D3EA3E65560}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daarto.IdentityProvider", "src\Daarto.IdentityProvider\Daarto.IdentityProvider.csproj", "{CC1867BB-2D02-4C85-88C4-8623DD1EFB7C}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daarto.DataAccess", "src\Daarto.DataAccess\Daarto.DataAccess.csproj", "{4C36DB4A-B74F-4308-B077-6F0B90708882}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{AAE1B832-6032-4C5C-8154-F6775CC051F8}"
@@ -23,6 +21,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{0236
 		misc\scripts\generate_users_roles_table_data.sql = misc\scripts\generate_users_roles_table_data.sql
 		misc\scripts\generate_users_table_data.sql = misc\scripts\generate_users_table_data.sql
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Identity.Dapper", "src\AspNetCore.Identity.Dapper\AspNetCore.Identity.Dapper.csproj", "{DD01411B-826F-4CA3-8581-8FDA9C7961AC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,14 +38,14 @@ Global
 		{EFA0E794-C1F4-45D2-ABD3-6D3EA3E65560}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EFA0E794-C1F4-45D2-ABD3-6D3EA3E65560}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EFA0E794-C1F4-45D2-ABD3-6D3EA3E65560}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CC1867BB-2D02-4C85-88C4-8623DD1EFB7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CC1867BB-2D02-4C85-88C4-8623DD1EFB7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CC1867BB-2D02-4C85-88C4-8623DD1EFB7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CC1867BB-2D02-4C85-88C4-8623DD1EFB7C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4C36DB4A-B74F-4308-B077-6F0B90708882}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4C36DB4A-B74F-4308-B077-6F0B90708882}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C36DB4A-B74F-4308-B077-6F0B90708882}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4C36DB4A-B74F-4308-B077-6F0B90708882}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD01411B-826F-4CA3-8581-8FDA9C7961AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD01411B-826F-4CA3-8581-8FDA9C7961AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD01411B-826F-4CA3-8581-8FDA9C7961AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD01411B-826F-4CA3-8581-8FDA9C7961AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,9 +53,9 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{62608A22-4678-4210-9DE5-094FC73D76ED} = {AE94DD8D-1626-4618-AB38-37459DEE54E0}
 		{EFA0E794-C1F4-45D2-ABD3-6D3EA3E65560} = {AE94DD8D-1626-4618-AB38-37459DEE54E0}
-		{CC1867BB-2D02-4C85-88C4-8623DD1EFB7C} = {AE94DD8D-1626-4618-AB38-37459DEE54E0}
 		{4C36DB4A-B74F-4308-B077-6F0B90708882} = {AE94DD8D-1626-4618-AB38-37459DEE54E0}
 		{02369E2A-8527-4EC5-AE86-CB7805427398} = {AAE1B832-6032-4C5C-8154-F6775CC051F8}
+		{DD01411B-826F-4CA3-8581-8FDA9C7961AC} = {AE94DD8D-1626-4618-AB38-37459DEE54E0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {78AE28B8-138A-401A-B79E-457DC5EFB188}

@@ -1,4 +1,4 @@
-﻿using Daarto.IdentityProvider.Entities;
+﻿using AspNetCore.Identity.Dapper;
 using Daarto.WebUI.Infrastructure.Filters;
 using Daarto.WebUI.Infrastructure.Settings;
 using Daarto.WebUI.Models;

@@ -1,6 +1,6 @@
-﻿using Daarto.DataAccess.Abstract;
+﻿using AspNetCore.Identity.Dapper;
+using Daarto.DataAccess.Abstract;
 using Daarto.DataAccess.Models;
-using Daarto.IdentityProvider.Entities;
 using Daarto.WebUI.Areas.Administration.Models;
 using Daarto.WebUI.Models.DataTables;
 using Microsoft.AspNetCore.Authorization;
