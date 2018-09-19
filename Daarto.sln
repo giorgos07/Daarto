@@ -13,6 +13,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daarto.IdentityProvider", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daarto.DataAccess", "src\Daarto.DataAccess\Daarto.DataAccess.csproj", "{4C36DB4A-B74F-4308-B077-6F0B90708882}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{AAE1B832-6032-4C5C-8154-F6775CC051F8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{02369E2A-8527-4EC5-AE86-CB7805427398}"
+	ProjectSection(SolutionItems) = preProject
+		misc\scripts\clear_database.sql = misc\scripts\clear_database.sql
+		misc\scripts\create_database_schema.sql = misc\scripts\create_database_schema.sql
+		misc\scripts\generate_roles_table_data.sql = misc\scripts\generate_roles_table_data.sql
+		misc\scripts\generate_users_roles_table_data.sql = misc\scripts\generate_users_roles_table_data.sql
+		misc\scripts\generate_users_table_data.sql = misc\scripts\generate_users_table_data.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -44,6 +55,7 @@ Global
 		{EFA0E794-C1F4-45D2-ABD3-6D3EA3E65560} = {AE94DD8D-1626-4618-AB38-37459DEE54E0}
 		{CC1867BB-2D02-4C85-88C4-8623DD1EFB7C} = {AE94DD8D-1626-4618-AB38-37459DEE54E0}
 		{4C36DB4A-B74F-4308-B077-6F0B90708882} = {AE94DD8D-1626-4618-AB38-37459DEE54E0}
+		{02369E2A-8527-4EC5-AE86-CB7805427398} = {AAE1B832-6032-4C5C-8154-F6775CC051F8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {78AE28B8-138A-401A-B79E-457DC5EFB188}
