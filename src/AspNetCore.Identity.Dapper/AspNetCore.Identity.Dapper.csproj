@@ -7,7 +7,4 @@
     <PackageReference Include="Microsoft.AspNetCore.Identity" Version="2.1.3" />
     <PackageReference Include="Dapper" Version="1.50.5" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Daarto.Services\Daarto.Services.csproj" />
-  </ItemGroup>
 </Project>

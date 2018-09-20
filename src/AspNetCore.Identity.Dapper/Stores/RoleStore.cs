@@ -1,9 +1,8 @@
-﻿using Daarto.Services.Abstract;
-using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCore.Identity.Dapper
 {
@@ -11,9 +10,7 @@ namespace AspNetCore.Identity.Dapper
     {
         private readonly RolesTable _rolesTable;
 
-        public RoleStore(IDatabaseConnectionService databaseConnection) {
-            _rolesTable = new RolesTable(databaseConnection.CreateConnection());
-        }
+        public RoleStore(IDatabaseConnectionFactory databaseConnectionFactory) => _rolesTable = new RolesTable(databaseConnectionFactory);
 
         public IQueryable<ApplicationRole> Roles => Task.Run(() => _rolesTable.GetAllRoles()).Result.AsQueryable();
 
@@ -26,13 +23,13 @@ namespace AspNetCore.Identity.Dapper
         public Task<IdentityResult> UpdateAsync(ApplicationRole role, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             role.ThrowIfNull(nameof(role));
-            return _rolesTable.UpdateAsync(role, cancellationToken);
+            return _rolesTable.UpdateAsync(role);
         }
 
         public Task<IdentityResult> DeleteAsync(ApplicationRole role, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             role.ThrowIfNull(nameof(role));
-            return _rolesTable.DeleteAsync(role, cancellationToken);
+            return _rolesTable.DeleteAsync(role);
         }
 
         public Task<string> GetRoleIdAsync(ApplicationRole role, CancellationToken cancellationToken) {
@@ -52,7 +49,7 @@ namespace AspNetCore.Identity.Dapper
             role.ThrowIfNull(nameof(role));
             roleName.ThrowIfNull(nameof(roleName));
             role.Name = roleName;
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public Task<string> GetNormalizedRoleNameAsync(ApplicationRole role, CancellationToken cancellationToken) {
@@ -66,7 +63,7 @@ namespace AspNetCore.Identity.Dapper
             role.ThrowIfNull(nameof(role));
             normalizedName.ThrowIfNull(nameof(normalizedName));
             role.NormalizedName = normalizedName;
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public Task<ApplicationRole> FindByIdAsync(string roleId, CancellationToken cancellationToken) {
@@ -87,8 +84,6 @@ namespace AspNetCore.Identity.Dapper
             return _rolesTable.FindByNameAsync(normalizedRoleName);
         }
 
-        public void Dispose() {
-            _rolesTable.Dispose();
-        }
+        public void Dispose() { }
     }
 }

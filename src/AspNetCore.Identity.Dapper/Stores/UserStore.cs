@@ -4,7 +4,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
-using Daarto.Services.Abstract;
 using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCore.Identity.Dapper
@@ -19,13 +18,12 @@ namespace AspNetCore.Identity.Dapper
         private readonly UsersClaimsTable _usersClaimsTable;
         private readonly UsersLoginsTable _usersLoginsTable;
 
-        public UserStore(IDatabaseConnectionService databaseConnection) {
-            var sqlConnection = databaseConnection.CreateConnection();
-            _usersTable = new UsersTable(sqlConnection);
-            _usersRolesTable = new UsersRolesTable(sqlConnection);
-            _rolesTable = new RolesTable(sqlConnection);
-            _usersClaimsTable = new UsersClaimsTable(sqlConnection);
-            _usersLoginsTable = new UsersLoginsTable(sqlConnection);
+        public UserStore(IDatabaseConnectionFactory databaseConnectionFactory) {
+            _usersTable = new UsersTable(databaseConnectionFactory);
+            _usersRolesTable = new UsersRolesTable(databaseConnectionFactory);
+            _rolesTable = new RolesTable(databaseConnectionFactory);
+            _usersClaimsTable = new UsersClaimsTable(databaseConnectionFactory);
+            _usersLoginsTable = new UsersLoginsTable(databaseConnectionFactory);
         }
 
         public IQueryable<ApplicationUser> Users => Task.Run(() => _usersTable.GetAllUsers()).Result.AsQueryable();
@@ -34,13 +32,13 @@ namespace AspNetCore.Identity.Dapper
         public Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
-            return _usersTable.CreateAsync(user, cancellationToken);
+            return _usersTable.CreateAsync(user);
         }
 
         public Task<IdentityResult> DeleteAsync(ApplicationUser user, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
-            return _usersTable.DeleteAsync(user, cancellationToken);
+            return _usersTable.DeleteAsync(user);
         }
 
         public Task<ApplicationUser> FindByIdAsync(string userId, CancellationToken cancellationToken) {
@@ -83,7 +81,7 @@ namespace AspNetCore.Identity.Dapper
             user.ThrowIfNull(nameof(user));
             normalizedName.ThrowIfNull(nameof(normalizedName));
             user.NormalizedUserName = normalizedName;
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public Task SetUserNameAsync(ApplicationUser user, string userName, CancellationToken cancellationToken) {
@@ -91,18 +89,16 @@ namespace AspNetCore.Identity.Dapper
             user.ThrowIfNull(nameof(user));
             userName.ThrowIfNull(nameof(userName));
             user.UserName = userName;
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
-            return _usersTable.UpdateAsync(user, cancellationToken);
+            return _usersTable.UpdateAsync(user);
         }
 
-        public void Dispose() {
-            _usersTable.Dispose();
-        }
+        public void Dispose() { }
         #endregion IUserStore<ApplicationUser> implementation.
 
         #region IUserEmailStore<ApplicationUser> implementation.
@@ -111,7 +107,7 @@ namespace AspNetCore.Identity.Dapper
             user.ThrowIfNull(nameof(user));
             email.ThrowIfNull(nameof(email));
             user.Email = email;
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public Task<string> GetEmailAsync(ApplicationUser user, CancellationToken cancellationToken) {
@@ -130,7 +126,7 @@ namespace AspNetCore.Identity.Dapper
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.EmailConfirmed = confirmed;
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public Task<ApplicationUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken) {
@@ -150,7 +146,7 @@ namespace AspNetCore.Identity.Dapper
             user.ThrowIfNull(nameof(user));
             normalizedEmail.ThrowIfNull(nameof(normalizedEmail));
             user.NormalizedEmail = normalizedEmail;
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
         #endregion IUserEmailStore<ApplicationUser> implementation.
 
@@ -173,13 +169,13 @@ namespace AspNetCore.Identity.Dapper
         public Task<IList<UserLoginInfo>> GetLoginsAsync(ApplicationUser user, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
-            return _usersLoginsTable.GetLoginsAsync(user, cancellationToken);
+            return _usersLoginsTable.GetLoginsAsync(user);
         }
 
         public Task<ApplicationUser> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             loginProvider.ThrowIfNull(nameof(loginProvider));
-            return _usersLoginsTable.FindByLoginAsync(loginProvider, providerKey, cancellationToken);
+            return _usersLoginsTable.FindByLoginAsync(loginProvider, providerKey);
         }
         #endregion IUserLoginStore<ApplicationUser> implementation.
 
@@ -189,7 +185,7 @@ namespace AspNetCore.Identity.Dapper
             user.ThrowIfNull(nameof(user));
             passwordHash.ThrowIfNull(nameof(passwordHash));
             user.PasswordHash = passwordHash;
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public Task<string> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken) {
@@ -210,7 +206,7 @@ namespace AspNetCore.Identity.Dapper
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.PhoneNumber = phoneNumber;
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public Task<string> GetPhoneNumberAsync(ApplicationUser user, CancellationToken cancellationToken) {
@@ -229,7 +225,7 @@ namespace AspNetCore.Identity.Dapper
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.PhoneNumberConfirmed = confirmed;
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
         #endregion IUserPhoneNumberStore<ApplicationUser> implementation.
 
@@ -238,7 +234,7 @@ namespace AspNetCore.Identity.Dapper
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.TwoFactorEnabled = enabled;
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public Task<bool> GetTwoFactorEnabledAsync(ApplicationUser user, CancellationToken cancellationToken) {
@@ -268,7 +264,7 @@ namespace AspNetCore.Identity.Dapper
         public Task<IList<Claim>> GetClaimsAsync(ApplicationUser user, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
-            return _usersClaimsTable.GetClaimsAsync(user, cancellationToken);
+            return _usersClaimsTable.GetClaimsAsync(user);
         }
 
         public Task AddClaimsAsync(ApplicationUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken) {
@@ -306,7 +302,7 @@ namespace AspNetCore.Identity.Dapper
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.LockoutEndDateTimeUtc = lockoutEnd?.UtcDateTime;
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public Task<int> IncrementAccessFailedCountAsync(ApplicationUser user, CancellationToken cancellationToken) {
@@ -320,7 +316,7 @@ namespace AspNetCore.Identity.Dapper
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.AccessFailedCount = 0;
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
 
         public Task<int> GetAccessFailedCountAsync(ApplicationUser user, CancellationToken cancellationToken) {
@@ -339,7 +335,7 @@ namespace AspNetCore.Identity.Dapper
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.LockoutEnabled = enabled;
-            return Task.FromResult<object>(null);
+            return Task.CompletedTask;
         }
         #endregion IUserLockoutStore<ApplicationUser> implementation.
 
@@ -349,20 +345,20 @@ namespace AspNetCore.Identity.Dapper
             user.ThrowIfNull(nameof(user));
             roleName.ThrowIfNull(nameof(roleName));
             var role = Task.Run(() => _rolesTable.GetAllRoles(), cancellationToken).Result.SingleOrDefault(e => e.NormalizedName == roleName);
-            return role != null ? _usersRolesTable.AddToRoleAsync(user, role.Id) : Task.FromResult<object>(null);
+            return _usersRolesTable.AddToRoleAsync(user, role.Id);
         }
 
         public Task RemoveFromRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             var role = Task.Run(() => _rolesTable.GetAllRoles(), cancellationToken).Result.SingleOrDefault(e => e.NormalizedName == roleName);
-            return role != null ? _usersRolesTable.RemoveFromRoleAsync(user, role.Id) : Task.FromResult<object>(null);
+            return _usersRolesTable.RemoveFromRoleAsync(user, role.Id);
         }
 
         public Task<IList<string>> GetRolesAsync(ApplicationUser user, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
-            return _usersRolesTable.GetRolesAsync(user, cancellationToken);
+            return _usersRolesTable.GetRolesAsync(user);
         }
 
         public async Task<bool> IsInRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken) {

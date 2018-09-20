@@ -19,11 +19,11 @@ namespace AspNetCore.Identity.Dapper
         /// <param name="connectionString">The database connection string.</param>
         /// <returns>The <see cref="IdentityBuilder"/> instance this method extends.</returns>
         public static IdentityBuilder AddDapperStores(this IdentityBuilder builder, string connectionString) {
-            AddStores(builder.Services, builder.UserType, builder.RoleType);
+            AddStores(builder.Services, builder.UserType, builder.RoleType, connectionString);
             return builder;
         }
 
-        private static void AddStores(IServiceCollection services, Type userType, Type roleType) {
+        private static void AddStores(IServiceCollection services, Type userType, Type roleType, string connectionString) {
             if (userType != typeof(ApplicationUser)) {
                 throw new InvalidOperationException($"{nameof(AddDapperStores)} can only be called with a user that is of type {nameof(ApplicationUser)}.");
             }
@@ -35,6 +35,7 @@ namespace AspNetCore.Identity.Dapper
 
                 services.TryAddScoped<IUserStore<ApplicationUser>, UserStore>();
                 services.TryAddScoped<IRoleStore<ApplicationRole>, RoleStore>();
+                services.TryAddScoped<IDatabaseConnectionFactory>(provider => new SqlConnectionFactory(connectionString));
             }
         }
 

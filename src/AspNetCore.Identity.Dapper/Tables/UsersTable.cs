@@ -1,103 +1,125 @@
-﻿using Dapper;
-using Microsoft.AspNetCore.Identity;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Threading;
 using System.Threading.Tasks;
+using Dapper;
+using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCore.Identity.Dapper
 {
     internal class UsersTable
     {
-        private SqlConnection _sqlConnection;
+        private readonly IDatabaseConnectionFactory _databaseConnectionFactory;
 
-        public UsersTable(SqlConnection sqlConnection) {
-            _sqlConnection = sqlConnection;
-        }
+        public UsersTable(IDatabaseConnectionFactory databaseConnectionFactory) => _databaseConnectionFactory = databaseConnectionFactory;
 
-        public Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public async Task<IdentityResult> CreateAsync(ApplicationUser user) {
             const string command = "INSERT INTO dbo.Users " +
                                    "VALUES (@Id, @FirstName, @LastName, @UserName, @NormalizedUserName, @Email, @NormalizedEmail, @EmailConfirmed, " +
                                            "@PasswordHash, @PhoneNumber, @PhoneNumberConfirmed, @PhotoUrl, @Address, @ConcurrencyStamp, @SecurityStamp, " +
                                            "@RegistrationDate, @LastLoginDate, @LockoutEnabled, @LockoutEndDateTimeUtc, @TwoFactorEnabled, @AccessFailedCount);";
 
-            var rowsInserted = Task.Run(() => _sqlConnection.ExecuteAsync(command, new {
-                user.Id,
-                user.FirstName,
-                user.LastName,
-                user.UserName,
-                user.NormalizedUserName,
-                user.Email,
-                user.NormalizedEmail,
-                user.EmailConfirmed,
-                user.PasswordHash,
-                user.PhoneNumber,
-                user.PhoneNumberConfirmed,
-                user.PhotoUrl,
-                user.Address,
-                user.ConcurrencyStamp,
-                user.SecurityStamp,
-                user.RegistrationDate,
-                user.LastLoginDate,
-                user.LockoutEnabled,
-                user.LockoutEndDateTimeUtc,
-                user.TwoFactorEnabled,
-                user.AccessFailedCount
-            }), cancellationToken).Result;
+            var rowsInserted = 0;
 
-            return Task.FromResult(rowsInserted == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
+            using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
+                rowsInserted = await sqlConnection.ExecuteAsync(command, new {
+                    user.Id,
+                    user.FirstName,
+                    user.LastName,
+                    user.UserName,
+                    user.NormalizedUserName,
+                    user.Email,
+                    user.NormalizedEmail,
+                    user.EmailConfirmed,
+                    user.PasswordHash,
+                    user.PhoneNumber,
+                    user.PhoneNumberConfirmed,
+                    user.PhotoUrl,
+                    user.Address,
+                    user.ConcurrencyStamp,
+                    user.SecurityStamp,
+                    user.RegistrationDate,
+                    user.LastLoginDate,
+                    user.LockoutEnabled,
+                    user.LockoutEndDateTimeUtc,
+                    user.TwoFactorEnabled,
+                    user.AccessFailedCount
+                });
+            }
+
+            return rowsInserted == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
                 Code = string.Empty,
                 Description = $"User with email {user.Email} could not be inserted in the database."
-            }));
+            });
         }
 
-        public Task<IdentityResult> DeleteAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public async Task<IdentityResult> DeleteAsync(ApplicationUser user) {
             const string command = "DELETE " +
                                    "FROM dbo.Users " +
                                    "WHERE Id = @Id;";
 
-            var rowsDeleted = Task.Run(() => _sqlConnection.ExecuteAsync(command, new {
-                user.Id
-            }), cancellationToken).Result;
+            var rowsDeleted = 0;
 
-            return Task.FromResult(rowsDeleted.Equals(1) ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
+            using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
+                rowsDeleted = await sqlConnection.ExecuteAsync(command, new {
+                    user.Id
+                });
+            }
+
+            return rowsDeleted == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
                 Code = string.Empty,
                 Description = $"User with email {user.Email} could not be deleted from the database."
-            }));
+            });
         }
 
-        public Task<ApplicationUser> FindByIdAsync(Guid userId) {
+        public async Task<ApplicationUser> FindByIdAsync(Guid userId) {
             const string command = "SELECT * " +
                                    "FROM dbo.Users " +
                                    "WHERE Id = @Id;";
 
-            return _sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new {
-                Id = userId
-            });
+            ApplicationUser user;
+
+            using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
+                user = await sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new {
+                    Id = userId
+                });
+            }
+
+            return user;
         }
 
-        public Task<ApplicationUser> FindByNameAsync(string normalizedUserName) {
+        public async Task<ApplicationUser> FindByNameAsync(string normalizedUserName) {
             const string command = "SELECT * " +
                                    "FROM dbo.Users " +
                                    "WHERE NormalizedUserName = @NormalizedUserName;";
 
-            return _sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new {
-                NormalizedUserName = normalizedUserName
-            });
+            ApplicationUser user;
+
+            using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
+                user = await sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new {
+                    NormalizedUserName = normalizedUserName
+                });
+            }
+
+            return user;
         }
 
-        public Task<ApplicationUser> FindByEmailAsync(string normalizedEmail) {
+        public async Task<ApplicationUser> FindByEmailAsync(string normalizedEmail) {
             const string command = "SELECT * " +
                                    "FROM dbo.Users " +
                                    "WHERE NormalizedEmail = @NormalizedEmail;";
 
-            return _sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new {
-                NormalizedEmail = normalizedEmail
-            });
+            ApplicationUser user;
+
+            using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
+                user = await sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new {
+                    NormalizedEmail = normalizedEmail
+                });
+            }
+
+            return user;
         }
 
-        public Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public async Task<IdentityResult> UpdateAsync(ApplicationUser user) {
             const string command = "UPDATE dbo.Users " +
                                    "SET FirstName = @FirstName, LastName = @LastName, UserName = @UserName, NormalizedUserName = @NormalizedUserName, Email = @Email, NormalizedEmail = @NormalizedEmail, " +
                                        "EmailConfirmed = @EmailConfirmed, PasswordHash = @PasswordHash, PhoneNumber = @PhoneNumber, PhoneNumberConfirmed = @PhoneNumberConfirmed, PhotoUrl = @PhotoUrl, Address = @Address, " +
@@ -105,50 +127,51 @@ namespace AspNetCore.Identity.Dapper
                                        "TwoFactorEnabled = @TwoFactorEnabled, AccessFailedCount = @AccessFailedCount " +
                                    "WHERE Id = @Id;";
 
-            var rowsUpdated = Task.Run(() => _sqlConnection.ExecuteAsync(command, new {
-                user.FirstName,
-                user.LastName,
-                user.UserName,
-                user.NormalizedUserName,
-                user.Email,
-                user.NormalizedEmail,
-                user.EmailConfirmed,
-                user.PasswordHash,
-                user.PhoneNumber,
-                user.PhoneNumberConfirmed,
-                user.PhotoUrl,
-                user.Address,
-                user.ConcurrencyStamp,
-                user.SecurityStamp,
-                user.RegistrationDate,
-                user.LastLoginDate,
-                user.LockoutEnabled,
-                user.LockoutEndDateTimeUtc,
-                user.TwoFactorEnabled,
-                user.AccessFailedCount,
-                user.Id
-            }), cancellationToken).Result;
+            var rowsUpdated = 0;
 
-            return Task.FromResult(rowsUpdated == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
+            using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
+                rowsUpdated = await sqlConnection.ExecuteAsync(command, new {
+                    user.FirstName,
+                    user.LastName,
+                    user.UserName,
+                    user.NormalizedUserName,
+                    user.Email,
+                    user.NormalizedEmail,
+                    user.EmailConfirmed,
+                    user.PasswordHash,
+                    user.PhoneNumber,
+                    user.PhoneNumberConfirmed,
+                    user.PhotoUrl,
+                    user.Address,
+                    user.ConcurrencyStamp,
+                    user.SecurityStamp,
+                    user.RegistrationDate,
+                    user.LastLoginDate,
+                    user.LockoutEnabled,
+                    user.LockoutEndDateTimeUtc,
+                    user.TwoFactorEnabled,
+                    user.AccessFailedCount,
+                    user.Id
+                });
+            }
+
+            return rowsUpdated == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
                 Code = string.Empty,
                 Description = $"User with email {user.Email} could not be updated."
-            }));
+            });
         }
 
-        public Task<IEnumerable<ApplicationUser>> GetAllUsers() {
+        public async Task<IEnumerable<ApplicationUser>> GetAllUsers() {
             const string command = "SELECT * " +
                                    "FROM dbo.Users;";
 
-            return _sqlConnection.QueryAsync<ApplicationUser>(command);
-        }
+            IEnumerable<ApplicationUser> users = new List<ApplicationUser>();
 
-        public void Dispose() {
-            if (_sqlConnection == null) {
-                return;
+            using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
+                users = await sqlConnection.QueryAsync<ApplicationUser>(command);
             }
 
-            _sqlConnection.Dispose();
-            _sqlConnection = null;
+            return users;
         }
     }
 }
