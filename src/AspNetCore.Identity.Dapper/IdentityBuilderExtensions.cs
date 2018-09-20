@@ -18,23 +18,18 @@ namespace AspNetCore.Identity.Dapper
         /// <param name="builder">Helper functions for configuring identity services.</param>
         /// <param name="connectionString">The database connection string.</param>
         /// <returns>The <see cref="IdentityBuilder"/> instance this method extends.</returns>
-        public static IdentityBuilder AddDapperStores(this IdentityBuilder builder, string connectionString)
-        {
+        public static IdentityBuilder AddDapperStores(this IdentityBuilder builder, string connectionString) {
             AddStores(builder.Services, builder.UserType, builder.RoleType);
             return builder;
         }
 
-        private static void AddStores(IServiceCollection services, Type userType, Type roleType)
-        {
-            if (userType != typeof(ApplicationUser))
-            {
+        private static void AddStores(IServiceCollection services, Type userType, Type roleType) {
+            if (userType != typeof(ApplicationUser)) {
                 throw new InvalidOperationException($"{nameof(AddDapperStores)} can only be called with a user that is of type {nameof(ApplicationUser)}.");
             }
 
-            if (roleType != null)
-            {
-                if (roleType != typeof(ApplicationRole))
-                {
+            if (roleType != null) {
+                if (roleType != typeof(ApplicationRole)) {
                     throw new InvalidOperationException($"{nameof(AddDapperStores)} can only be called with a role that is of type {nameof(ApplicationRole)}.");
                 }
 
@@ -43,17 +38,14 @@ namespace AspNetCore.Identity.Dapper
             }
         }
 
-        private static TypeInfo FindGenericBaseType(Type currentType, Type genericBaseType)
-        {
+        private static TypeInfo FindGenericBaseType(Type currentType, Type genericBaseType) {
             var type = currentType;
 
-            while (type != null)
-            {
+            while (type != null) {
                 var typeInfo = type.GetTypeInfo();
                 var genericType = type.IsGenericType ? type : null;
 
-                if (genericType != null && genericType == genericBaseType)
-                {
+                if (genericType != null && genericType == genericBaseType) {
                     return typeInfo;
                 }
 

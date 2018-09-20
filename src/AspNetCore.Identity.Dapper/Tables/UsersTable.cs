@@ -12,20 +12,17 @@ namespace AspNetCore.Identity.Dapper
     {
         private SqlConnection _sqlConnection;
 
-        public UsersTable(SqlConnection sqlConnection)
-        {
+        public UsersTable(SqlConnection sqlConnection) {
             _sqlConnection = sqlConnection;
         }
 
-        public Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
+        public Task<IdentityResult> CreateAsync(ApplicationUser user, CancellationToken cancellationToken) {
             const string command = "INSERT INTO dbo.Users " +
                                    "VALUES (@Id, @FirstName, @LastName, @UserName, @NormalizedUserName, @Email, @NormalizedEmail, @EmailConfirmed, " +
                                            "@PasswordHash, @PhoneNumber, @PhoneNumberConfirmed, @PhotoUrl, @Address, @ConcurrencyStamp, @SecurityStamp, " +
                                            "@RegistrationDate, @LastLoginDate, @LockoutEnabled, @LockoutEndDateTimeUtc, @TwoFactorEnabled, @AccessFailedCount);";
 
-            int rowsInserted = Task.Run(() => _sqlConnection.ExecuteAsync(command, new
-            {
+            var rowsInserted = Task.Run(() => _sqlConnection.ExecuteAsync(command, new {
                 user.Id,
                 user.FirstName,
                 user.LastName,
@@ -49,69 +46,58 @@ namespace AspNetCore.Identity.Dapper
                 user.AccessFailedCount
             }), cancellationToken).Result;
 
-            return Task.FromResult(rowsInserted == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError
-            {
+            return Task.FromResult(rowsInserted == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
                 Code = string.Empty,
                 Description = $"User with email {user.Email} could not be inserted in the database."
             }));
         }
 
-        public Task<IdentityResult> DeleteAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
+        public Task<IdentityResult> DeleteAsync(ApplicationUser user, CancellationToken cancellationToken) {
             const string command = "DELETE " +
                                    "FROM dbo.Users " +
                                    "WHERE Id = @Id;";
 
-            int rowsDeleted = Task.Run(() => _sqlConnection.ExecuteAsync(command, new
-            {
+            var rowsDeleted = Task.Run(() => _sqlConnection.ExecuteAsync(command, new {
                 user.Id
             }), cancellationToken).Result;
 
-            return Task.FromResult(rowsDeleted.Equals(1) ? IdentityResult.Success : IdentityResult.Failed(new IdentityError
-            {
+            return Task.FromResult(rowsDeleted.Equals(1) ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
                 Code = string.Empty,
                 Description = $"User with email {user.Email} could not be deleted from the database."
             }));
         }
 
-        public Task<ApplicationUser> FindByIdAsync(Guid userId)
-        {
+        public Task<ApplicationUser> FindByIdAsync(Guid userId) {
             const string command = "SELECT * " +
                                    "FROM dbo.Users " +
                                    "WHERE Id = @Id;";
 
-            return _sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new
-            {
+            return _sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new {
                 Id = userId
             });
         }
 
-        public Task<ApplicationUser> FindByNameAsync(string normalizedUserName)
-        {
+        public Task<ApplicationUser> FindByNameAsync(string normalizedUserName) {
             const string command = "SELECT * " +
                                    "FROM dbo.Users " +
                                    "WHERE NormalizedUserName = @NormalizedUserName;";
 
-            return _sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new
-            {
+            return _sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new {
                 NormalizedUserName = normalizedUserName
             });
         }
 
-        public Task<ApplicationUser> FindByEmailAsync(string normalizedEmail)
-        {
+        public Task<ApplicationUser> FindByEmailAsync(string normalizedEmail) {
             const string command = "SELECT * " +
                                    "FROM dbo.Users " +
                                    "WHERE NormalizedEmail = @NormalizedEmail;";
 
-            return _sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new
-            {
+            return _sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new {
                 NormalizedEmail = normalizedEmail
             });
         }
 
-        public Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken)
-        {
+        public Task<IdentityResult> UpdateAsync(ApplicationUser user, CancellationToken cancellationToken) {
             const string command = "UPDATE dbo.Users " +
                                    "SET FirstName = @FirstName, LastName = @LastName, UserName = @UserName, NormalizedUserName = @NormalizedUserName, Email = @Email, NormalizedEmail = @NormalizedEmail, " +
                                        "EmailConfirmed = @EmailConfirmed, PasswordHash = @PasswordHash, PhoneNumber = @PhoneNumber, PhoneNumberConfirmed = @PhoneNumberConfirmed, PhotoUrl = @PhotoUrl, Address = @Address, " +
@@ -119,8 +105,7 @@ namespace AspNetCore.Identity.Dapper
                                        "TwoFactorEnabled = @TwoFactorEnabled, AccessFailedCount = @AccessFailedCount " +
                                    "WHERE Id = @Id;";
 
-            int rowsUpdated = Task.Run(() => _sqlConnection.ExecuteAsync(command, new
-            {
+            var rowsUpdated = Task.Run(() => _sqlConnection.ExecuteAsync(command, new {
                 user.FirstName,
                 user.LastName,
                 user.UserName,
@@ -144,25 +129,21 @@ namespace AspNetCore.Identity.Dapper
                 user.Id
             }), cancellationToken).Result;
 
-            return Task.FromResult(rowsUpdated == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError
-            {
+            return Task.FromResult(rowsUpdated == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
                 Code = string.Empty,
                 Description = $"User with email {user.Email} could not be updated."
             }));
         }
 
-        public Task<IEnumerable<ApplicationUser>> GetAllUsers()
-        {
+        public Task<IEnumerable<ApplicationUser>> GetAllUsers() {
             const string command = "SELECT * " +
                                    "FROM dbo.Users;";
 
             return _sqlConnection.QueryAsync<ApplicationUser>(command);
         }
 
-        public void Dispose()
-        {
-            if (_sqlConnection == null)
-            {
+        public void Dispose() {
+            if (_sqlConnection == null) {
                 return;
             }
 
