@@ -292,7 +292,8 @@ __pycache__/
 *.xsd.cs
 
 # Custom ignored items
-src/Daarto.WebUI/wwwroot/lib/*
-src/Daarto.WebUI/package-lock.json
+samples/Daarto.WebUI/wwwroot/lib/*
+samples/Daarto.WebUI/node_modules/*
+samples/Daarto.WebUI/package-lock.json
 
 # End of https://www.gitignore.io/api/visualstudio
