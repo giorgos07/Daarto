@@ -14,41 +14,34 @@ namespace AspNetCore.Identity.Dapper
 
         public async Task<IdentityResult> CreateAsync(ApplicationUser user) {
             const string command = "INSERT INTO dbo.Users " +
-                                   "VALUES (@Id, @FirstName, @LastName, @UserName, @NormalizedUserName, @Email, @NormalizedEmail, @EmailConfirmed, " +
-                                           "@PasswordHash, @PhoneNumber, @PhoneNumberConfirmed, @PhotoUrl, @Address, @ConcurrencyStamp, @SecurityStamp, " +
-                                           "@RegistrationDate, @LastLoginDate, @LockoutEnabled, @LockoutEndDateTimeUtc, @TwoFactorEnabled, @AccessFailedCount);";
+                                   "VALUES (@Id, @UserName, @NormalizedUserName, @Email, @NormalizedEmail, @EmailConfirmed, @PasswordHash, @SecurityStamp, @ConcurrencyStamp, " +
+                                           "@PhoneNumber, @PhoneNumberConfirmed, @TwoFactorEnabled, @LockoutEnd, @LockoutEnabled, @AccessFailedCount);";
 
-            var rowsInserted = 0;
+            int rowsInserted;
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
                 rowsInserted = await sqlConnection.ExecuteAsync(command, new {
                     user.Id,
-                    user.FirstName,
-                    user.LastName,
                     user.UserName,
                     user.NormalizedUserName,
                     user.Email,
                     user.NormalizedEmail,
                     user.EmailConfirmed,
                     user.PasswordHash,
+                    user.SecurityStamp,
+                    user.ConcurrencyStamp,
                     user.PhoneNumber,
                     user.PhoneNumberConfirmed,
-                    user.PhotoUrl,
-                    user.Address,
-                    user.ConcurrencyStamp,
-                    user.SecurityStamp,
-                    user.RegistrationDate,
-                    user.LastLoginDate,
-                    user.LockoutEnabled,
-                    user.LockoutEndDateTimeUtc,
                     user.TwoFactorEnabled,
+                    user.LockoutEnd,
+                    user.LockoutEnabled,
                     user.AccessFailedCount
                 });
             }
 
             return rowsInserted == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
-                Code = string.Empty,
-                Description = $"User with email {user.Email} could not be inserted in the database."
+                Code = nameof(CreateAsync),
+                Description = $"User with email {user.Email} could not be inserted."
             });
         }
 
@@ -57,7 +50,7 @@ namespace AspNetCore.Identity.Dapper
                                    "FROM dbo.Users " +
                                    "WHERE Id = @Id;";
 
-            var rowsDeleted = 0;
+            int rowsDeleted;
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
                 rowsDeleted = await sqlConnection.ExecuteAsync(command, new {
@@ -66,8 +59,8 @@ namespace AspNetCore.Identity.Dapper
             }
 
             return rowsDeleted == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
-                Code = string.Empty,
-                Description = $"User with email {user.Email} could not be deleted from the database."
+                Code = nameof(DeleteAsync),
+                Description = $"User with email {user.Email} could not be deleted."
             });
         }
 
@@ -121,42 +114,36 @@ namespace AspNetCore.Identity.Dapper
 
         public async Task<IdentityResult> UpdateAsync(ApplicationUser user) {
             const string command = "UPDATE dbo.Users " +
-                                   "SET FirstName = @FirstName, LastName = @LastName, UserName = @UserName, NormalizedUserName = @NormalizedUserName, Email = @Email, NormalizedEmail = @NormalizedEmail, " +
-                                       "EmailConfirmed = @EmailConfirmed, PasswordHash = @PasswordHash, PhoneNumber = @PhoneNumber, PhoneNumberConfirmed = @PhoneNumberConfirmed, PhotoUrl = @PhotoUrl, Address = @Address, " +
-                                       "ConcurrencyStamp = @ConcurrencyStamp, SecurityStamp = @SecurityStamp, RegistrationDate = @RegistrationDate, LastLoginDate = @LastLoginDate, LockoutEnabled = @LockoutEnabled, LockoutEndDateTimeUtc = @LockoutEndDateTimeUtc, " +
-                                       "TwoFactorEnabled = @TwoFactorEnabled, AccessFailedCount = @AccessFailedCount " +
+                                   "SET UserName = @UserName, NormalizedUserName = @NormalizedUserName, Email = @Email, NormalizedEmail = @NormalizedEmail, EmailConfirmed = @EmailConfirmed, " +
+                                       "PasswordHash = @PasswordHash, SecurityStamp = @SecurityStamp, ConcurrencyStamp = @ConcurrencyStamp, PhoneNumber = @PhoneNumber, " +
+                                       "PhoneNumberConfirmed = @PhoneNumberConfirmed, TwoFactorEnabled = @TwoFactorEnabled, LockoutEnd = @LockoutEnd, LockoutEnabled = @LockoutEnabled, " +
+                                       "AccessFailedCount = @AccessFailedCount " +
                                    "WHERE Id = @Id;";
 
-            var rowsUpdated = 0;
+            int rowsUpdated;
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
                 rowsUpdated = await sqlConnection.ExecuteAsync(command, new {
-                    user.FirstName,
-                    user.LastName,
                     user.UserName,
                     user.NormalizedUserName,
                     user.Email,
                     user.NormalizedEmail,
                     user.EmailConfirmed,
                     user.PasswordHash,
+                    user.SecurityStamp,
+                    user.ConcurrencyStamp,
                     user.PhoneNumber,
                     user.PhoneNumberConfirmed,
-                    user.PhotoUrl,
-                    user.Address,
-                    user.ConcurrencyStamp,
-                    user.SecurityStamp,
-                    user.RegistrationDate,
-                    user.LastLoginDate,
-                    user.LockoutEnabled,
-                    user.LockoutEndDateTimeUtc,
                     user.TwoFactorEnabled,
+                    user.LockoutEnd,
+                    user.LockoutEnabled,
                     user.AccessFailedCount,
                     user.Id
                 });
             }
 
             return rowsUpdated == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
-                Code = string.Empty,
+                Code = nameof(UpdateAsync),
                 Description = $"User with email {user.Email} could not be updated."
             });
         }

@@ -1,0 +1,110 @@
+﻿@model EditUserViewModel
+
+@{
+    ViewData["Title"] = "Edit User";
+}
+
+<div class="bg-light lter b-b wrapper-md">
+    <h1 class="m-n font-thin h3">Edit User</h1>
+</div>
+<div class="wrapper-md">
+    <div class="col-sm-12">
+        @if (Model == null)
+        {
+            <div class="panel">
+                <div class="wrapper-lg">
+                    <h2 class="m-t-none">
+                        <a href="#">User was not found</a>
+                    </h2>
+                    <div>
+                        <p>
+                            The user that you requested was not found. Go back to the <a class="text-info" asp-area="administration" asp-controller="users" asp-action="get-all">list</a> to display all users.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading font-bold">User Information</div>
+                <div class="panel-body">
+                    <form asp-area="administration" asp-controller="users" asp-action="edit" method="post" name="form" class="form-horizontal">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="Email" />
+                        @if (ViewBag.Response != null)
+                        {
+                            var response = (EditUserResponseViewModel)ViewBag.Response;
+
+                            <div class="@(response.Succeeded ? "text-success" : "text-danger") wrapper text-center">
+                                @response.Description
+                            </div>
+                        }
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">First Name</label>
+                            <div class="col-lg-10">
+                                <input asp-for="FirstName" type="text" class="form-control" placeholder="First Name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">Last Name</label>
+                            <div class="col-lg-10">
+                                <input asp-for="LastName" type="text" class="form-control" placeholder="Last Name" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">Email</label>
+                            <div class="col-lg-10">
+                                <p class="form-control-static text-info">
+                                    <a href="mailto:@Model.Email">@Model.Email</a>
+                                </p>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">Phone Number</label>
+                            <div class="col-lg-10">
+                                <input asp-for="PhoneNumber" type="tel" class="form-control" placeholder="Phone Number" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">Address</label>
+                            <div class="col-lg-10">
+                                <input asp-for="Address" type="tel" class="form-control" placeholder="Address" />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">Is Email Confirmed?</label>
+                            <div class="col-lg-10">
+                                <div class="checkbox">
+                                    <label class="i-checks">
+                                        <input asp-for="EmailConfirmed" type="checkbox" /><i></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label">Lock Account</label>
+                            <div class="col-lg-10">
+                                <div class="checkbox">
+                                    <label class="i-checks">
+                                        <input asp-for="LockoutEnabled" type="checkbox" /><i></i>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-offset-2 col-lg-10">
+                                <button type="submit" class="btn btn-sm btn-info">Update</button>
+                                <a asp-area="Administration" asp-controller="@Daarto.Controllers.Administration.UsersController.Name" asp-action="@nameof(@Daarto.Controllers.Administration.UsersController.Index)" class="btn btn-sm btn-default">Back</a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}

@@ -1,19 +1,28 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCore.Identity.Dapper
 {
-    internal class RoleStore : IQueryableRoleStore<ApplicationRole>
+    internal class RoleStore : IQueryableRoleStore<ApplicationRole>, IRoleClaimStore<ApplicationRole>, IRoleStore<ApplicationRole>
     {
         private readonly RolesTable _rolesTable;
+        private readonly RoleClaimsTable _roleClaimsTable;
 
-        public RoleStore(IDatabaseConnectionFactory databaseConnectionFactory) => _rolesTable = new RolesTable(databaseConnectionFactory);
+        public RoleStore(IDatabaseConnectionFactory databaseConnectionFactory) {
+            _rolesTable = new RolesTable(databaseConnectionFactory);
+            _roleClaimsTable = new RoleClaimsTable(databaseConnectionFactory);
+        }
 
+        #region IQueryableRoleStore Implementation
         public IQueryable<ApplicationRole> Roles => Task.Run(() => _rolesTable.GetAllRoles()).Result.AsQueryable();
+        #endregion
 
+        #region IRoleStore<ApplicationRole> Implementation
         public Task<IdentityResult> CreateAsync(ApplicationRole role, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             role.ThrowIfNull(nameof(role));
@@ -85,5 +94,22 @@ namespace AspNetCore.Identity.Dapper
         }
 
         public void Dispose() { }
+        #endregion
+
+        #region IRoleClaimStore<ApplicationRole> Implementation
+        public Task<IList<Claim>> GetClaimsAsync(ApplicationRole role, CancellationToken cancellationToken = default(CancellationToken)) {
+            cancellationToken.ThrowIfCancellationRequested();
+            role.ThrowIfNull(nameof(role));
+            return _roleClaimsTable.GetClaimsAsync(role.Id);
+        }
+
+        public Task AddClaimAsync(ApplicationRole role, Claim claim, CancellationToken cancellationToken = default(CancellationToken)) {
+            throw new NotImplementedException();
+        }
+
+        public Task RemoveClaimAsync(ApplicationRole role, Claim claim, CancellationToken cancellationToken = default(CancellationToken)) {
+            throw new NotImplementedException();
+        }
+        #endregion
     }
 }

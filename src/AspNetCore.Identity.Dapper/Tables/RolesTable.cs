@@ -15,16 +15,16 @@ namespace AspNetCore.Identity.Dapper
 
         public async Task<IdentityResult> CreateAsync(ApplicationRole role, CancellationToken cancellationToken) {
             const string command = "INSERT INTO dbo.Roles " +
-                                   "VALUES (@Id, @ConcurrencyStamp, @Name, @NormalizedName);";
+                                   "VALUES (@Id, @Name, @NormalizedName, @ConcurrencyStamp);";
 
-            var rowsInserted = 0;
+            int rowsInserted;
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
                 rowsInserted = await sqlConnection.ExecuteAsync(command, new {
                     role.Id,
-                    role.ConcurrencyStamp,
                     role.Name,
-                    role.NormalizedName
+                    role.NormalizedName,
+                    role.ConcurrencyStamp
                 });
             }
 
@@ -36,21 +36,21 @@ namespace AspNetCore.Identity.Dapper
 
         public async Task<IdentityResult> UpdateAsync(ApplicationRole role) {
             const string command = "UPDATE dbo.Roles " +
-                                   "SET ConcurrencyStamp = @ConcurrencyStamp, Name = @Name, NormalizedName = @NormalizedName " +
+                                   "SET Name = @Name, NormalizedName = @NormalizedName, ConcurrencyStamp = @ConcurrencyStamp " +
                                    "WHERE Id = @Id;";
 
-            var rowsUpdated = 0;
+            int rowsUpdated;
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
                 rowsUpdated = await sqlConnection.ExecuteAsync(command, new {
-                    role.ConcurrencyStamp,
                     role.Name,
                     role.NormalizedName,
+                    role.ConcurrencyStamp,
                     role.Id
                 });
             }
 
-            return rowsUpdated.Equals(1) ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
+            return rowsUpdated == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
                 Code = string.Empty,
                 Description = $"The role with name {role.Name} could not be updated."
             });
@@ -61,7 +61,7 @@ namespace AspNetCore.Identity.Dapper
                                    "FROM dbo.Roles " +
                                    "WHERE Id = @Id;";
 
-            var rowsDeleted = 0;
+            int rowsDeleted;
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
                 rowsDeleted = await sqlConnection.ExecuteAsync(command, new { role.Id });

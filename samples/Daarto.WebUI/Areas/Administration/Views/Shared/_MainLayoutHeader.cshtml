@@ -1,0 +1,85 @@
+@{ 
+    var photoUrl = !string.IsNullOrEmpty(User.GetPhotoUrl()) ? User.GetPhotoUrl() : Url.Content("~/img/default_profile.png");
+}
+
+<header id="header" class="app-header navbar" role="menu">
+    <div class="navbar-header bg-dark">
+        <button class="pull-right visible-xs dk" ui-toggle-class="show" target=".navbar-collapse">
+            <i class="glyphicon glyphicon-cog"></i>
+        </button>
+        <button class="pull-right visible-xs" ui-toggle-class="off-screen" target=".app-aside" ui-scroll="app">
+            <i class="glyphicon glyphicon-align-justify"></i>
+        </button>
+        <a asp-area="Administration" asp-controller="@Daarto.Controllers.Administration.HomeController.Name" asp-action="@nameof(Daarto.Controllers.Administration.HomeController.Index)" class="navbar-brand text-lt">
+            <i class="fa fa-btc"></i>
+            <img src="@photoUrl" alt="." class="hide" />
+            <span class="hidden-folded m-l-xs">Daarto</span>
+        </a>
+    </div>
+    <div class="collapse pos-rlt navbar-collapse box-shadow bg-white-only">
+        <div class="nav navbar-nav hidden-xs">
+            <a href="#" class="btn no-shadow navbar-btn" ui-toggle-class="app-aside-folded" target=".app">
+                <i class="fa fa-dedent fa-fw text"></i>
+                <i class="fa fa-indent fa-fw text-active"></i>
+            </a>
+            <a href="#" class="btn no-shadow navbar-btn" ui-toggle-class="show" target="#aside-user">
+                <i class="icon-user fa-fw"></i>
+            </a>
+        </div>
+        <ul class="nav navbar-nav hidden-sm">
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle">
+                    <i class="fa fa-fw fa-plus visible-xs-inline-block"></i>
+                    <span>New</span>
+                    <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu" role="menu">
+                    <li>
+                        <a asp-area="Administration" asp-controller="@Daarto.Controllers.Administration.UsersController.Name" asp-action="@nameof(@Daarto.Controllers.Administration.UsersController.Create)">User</a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <span class="badge bg-info pull-right">5</span>
+                            <span>Task</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">User</a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#">
+                            <span class="badge bg-danger pull-right">4</span>
+                            <span>Email</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <ul class="nav navbar-nav navbar-right">
+            <li class="dropdown">
+                <a href="#" data-toggle="dropdown" class="dropdown-toggle clear">
+                    <span class="thumb-sm avatar pull-right m-t-n-sm m-b-n-sm m-l-sm">
+                        <img src="@photoUrl" alt="..." />
+                        <i class="on b-white bottom"></i>
+                    </span>
+                    <span class="hidden-sm hidden-md">@User.Identity.Name</span>
+                    <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu animated fadeInRight w">
+                    <li>
+                        <a asp-area="Administration" asp-controller="@ProfileController.Name" asp-action="@nameof(ProfileController.Edit)">
+                            <span>Profile</span>
+                        </a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <form asp-area="" asp-controller="@AccountController.Name" asp-action="@nameof(AccountController.LogOut)" method="post" id="log-out-form">
+                            <a>Logout</a>
+                        </form>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</header>

@@ -2,11 +2,10 @@
  * The following code is inspired from https://github.com/aspnet/Identity/blob/master/src/EF/IdentityEntityFrameworkBuilderExtensions.cs
  */
 
+using System;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using System;
-using System.Reflection;
 
 namespace AspNetCore.Identity.Dapper
 {
@@ -37,23 +36,6 @@ namespace AspNetCore.Identity.Dapper
                 services.TryAddScoped<IRoleStore<ApplicationRole>, RoleStore>();
                 services.TryAddScoped<IDatabaseConnectionFactory>(provider => new SqlConnectionFactory(connectionString));
             }
-        }
-
-        private static TypeInfo FindGenericBaseType(Type currentType, Type genericBaseType) {
-            var type = currentType;
-
-            while (type != null) {
-                var typeInfo = type.GetTypeInfo();
-                var genericType = type.IsGenericType ? type : null;
-
-                if (genericType != null && genericType == genericBaseType) {
-                    return typeInfo;
-                }
-
-                type = type.BaseType;
-            }
-
-            return null;
         }
     }
 }
