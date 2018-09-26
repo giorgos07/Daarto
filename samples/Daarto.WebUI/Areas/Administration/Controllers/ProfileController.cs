@@ -54,7 +54,7 @@ namespace Daarto.Controllers.Administration
         [HttpPost("edit")]
         public async Task<IActionResult> Edit(EditProfileRequest model) {
             if (!ModelState.IsValid) {
-                ViewBag.Response = new EditUserProfileResponseViewModel {
+                ViewBag.Response = new EditProfileResult {
                     Succeeded = false,
                     Description = "Request does not contain the required information to update your profile."
                 };
@@ -74,7 +74,7 @@ namespace Daarto.Controllers.Administration
             var result = await _userManager.AddClaimsAsync(user, claims);
 
             if (!result.Succeeded) {
-                ViewBag.Response = new EditUserProfileResponseViewModel {
+                ViewBag.Response = new EditProfileResult {
                     Succeeded = false,
                     Description = "The was a problem updating your profile. Please try again."
                 };
@@ -87,7 +87,7 @@ namespace Daarto.Controllers.Administration
             await _signInManager.SignOutAsync();
             await _signInManager.SignInAsync(user, true);
 
-            ViewBag.Response = new EditUserProfileResponseViewModel {
+            ViewBag.Response = new EditProfileResult {
                 Succeeded = true,
                 Description = "Your profile was updated successfully."
             };
