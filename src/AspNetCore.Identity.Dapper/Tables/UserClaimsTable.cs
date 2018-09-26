@@ -29,19 +29,6 @@ namespace AspNetCore.Identity.Dapper
             return userClaims.Select(e => new Claim(e.ClaimType, e.ClaimValue)).ToList();
         }
 
-        public async Task AddClaimsAsync(ApplicationUser user, IEnumerable<Claim> claims) {
-            const string command = "INSERT INTO dbo.UserClaims (UserId, ClaimType, ClaimValue) " +
-                                   "VALUES (@UserId, @ClaimType, @ClaimValue);";
-
-            using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                await sqlConnection.ExecuteAsync(command, claims.Select(e => new {
-                    UserId = user.Id,
-                    ClaimType = e.Type,
-                    ClaimValue = e.Value
-                }));
-            }
-        }
-
         public async Task ReplaceClaimAsync(ApplicationUser user, Claim claim, Claim newClaim) {
             const string command = "UPDATE dbo.UserClaims " +
                                    "SET ClaimType = @NewClaimType, ClaimValue = @NewClaimValue " +

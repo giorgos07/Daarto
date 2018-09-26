@@ -45,7 +45,9 @@ namespace Daarto.Controllers.Administration
                 Address = User.GetClaimValue(ClaimTypes.StreetAddress),
                 Id = user.Id,
                 PhotoName = photoName,
-                PhotoUrl = !string.IsNullOrEmpty(photoName) ? $"{_appSettings.Domain}/{_appSettings.UploadsFolder}/{user.Id}/{photoName}" : $"{_appSettings.Domain}/img/default_profile.png"
+                PhotoUrl = !string.IsNullOrEmpty(photoName) 
+                    ? $"{_appSettings.Domain}/{_appSettings.UploadsFolder}/{user.Id}/{photoName}" 
+                    : $"{_appSettings.Domain}/img/default_profile.png"
             });
         }
 
@@ -66,17 +68,10 @@ namespace Daarto.Controllers.Administration
             if (!string.IsNullOrEmpty(model.Address)) { claims.Add(new Claim(ClaimTypes.StreetAddress, model.Address)); }
             if (!string.IsNullOrEmpty(model.FirstName)) { claims.Add(new Claim(ClaimTypes.GivenName, model.FirstName)); }
             if (!string.IsNullOrEmpty(model.LastName)) { claims.Add(new Claim(ClaimTypes.Surname, model.LastName)); }
-
-            if (claims.Count > 0) {
-                await _userManager.AddClaimsAsync(user, claims);
-            }
-
             user.PhoneNumber = model.PhoneNumber;
-            var result = await _userManager.UpdateAsync(user);
-
-            //model.PhotoUrl = !string.IsNullOrEmpty(user.PhotoUrl)
-            //    ? $"{_appSettings.Domain}/{_appSettings.UploadsFolder}/{user.Id}/{user.PhotoUrl}"
-            //    : $"{_appSettings.Domain}/img/default_profile.png";
+            // Built-in UserManager internally calls UpdateAsync so no need to call it explicitly.
+            // https://github.com/aspnet/Identity/blob/master/src/Core/UserManager.cs#L1044
+            var result = await _userManager.AddClaimsAsync(user, claims);
 
             if (!result.Succeeded) {
                 ViewBag.Response = new EditUserProfileResponseViewModel {
@@ -96,6 +91,10 @@ namespace Daarto.Controllers.Administration
                 Succeeded = true,
                 Description = "Your profile was updated successfully."
             };
+
+            model.PhotoUrl = !string.IsNullOrEmpty(model.PhotoName) 
+                ? $"{_appSettings.Domain}/{_appSettings.UploadsFolder}/{user.Id}/{model.PhotoName}" 
+                : $"{_appSettings.Domain}/img/default_profile.png";
 
             return View(model);
         }

@@ -270,7 +270,8 @@ namespace AspNetCore.Identity.Dapper
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             claims.ThrowIfNull(nameof(claims));
-            return _usersClaimsTable.AddClaimsAsync(user, claims);
+            user.Claims = claims;
+            return Task.CompletedTask;
         }
 
         public Task ReplaceClaimAsync(ApplicationUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken) {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Identity;
@@ -113,17 +114,21 @@ namespace AspNetCore.Identity.Dapper
         }
 
         public async Task<IdentityResult> UpdateAsync(ApplicationUser user) {
-            const string command = "UPDATE dbo.Users " +
-                                   "SET UserName = @UserName, NormalizedUserName = @NormalizedUserName, Email = @Email, NormalizedEmail = @NormalizedEmail, EmailConfirmed = @EmailConfirmed, " +
-                                       "PasswordHash = @PasswordHash, SecurityStamp = @SecurityStamp, ConcurrencyStamp = @ConcurrencyStamp, PhoneNumber = @PhoneNumber, " +
-                                       "PhoneNumberConfirmed = @PhoneNumberConfirmed, TwoFactorEnabled = @TwoFactorEnabled, LockoutEnd = @LockoutEnd, LockoutEnabled = @LockoutEnabled, " +
-                                       "AccessFailedCount = @AccessFailedCount " +
-                                   "WHERE Id = @Id;";
+            const string updateUserCommand =
+                "UPDATE dbo.Users " +
+                "SET UserName = @UserName, NormalizedUserName = @NormalizedUserName, Email = @Email, NormalizedEmail = @NormalizedEmail, EmailConfirmed = @EmailConfirmed, " +
+                    "PasswordHash = @PasswordHash, SecurityStamp = @SecurityStamp, ConcurrencyStamp = @ConcurrencyStamp, PhoneNumber = @PhoneNumber, " +
+                    "PhoneNumberConfirmed = @PhoneNumberConfirmed, TwoFactorEnabled = @TwoFactorEnabled, LockoutEnd = @LockoutEnd, LockoutEnabled = @LockoutEnabled, " +
+                    "AccessFailedCount = @AccessFailedCount " +
+                "WHERE Id = @Id;";
+
+            const string insertClaimsCommand = "INSERT INTO dbo.UserClaims (UserId, ClaimType, ClaimValue) " +
+                                               "VALUES (@UserId, @ClaimType, @ClaimValue);";
 
             int rowsUpdated;
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                rowsUpdated = await sqlConnection.ExecuteAsync(command, new {
+                rowsUpdated = await sqlConnection.ExecuteAsync(updateUserCommand, new {
                     user.UserName,
                     user.NormalizedUserName,
                     user.Email,
@@ -140,9 +145,17 @@ namespace AspNetCore.Identity.Dapper
                     user.AccessFailedCount,
                     user.Id
                 });
+
+                if (user.Claims.Count() > 0) {
+                    rowsUpdated += await sqlConnection.ExecuteAsync(insertClaimsCommand, user.Claims.Select(e => new {
+                        UserId = user.Id,
+                        ClaimType = e.Type,
+                        ClaimValue = e.Value
+                    }));
+                }
             }
 
-            return rowsUpdated == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
+            return rowsUpdated == user.Claims.Count() + 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
                 Code = nameof(UpdateAsync),
                 Description = $"User with email {user.Email} could not be updated."
             });
