@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AspNetCore.Identity.Dapper.Stores
+﻿namespace AspNetCore.Identity.Dapper
 {
     internal class UserToken
     {

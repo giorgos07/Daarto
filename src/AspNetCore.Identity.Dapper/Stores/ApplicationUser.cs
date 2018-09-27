@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCore.Identity.Dapper
 {
@@ -21,6 +22,9 @@ namespace AspNetCore.Identity.Dapper
         public DateTimeOffset? LockoutEnd { get; set; }
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
-        internal IEnumerable<Claim> Claims { get; set; } = new List<Claim>();
+        internal List<Claim> Claims { get; set; }
+        internal List<string> Roles { get; set; }
+        internal List<UserLoginInfo> Logins { get; set; }
+        internal List<UserToken> Tokens { get; set; }
     }
 }

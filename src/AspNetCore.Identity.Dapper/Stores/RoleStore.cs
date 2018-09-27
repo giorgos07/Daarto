@@ -19,7 +19,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         #region IQueryableRoleStore Implementation
-        public IQueryable<ApplicationRole> Roles => Task.Run(() => _rolesTable.GetAllRoles()).Result.AsQueryable();
+        public IQueryable<ApplicationRole> Roles => Task.Run(() => _rolesTable.GetAllRolesAsync()).Result.AsQueryable();
         #endregion
 
         #region IRoleStore<ApplicationRole> Implementation

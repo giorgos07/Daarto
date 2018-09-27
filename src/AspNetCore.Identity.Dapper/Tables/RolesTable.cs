@@ -105,7 +105,7 @@ namespace AspNetCore.Identity.Dapper
             return role;
         }
 
-        public async Task<IEnumerable<ApplicationRole>> GetAllRoles() {
+        public async Task<IEnumerable<ApplicationRole>> GetAllRolesAsync() {
             const string command = "SELECT * " +
                                    "FROM dbo.Roles;";
 

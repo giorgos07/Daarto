@@ -104,44 +104,44 @@ namespace AspNetCore.Identity.Dapper
         #endregion IUserStore<ApplicationUser> Implementation
 
         #region IUserEmailStore<ApplicationUser> Implementation
-        public Task SetEmailAsync(ApplicationUser user, string email, CancellationToken cancellationToken) {
+        public Task SetEmailAsync(ApplicationUser user, string email, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.Email = email;
             return Task.CompletedTask;
         }
 
-        public Task<string> GetEmailAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<string> GetEmailAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             return Task.FromResult(user.Email);
         }
 
-        public Task<bool> GetEmailConfirmedAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<bool> GetEmailConfirmedAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             return Task.FromResult(user.EmailConfirmed);
         }
 
-        public Task SetEmailConfirmedAsync(ApplicationUser user, bool confirmed, CancellationToken cancellationToken) {
+        public Task SetEmailConfirmedAsync(ApplicationUser user, bool confirmed, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.EmailConfirmed = confirmed;
             return Task.CompletedTask;
         }
 
-        public Task<ApplicationUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken) {
+        public Task<ApplicationUser> FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             return _usersTable.FindByEmailAsync(normalizedEmail);
         }
 
-        public Task<string> GetNormalizedEmailAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<string> GetNormalizedEmailAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             return Task.FromResult(user.NormalizedEmail);
         }
 
-        public Task SetNormalizedEmailAsync(ApplicationUser user, string normalizedEmail, CancellationToken cancellationToken) {
+        public Task SetNormalizedEmailAsync(ApplicationUser user, string normalizedEmail, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.NormalizedEmail = normalizedEmail;
@@ -150,28 +150,46 @@ namespace AspNetCore.Identity.Dapper
         #endregion IUserEmailStore<ApplicationUser> Implementation
 
         #region IUserLoginStore<ApplicationUser> Implementation
-        public Task AddLoginAsync(ApplicationUser user, UserLoginInfo login, CancellationToken cancellationToken) {
+        public async Task AddLoginAsync(ApplicationUser user, UserLoginInfo login, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             login.ThrowIfNull(nameof(login));
-            return _usersLoginsTable.AddLoginAsync(user, login);
+
+            if (user.Logins == null) {
+                user.Logins = (await GetLoginsAsync(user, cancellationToken)).ToList();
+            }
+
+            var foundLogin = user.Logins.SingleOrDefault(x => x.LoginProvider == login.LoginProvider && x.ProviderKey == login.ProviderKey);
+
+            if (foundLogin == null) {
+                user.Logins.Add(login);
+            }
         }
 
-        public Task RemoveLoginAsync(ApplicationUser user, string loginProvider, string providerKey, CancellationToken cancellationToken) {
+        public async Task RemoveLoginAsync(ApplicationUser user, string loginProvider, string providerKey, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             loginProvider.ThrowIfNull(nameof(loginProvider));
-            loginProvider.ThrowIfNull(nameof(loginProvider));
-            return _usersLoginsTable.RemoveLoginAsync(user, loginProvider, providerKey);
+            providerKey.ThrowIfNull(nameof(providerKey));
+
+            if (user.Logins == null) {
+                user.Logins = (await GetLoginsAsync(user, cancellationToken)).ToList();
+            }
+
+            var foundLogin = user.Logins.SingleOrDefault(x => x.LoginProvider == loginProvider && x.ProviderKey == providerKey);
+
+            if (foundLogin != null) {
+                user.Logins.Remove(foundLogin);
+            }
         }
 
-        public Task<IList<UserLoginInfo>> GetLoginsAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<IList<UserLoginInfo>> GetLoginsAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             return _usersLoginsTable.GetLoginsAsync(user);
         }
 
-        public Task<ApplicationUser> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken) {
+        public Task<ApplicationUser> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             loginProvider.ThrowIfNull(nameof(loginProvider));
             return _usersLoginsTable.FindByLoginAsync(loginProvider, providerKey);
@@ -179,7 +197,7 @@ namespace AspNetCore.Identity.Dapper
         #endregion IUserLoginStore<ApplicationUser> Implementation
 
         #region IUserPasswordStore<ApplicationUser> Implementation
-        public Task SetPasswordHashAsync(ApplicationUser user, string passwordHash, CancellationToken cancellationToken) {
+        public Task SetPasswordHashAsync(ApplicationUser user, string passwordHash, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             passwordHash.ThrowIfNull(nameof(passwordHash));
@@ -187,13 +205,13 @@ namespace AspNetCore.Identity.Dapper
             return Task.CompletedTask;
         }
 
-        public Task<string> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<string> GetPasswordHashAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             return Task.FromResult(user.PasswordHash);
         }
 
-        public Task<bool> HasPasswordAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<bool> HasPasswordAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             return Task.FromResult(!string.IsNullOrEmpty(user.PasswordHash));
@@ -201,26 +219,26 @@ namespace AspNetCore.Identity.Dapper
         #endregion IUserPasswordStore<ApplicationUser> Implementation
 
         #region IUserPhoneNumberStore<ApplicationUser> Implementation
-        public Task SetPhoneNumberAsync(ApplicationUser user, string phoneNumber, CancellationToken cancellationToken) {
+        public Task SetPhoneNumberAsync(ApplicationUser user, string phoneNumber, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.PhoneNumber = phoneNumber;
             return Task.CompletedTask;
         }
 
-        public Task<string> GetPhoneNumberAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<string> GetPhoneNumberAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             return Task.FromResult(user.PhoneNumber);
         }
 
-        public Task<bool> GetPhoneNumberConfirmedAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<bool> GetPhoneNumberConfirmedAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             return Task.FromResult(user.PhoneNumberConfirmed);
         }
 
-        public Task SetPhoneNumberConfirmedAsync(ApplicationUser user, bool confirmed, CancellationToken cancellationToken) {
+        public Task SetPhoneNumberConfirmedAsync(ApplicationUser user, bool confirmed, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.PhoneNumberConfirmed = confirmed;
@@ -229,14 +247,14 @@ namespace AspNetCore.Identity.Dapper
         #endregion IUserPhoneNumberStore<ApplicationUser> Implementation
 
         #region IUserTwoFactorStore<ApplicationUser> Implementation
-        public Task SetTwoFactorEnabledAsync(ApplicationUser user, bool enabled, CancellationToken cancellationToken) {
+        public Task SetTwoFactorEnabledAsync(ApplicationUser user, bool enabled, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.TwoFactorEnabled = enabled;
             return Task.CompletedTask;
         }
 
-        public Task<bool> GetTwoFactorEnabledAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<bool> GetTwoFactorEnabledAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             return Task.FromResult(user.TwoFactorEnabled);
@@ -244,7 +262,7 @@ namespace AspNetCore.Identity.Dapper
         #endregion IUserTwoFactorStore<ApplicationUser> Implementation
 
         #region IUserSecurityStampStore<ApplicationUser> Implementation
-        public Task SetSecurityStampAsync(ApplicationUser user, string stamp, CancellationToken cancellationToken) {
+        public Task SetSecurityStampAsync(ApplicationUser user, string stamp, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             stamp.ThrowIfNull(nameof(stamp));
@@ -252,7 +270,7 @@ namespace AspNetCore.Identity.Dapper
             return Task.FromResult<object>(null);
         }
 
-        public Task<string> GetSecurityStampAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<string> GetSecurityStampAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             return Task.FromResult(user.SecurityStamp);
@@ -260,78 +278,104 @@ namespace AspNetCore.Identity.Dapper
         #endregion IUserSecurityStampStore<ApplicationUser> Implementation
 
         #region IUserClaimStore<ApplicationUser> Implementation
-        public Task<IList<Claim>> GetClaimsAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<IList<Claim>> GetClaimsAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             return _usersClaimsTable.GetClaimsAsync(user);
         }
 
-        public Task AddClaimsAsync(ApplicationUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken) {
+        public async Task AddClaimsAsync(ApplicationUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             claims.ThrowIfNull(nameof(claims));
-            user.Claims = claims;
-            return Task.CompletedTask;
+
+            if (user.Claims != null) {
+                user.Claims = (await GetClaimsAsync(user, cancellationToken)).ToList();
+            }
+
+            var newClaims = user.Claims.Union(claims, new ClaimEqualityComparer());
+            user.Claims.AddRange(newClaims);
         }
 
-        public Task ReplaceClaimAsync(ApplicationUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken) {
+        public async Task ReplaceClaimAsync(ApplicationUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             claim.ThrowIfNull(nameof(claim));
             newClaim.ThrowIfNull(nameof(newClaim));
-            return _usersClaimsTable.ReplaceClaimAsync(user, claim, newClaim);
+
+            if (user.Claims != null) {
+                user.Claims = (await GetClaimsAsync(user, cancellationToken)).ToList();
+            }
+
+            var foundClaim = user.Claims.FirstOrDefault(x => x.Type == claim.Type && x.Value == claim.Value);
+
+            if (foundClaim != null) {
+                foundClaim = new Claim(newClaim.Type, newClaim.Value);
+            }
         }
 
-        public Task RemoveClaimsAsync(ApplicationUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken) {
-            throw new NotImplementedException();
+        public async Task RemoveClaimsAsync(ApplicationUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken = default(CancellationToken)) {
+            cancellationToken.ThrowIfCancellationRequested();
+            user.ThrowIfNull(nameof(user));
+            claims.ThrowIfNull(nameof(claims));
+
+            if (user.Claims != null) {
+                user.Claims = (await GetClaimsAsync(user, cancellationToken)).ToList();
+            }
+
+            foreach (var claim in claims) {
+                user.Claims.Remove(claim);
+            }
         }
 
-        public Task<IList<ApplicationUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken) {
-            throw new NotImplementedException();
+        public Task<IList<ApplicationUser>> GetUsersForClaimAsync(Claim claim, CancellationToken cancellationToken = default(CancellationToken)) {
+            cancellationToken.ThrowIfCancellationRequested();
+            claim.ThrowIfNull(nameof(claim));
+            return _usersTable.GetUsersForClaimAsync(claim);
         }
         #endregion IUserClaimStore<ApplicationUser> 
 
         #region IUserLockoutStore<ApplicationUser> Implementation
-        public Task<DateTimeOffset?> GetLockoutEndDateAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<DateTimeOffset?> GetLockoutEndDateAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             return Task.FromResult(user.LockoutEnd);
         }
 
-        public Task SetLockoutEndDateAsync(ApplicationUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken) {
+        public Task SetLockoutEndDateAsync(ApplicationUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.LockoutEnd = lockoutEnd?.UtcDateTime;
             return Task.CompletedTask;
         }
 
-        public Task<int> IncrementAccessFailedCountAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<int> IncrementAccessFailedCountAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.AccessFailedCount++;
             return Task.FromResult(user.AccessFailedCount);
         }
 
-        public Task ResetAccessFailedCountAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task ResetAccessFailedCountAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.AccessFailedCount = 0;
             return Task.CompletedTask;
         }
 
-        public Task<int> GetAccessFailedCountAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<int> GetAccessFailedCountAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             return Task.FromResult(user.AccessFailedCount);
         }
 
-        public Task<bool> GetLockoutEnabledAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<bool> GetLockoutEnabledAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             return Task.FromResult(user.LockoutEnabled);
         }
 
-        public Task SetLockoutEnabledAsync(ApplicationUser user, bool enabled, CancellationToken cancellationToken) {
+        public Task SetLockoutEnabledAsync(ApplicationUser user, bool enabled, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             user.LockoutEnabled = enabled;
@@ -340,50 +384,65 @@ namespace AspNetCore.Identity.Dapper
         #endregion IUserLockoutStore<ApplicationUser> Implementation
 
         #region IUserRoleStore<ApplicationUser> Implementation
-        public Task AddToRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken) {
+        public async Task AddToRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             roleName.ThrowIfNull(nameof(roleName));
-            var role = Task.Run(() => _rolesTable.GetAllRoles(), cancellationToken).Result.SingleOrDefault(e => e.NormalizedName == roleName);
-            return _usersRolesTable.AddToRoleAsync(user, role.Id);
+
+            if (user.Roles == null) {
+                user.Roles = (await GetRolesAsync(user, cancellationToken)).ToList();
+            }
+
+            if (!await IsInRoleAsync(user, roleName, cancellationToken)) {
+                user.Roles.Add(roleName);
+            }
         }
 
-        public Task RemoveFromRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken) {
+        public async Task RemoveFromRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
-            var role = Task.Run(() => _rolesTable.GetAllRoles(), cancellationToken).Result.SingleOrDefault(e => e.NormalizedName == roleName);
-            return _usersRolesTable.RemoveFromRoleAsync(user, role.Id);
+
+            if (user.Roles == null) {
+                user.Roles = (await GetRolesAsync(user, cancellationToken)).ToList();
+            }
+
+            user.Roles.Remove(roleName);
         }
 
-        public Task<IList<string>> GetRolesAsync(ApplicationUser user, CancellationToken cancellationToken) {
+        public Task<IList<string>> GetRolesAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             return _usersRolesTable.GetRolesAsync(user);
         }
 
-        public async Task<bool> IsInRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken) {
+        public async Task<bool> IsInRoleAsync(ApplicationUser user, string roleName, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             roleName.ThrowIfNull(nameof(roleName));
-            var userRoles = await GetRolesAsync(user, cancellationToken);
-            return userRoles.Contains(roleName);
+
+            if (user.Roles == null) {
+                user.Roles = (await GetRolesAsync(user, cancellationToken)).ToList();
+            }
+
+            return user.Roles.Contains(roleName);
         }
 
-        public Task<IList<ApplicationUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken) {
-            throw new NotImplementedException();
+        public Task<IList<ApplicationUser>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken = default(CancellationToken)) {
+            cancellationToken.ThrowIfCancellationRequested();
+            return _usersTable.GetUsersInRoleAsync(roleName);
         }
         #endregion IUserRoleStore<ApplicationUser> Implementation
 
         #region IUserAuthenticationTokenStore<ApplicationUser> Implementation
-        public Task SetTokenAsync(ApplicationUser user, string loginProvider, string name, string value, CancellationToken cancellationToken) {
+        public Task SetTokenAsync(ApplicationUser user, string loginProvider, string name, string value, CancellationToken cancellationToken = default(CancellationToken)) {
             throw new NotImplementedException();
         }
 
-        public Task RemoveTokenAsync(ApplicationUser user, string loginProvider, string name, CancellationToken cancellationToken) {
+        public Task RemoveTokenAsync(ApplicationUser user, string loginProvider, string name, CancellationToken cancellationToken = default(CancellationToken)) {
             throw new NotImplementedException();
         }
 
-        public Task<string> GetTokenAsync(ApplicationUser user, string loginProvider, string name, CancellationToken cancellationToken) {
+        public Task<string> GetTokenAsync(ApplicationUser user, string loginProvider, string name, CancellationToken cancellationToken = default(CancellationToken)) {
             throw new NotImplementedException();
         }
         #endregion

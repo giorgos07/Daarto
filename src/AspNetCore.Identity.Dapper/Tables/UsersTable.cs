@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Identity;
@@ -159,6 +160,42 @@ namespace AspNetCore.Identity.Dapper
                 Code = nameof(UpdateAsync),
                 Description = $"User with email {user.Email} could not be updated."
             });
+        }
+
+        public async Task<IList<ApplicationUser>> GetUsersInRoleAsync(string roleName) {
+            const string command = "SELECT * " +
+                                   "FROM dbo.Users AS u " +
+                                   "INNER JOIN dbo.UserRoles AS ur ON u.Id = ur.UserId " +
+                                   "INNER JOIN dbo.Roles AS r ON ur.RoleId = r.Id " +
+                                   "WHERE r.Name = @RoleName;";
+
+            IEnumerable<ApplicationUser> users = new List<ApplicationUser>();
+
+            using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
+                users = await sqlConnection.QueryAsync<ApplicationUser>(command, new {
+                    RoleName = roleName
+                });
+            }
+
+            return users.ToList();
+        }
+
+        public async Task<IList<ApplicationUser>> GetUsersForClaimAsync(Claim claim) {
+            const string command = "SELECT * " +
+                                   "FROM dbo.Users AS u " +
+                                   "INNER JOIN dbo.UserClaims AS uc ON u.Id = uc.UserId " +
+                                   "WHERE uc.ClaimType = @ClaimType AND uc.ClaimValue = @ClaimValue;";
+
+            IEnumerable<ApplicationUser> users = new List<ApplicationUser>();
+
+            using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
+                users = await sqlConnection.QueryAsync<ApplicationUser>(command, new {
+                    ClaimType = claim.Type,
+                    ClaimValue = claim.Value
+                });
+            }
+
+            return users.ToList();
         }
 
         public async Task<IEnumerable<ApplicationUser>> GetAllUsers() {
