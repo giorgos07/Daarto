@@ -131,7 +131,7 @@ namespace Daarto.WebUI.Controllers
             await _userManager.AddToRoleAsync(user, "User");
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
 
-            var callbackUrl = Url.Action("confirm-email", "account", new {
+            var callbackUrl = Url.Action(nameof(ConfirmEmail), Name, new {
                 userId = user.Id,
                 code
             }, HttpContext.Request.Scheme);

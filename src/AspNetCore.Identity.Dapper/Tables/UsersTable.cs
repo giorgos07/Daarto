@@ -123,43 +123,104 @@ namespace AspNetCore.Identity.Dapper
                     "AccessFailedCount = @AccessFailedCount " +
                 "WHERE Id = @Id;";
 
-            const string insertClaimsCommand = "INSERT INTO dbo.UserClaims (UserId, ClaimType, ClaimValue) " +
-                                               "VALUES (@UserId, @ClaimType, @ClaimValue);";
-
-            int rowsUpdated;
-
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                rowsUpdated = await sqlConnection.ExecuteAsync(updateUserCommand, new {
-                    user.UserName,
-                    user.NormalizedUserName,
-                    user.Email,
-                    user.NormalizedEmail,
-                    user.EmailConfirmed,
-                    user.PasswordHash,
-                    user.SecurityStamp,
-                    user.ConcurrencyStamp,
-                    user.PhoneNumber,
-                    user.PhoneNumberConfirmed,
-                    user.TwoFactorEnabled,
-                    user.LockoutEnd,
-                    user.LockoutEnabled,
-                    user.AccessFailedCount,
-                    user.Id
-                });
+                using (var transaction = sqlConnection.BeginTransaction()) {
+                    await sqlConnection.ExecuteAsync(updateUserCommand, new {
+                        user.UserName,
+                        user.NormalizedUserName,
+                        user.Email,
+                        user.NormalizedEmail,
+                        user.EmailConfirmed,
+                        user.PasswordHash,
+                        user.SecurityStamp,
+                        user.ConcurrencyStamp,
+                        user.PhoneNumber,
+                        user.PhoneNumberConfirmed,
+                        user.TwoFactorEnabled,
+                        user.LockoutEnd,
+                        user.LockoutEnabled,
+                        user.AccessFailedCount,
+                        user.Id
+                    }, transaction);
 
-                if (user.Claims.Count() > 0) {
-                    rowsUpdated += await sqlConnection.ExecuteAsync(insertClaimsCommand, user.Claims.Select(e => new {
-                        UserId = user.Id,
-                        ClaimType = e.Type,
-                        ClaimValue = e.Value
-                    }));
+                    if (user.Claims.Count() > 0) {
+                        const string deleteClaimsCommand = "DELETE " +
+                                                           "FROM dbo.UserClaims " +
+                                                           "WHERE UserId = @UserId;";
+
+                        await sqlConnection.ExecuteAsync(deleteClaimsCommand, new {
+                            UserId = user.Id
+                        }, transaction);
+
+                        const string insertClaimsCommand = "INSERT INTO dbo.UserClaims (UserId, ClaimType, ClaimValue) " +
+                                                           "VALUES (@UserId, @ClaimType, @ClaimValue);";
+
+                        await sqlConnection.ExecuteAsync(insertClaimsCommand, user.Claims.Select(x => new {
+                            UserId = user.Id,
+                            ClaimType = x.Type,
+                            ClaimValue = x.Value
+                        }), transaction);
+                    }
+
+                    if (user.Logins.Count() > 0) {
+                        const string deleteLoginsCommand = "DELETE " +
+                                                           "FROM dbo.UserLogins " +
+                                                           "WHERE UserId = @UserId;";
+
+                        await sqlConnection.ExecuteAsync(deleteLoginsCommand, new {
+                            UserId = user.Id
+                        }, transaction);
+
+                        const string insertLoginsCommand = "INSERT INTO dbo.UserLogins (LoginProvider, ProviderKey, ProviderDisplayName, UserId) " +
+                                                           "VALUES (@LoginProvider, @ProviderKey, @ProviderDisplayName, @UserId);";
+
+                        await sqlConnection.ExecuteAsync(insertLoginsCommand, user.Logins.Select(x => new {
+                            x.LoginProvider,
+                            x.ProviderKey,
+                            x.ProviderDisplayName,
+                            UserId = user.Id
+                        }), transaction);
+                    }
+
+                    if (user.Roles.Count() > 0) {
+                        const string deleteRolesCommand = "DELETE " +
+                                                          "FROM dbo.UserRoles " +
+                                                          "WHERE UserId = @UserId;";
+
+                        await sqlConnection.ExecuteAsync(deleteRolesCommand, new {
+                            UserId = user.Id
+                        }, transaction);
+
+                        const string insertRolesCommand = "INSERT INTO dbo.UserRoles (UserId, RoleId) " +
+                                                          "VALUES (@UserId, @RoleId);";
+
+                        await sqlConnection.ExecuteAsync(insertRolesCommand, user.Roles.Select(x => new {
+                            UserId = user.Id,
+                            x.RoleId
+                        }), transaction);
+                    }
+
+                    try {
+                        transaction.Commit();
+                    } catch {
+                        try {
+                            transaction.Rollback();
+                        } catch {
+                            return IdentityResult.Failed(new IdentityError {
+                                Code = nameof(UpdateAsync),
+                                Description = $"User with email {user.Email} could not be updated. Operation could not be rolled back."
+                            });
+                        }
+
+                        return IdentityResult.Failed(new IdentityError {
+                            Code = nameof(UpdateAsync),
+                            Description = $"User with email {user.Email} could not be updated. Operation was rolled back."
+                        });
+                    }
                 }
             }
 
-            return rowsUpdated == user.Claims.Count() + 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
-                Code = nameof(UpdateAsync),
-                Description = $"User with email {user.Email} could not be updated."
-            });
+            return IdentityResult.Success;
         }
 
         public async Task<IList<ApplicationUser>> GetUsersInRoleAsync(string roleName) {

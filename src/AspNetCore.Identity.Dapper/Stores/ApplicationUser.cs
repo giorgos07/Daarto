@@ -23,7 +23,7 @@ namespace AspNetCore.Identity.Dapper
         public bool LockoutEnabled { get; set; }
         public int AccessFailedCount { get; set; }
         internal List<Claim> Claims { get; set; }
-        internal List<string> Roles { get; set; }
+        internal List<UserRole> Roles { get; set; }
         internal List<UserLoginInfo> Logins { get; set; }
         internal List<UserToken> Tokens { get; set; }
     }

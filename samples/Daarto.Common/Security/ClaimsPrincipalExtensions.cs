@@ -77,5 +77,23 @@ namespace Daarto.Security
         }
 
         public static string GetPhotoUrl(this ClaimsPrincipal user) => GetClaimValue(user, ClaimTypes.Uri);
+
+        public static string GetDisplayName(this ClaimsPrincipal principal) {
+            var displayName = default(string);
+            var name = principal.FindFirst(ClaimTypes.Name)?.Value;
+            var firstName = principal.FindFirst(ClaimTypes.GivenName)?.Value;
+            var lastName = principal.FindFirst(ClaimTypes.Surname)?.Value;
+            var email = principal.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (!string.IsNullOrEmpty(firstName) || !string.IsNullOrEmpty(lastName)) {
+                displayName = $"{firstName} {lastName}".Trim();
+            } else if (!string.IsNullOrEmpty(name)) {
+                displayName = name;
+            } else if (!string.IsNullOrEmpty(email)) {
+                displayName = email;
+            }
+
+            return displayName;
+        }
     }
 }

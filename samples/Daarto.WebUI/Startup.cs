@@ -81,7 +81,7 @@ namespace Daarto.WebUI
 
             // Configure custom services to be used by the framework.
             services.AddTransient<IDatabaseConnectionFactory>(e => new SqlConnectionFactory(connectionString));
-            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, ApplicationUserClaimsPrincipalFactory>();
+            services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, UserClaimsPrincipalFactory>();
             services.AddSingleton<ICacheManagerService, CacheManagerService>();
             services.AddTransient<IUserRepository, UserRepository>();
 

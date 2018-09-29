@@ -16,7 +16,7 @@
                     <input asp-for="Id" type="hidden" />
                     @if (ViewBag.Response != null)
                     {
-                        var response = (EditUserProfileResponseViewModel)ViewBag.Response;
+                        var response = (EditProfileResult)ViewBag.Response;
 
                         <div class="@(response.Succeeded ? "text-success" : "text-danger") wrapper text-center">
                             @response.Description

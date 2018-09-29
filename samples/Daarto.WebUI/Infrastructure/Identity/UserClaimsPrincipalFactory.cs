@@ -8,11 +8,11 @@ using Microsoft.Extensions.Options;
 
 namespace Daarto.Infrastructure.Identity
 {
-    public class ApplicationUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
+    public class UserClaimsPrincipalFactory : UserClaimsPrincipalFactory<ApplicationUser, ApplicationRole>
     {
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public ApplicationUserClaimsPrincipalFactory(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IOptions<IdentityOptions> optionsAccessor,
+        public UserClaimsPrincipalFactory(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager, IOptions<IdentityOptions> optionsAccessor,
             IOptions<AppSettings> appSettings) : base(userManager, roleManager, optionsAccessor) {
 
             _userManager = userManager ?? throw new ArgumentNullException(nameof(userManager));
