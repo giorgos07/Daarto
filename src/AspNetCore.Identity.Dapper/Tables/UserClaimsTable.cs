@@ -17,15 +17,13 @@ namespace AspNetCore.Identity.Dapper
                                    "FROM dbo.UserClaims " +
                                    "WHERE UserId = @UserId;";
 
-            IEnumerable<UserClaim> userClaims = new List<UserClaim>();
-
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                userClaims = await sqlConnection.QueryAsync<UserClaim>(command, new {
-                    UserId = user.Id
-                });
+                return (
+                    await sqlConnection.QueryAsync<UserClaim>(command, new { UserId = user.Id })
+                )
+                .Select(e => new Claim(e.ClaimType, e.ClaimValue))
+                .ToList(); ;
             }
-
-            return userClaims.Select(e => new Claim(e.ClaimType, e.ClaimValue)).ToList();
         }
     }
 }

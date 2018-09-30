@@ -100,7 +100,7 @@ namespace AspNetCore.Identity.Dapper
             return _usersTable.UpdateAsync(user);
         }
 
-        public void Dispose() { }
+        public void Dispose() { /* Nothing to dispose. */ }
         #endregion IUserStore<ApplicationUser> Implementation
 
         #region IUserEmailStore<ApplicationUser> Implementation
@@ -388,7 +388,7 @@ namespace AspNetCore.Identity.Dapper
                 return;
             }
 
-            user.Roles = await GetRolesInternalAsync(user);
+            user.Roles = user.Roles ?? (await _usersRolesTable.GetRolesAsync(user)).ToList();
 
             if (await IsInRoleAsync(user, roleName, cancellationToken)) {
                 return;
@@ -404,7 +404,7 @@ namespace AspNetCore.Identity.Dapper
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             roleName.ThrowIfNull(nameof(roleName));
-            user.Roles = await GetRolesInternalAsync(user);
+            user.Roles = user.Roles ?? (await _usersRolesTable.GetRolesAsync(user)).ToList();
             var role = user.Roles.SingleOrDefault(x => x.RoleName == roleName);
 
             if (role != null) {
@@ -415,7 +415,7 @@ namespace AspNetCore.Identity.Dapper
         public async Task<IList<string>> GetRolesAsync(ApplicationUser user, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
-            user.Roles = await GetRolesInternalAsync(user);
+            user.Roles = user.Roles ?? (await _usersRolesTable.GetRolesAsync(user)).ToList();
             return user.Roles.Select(x => x.RoleName).ToList();
         }
 
@@ -423,7 +423,7 @@ namespace AspNetCore.Identity.Dapper
             cancellationToken.ThrowIfCancellationRequested();
             user.ThrowIfNull(nameof(user));
             roleName.ThrowIfNull(nameof(roleName));
-            user.Roles = await GetRolesInternalAsync(user);
+            user.Roles = user.Roles ?? (await _usersRolesTable.GetRolesAsync(user)).ToList();
             return user.Roles.Any(x => x.RoleName == roleName);
         }
 
@@ -434,21 +434,37 @@ namespace AspNetCore.Identity.Dapper
         #endregion IUserRoleStore<ApplicationUser> Implementation
 
         #region IUserAuthenticationTokenStore<ApplicationUser> Implementation
-        public Task SetTokenAsync(ApplicationUser user, string loginProvider, string name, string value, CancellationToken cancellationToken = default(CancellationToken)) {
-            throw new NotImplementedException();
+        public async Task SetTokenAsync(ApplicationUser user, string loginProvider, string name, string value, CancellationToken cancellationToken = default(CancellationToken)) {
+            cancellationToken.ThrowIfCancellationRequested();
+            user.ThrowIfNull(nameof(user));
+            loginProvider.ThrowIfNull(nameof(loginProvider));
+            user.Tokens = user.Tokens ?? (await _userTokensTable.GetTokensAsync(user.Id)).ToList();
+
+            user.Tokens.Add(new UserToken {
+                UserId = user.Id,
+                LoginProvider = loginProvider,
+                Name = name,
+                Value = value
+            });
         }
 
-        public Task RemoveTokenAsync(ApplicationUser user, string loginProvider, string name, CancellationToken cancellationToken = default(CancellationToken)) {
-            throw new NotImplementedException();
+        public async Task RemoveTokenAsync(ApplicationUser user, string loginProvider, string name, CancellationToken cancellationToken = default(CancellationToken)) {
+            cancellationToken.ThrowIfCancellationRequested();
+            user.ThrowIfNull(nameof(user));
+            loginProvider.ThrowIfNull(nameof(loginProvider));
+            user.Tokens = user.Tokens ?? (await _userTokensTable.GetTokensAsync(user.Id)).ToList();
+            var token = user.Tokens.SingleOrDefault(x => x.LoginProvider == loginProvider && x.Name == name);
+            user.Tokens.Remove(token);
         }
 
-        public Task<string> GetTokenAsync(ApplicationUser user, string loginProvider, string name, CancellationToken cancellationToken = default(CancellationToken)) {
-            throw new NotImplementedException();
+        public async Task<string> GetTokenAsync(ApplicationUser user, string loginProvider, string name, CancellationToken cancellationToken = default(CancellationToken)) {
+            cancellationToken.ThrowIfCancellationRequested();
+            user.ThrowIfNull(nameof(user));
+            loginProvider.ThrowIfNull(nameof(loginProvider));
+            name.ThrowIfNull(nameof(name));
+            user.Tokens = user.Tokens ?? (await _userTokensTable.GetTokensAsync(user.Id)).ToList();
+            return user.Tokens.SingleOrDefault(x => x.LoginProvider == loginProvider && x.Name == name)?.Value;
         }
-        #endregion
-
-        #region Helper Methods
-        private async Task<List<UserRole>> GetRolesInternalAsync(ApplicationUser user) => user.Roles ?? (await _usersRolesTable.GetRolesAsync(user)).ToList();
         #endregion
     }
 }

@@ -93,22 +93,38 @@ namespace AspNetCore.Identity.Dapper
             return _rolesTable.FindByNameAsync(normalizedRoleName);
         }
 
-        public void Dispose() { }
+        public void Dispose() { /* Nothing to dispose. */ }
         #endregion
 
         #region IRoleClaimStore<ApplicationRole> Implementation
-        public Task<IList<Claim>> GetClaimsAsync(ApplicationRole role, CancellationToken cancellationToken = default(CancellationToken)) {
+        public async Task<IList<Claim>> GetClaimsAsync(ApplicationRole role, CancellationToken cancellationToken = default(CancellationToken)) {
             cancellationToken.ThrowIfCancellationRequested();
             role.ThrowIfNull(nameof(role));
-            return _roleClaimsTable.GetClaimsAsync(role.Id);
+            role.Claims = role.Claims ?? (await _roleClaimsTable.GetClaimsAsync(role.Id)).ToList();
+            return role.Claims;
         }
 
-        public Task AddClaimAsync(ApplicationRole role, Claim claim, CancellationToken cancellationToken = default(CancellationToken)) {
-            throw new NotImplementedException();
+        public async Task AddClaimAsync(ApplicationRole role, Claim claim, CancellationToken cancellationToken = default(CancellationToken)) {
+            cancellationToken.ThrowIfCancellationRequested();
+            role.ThrowIfNull(nameof(role));
+            claim.ThrowIfNull(nameof(claim));
+            role.Claims = role.Claims ?? (await _roleClaimsTable.GetClaimsAsync(role.Id)).ToList();
+            var foundClaim = role.Claims.FirstOrDefault(x => x.Type == claim.Type);
+
+            if (foundClaim != null) {
+                role.Claims.Remove(foundClaim);
+                role.Claims.Add(claim);
+            } else {
+                role.Claims.Add(claim);
+            }
         }
 
-        public Task RemoveClaimAsync(ApplicationRole role, Claim claim, CancellationToken cancellationToken = default(CancellationToken)) {
-            throw new NotImplementedException();
+        public async Task RemoveClaimAsync(ApplicationRole role, Claim claim, CancellationToken cancellationToken = default(CancellationToken)) {
+            cancellationToken.ThrowIfCancellationRequested();
+            role.ThrowIfNull(nameof(role));
+            claim.ThrowIfNull(nameof(claim));
+            role.Claims = role.Claims ?? (await _roleClaimsTable.GetClaimsAsync(role.Id)).ToList();
+            role.Claims.Remove(claim);
         }
         #endregion
     }

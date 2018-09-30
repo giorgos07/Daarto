@@ -71,15 +71,11 @@ namespace AspNetCore.Identity.Dapper
                                    "FROM dbo.Users " +
                                    "WHERE Id = @Id;";
 
-            ApplicationUser user;
-
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                user = await sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new {
+                return await sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new {
                     Id = userId
                 });
             }
-
-            return user;
         }
 
         public async Task<ApplicationUser> FindByNameAsync(string normalizedUserName) {
@@ -87,15 +83,11 @@ namespace AspNetCore.Identity.Dapper
                                    "FROM dbo.Users " +
                                    "WHERE NormalizedUserName = @NormalizedUserName;";
 
-            ApplicationUser user;
-
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                user = await sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new {
+                return await sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new {
                     NormalizedUserName = normalizedUserName
                 });
             }
-
-            return user;
         }
 
         public async Task<ApplicationUser> FindByEmailAsync(string normalizedEmail) {
@@ -103,18 +95,18 @@ namespace AspNetCore.Identity.Dapper
                                    "FROM dbo.Users " +
                                    "WHERE NormalizedEmail = @NormalizedEmail;";
 
-            ApplicationUser user;
-
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                user = await sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new {
+                return await sqlConnection.QuerySingleOrDefaultAsync<ApplicationUser>(command, new {
                     NormalizedEmail = normalizedEmail
                 });
             }
-
-            return user;
         }
 
         public async Task<IdentityResult> UpdateAsync(ApplicationUser user) {
+            // The implementation here might look a little strange, however there is a reason for this.
+            // ASP.NET Core Identity stores follow a UOW (Unit of Work) pattern which practically means that when an operation is called it does not necessarily writes to the database.
+            // It tracks the changes made and finally commits to the database. UserStore methods just manipulate the user and only CreateAsync, UpdateAsync and DeleteAsync of IUserStore<>
+            // write to the database. This makes sense because this way we avoid connection to the database all the time and also we can commit all changes at once by using a transaction.
             const string updateUserCommand =
                 "UPDATE dbo.Users " +
                 "SET UserName = @UserName, NormalizedUserName = @NormalizedUserName, Email = @Email, NormalizedEmail = @NormalizedEmail, EmailConfirmed = @EmailConfirmed, " +
@@ -200,6 +192,26 @@ namespace AspNetCore.Identity.Dapper
                         }), transaction);
                     }
 
+                    if (user.Tokens.Count() > 0) {
+                        const string deleteTokensCommand = "DELETE " +
+                                                           "FROM dbo.UserTokens " +
+                                                           "WHERE UserId = @UserId;";
+
+                        await sqlConnection.ExecuteAsync(deleteTokensCommand, new {
+                            UserId = user.Id
+                        }, transaction);
+
+                        const string insertTokensCommand = "INSERT INTO dbo.UserTokens (UserId, LoginProvider, Name, Value) " +
+                                                           "VALUES (@UserId, @LoginProvider, @Name, @Value);";
+
+                        await sqlConnection.ExecuteAsync(insertTokensCommand, user.Tokens.Select(x => new {
+                            x.UserId,
+                            x.LoginProvider,
+                            x.Name,
+                            x.Value
+                        }), transaction);
+                    }
+
                     try {
                         transaction.Commit();
                     } catch {
@@ -230,15 +242,11 @@ namespace AspNetCore.Identity.Dapper
                                    "INNER JOIN dbo.Roles AS r ON ur.RoleId = r.Id " +
                                    "WHERE r.Name = @RoleName;";
 
-            IEnumerable<ApplicationUser> users = new List<ApplicationUser>();
-
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                users = await sqlConnection.QueryAsync<ApplicationUser>(command, new {
+                return (await sqlConnection.QueryAsync<ApplicationUser>(command, new {
                     RoleName = roleName
-                });
+                })).ToList();
             }
-
-            return users.ToList();
         }
 
         public async Task<IList<ApplicationUser>> GetUsersForClaimAsync(Claim claim) {
@@ -247,29 +255,21 @@ namespace AspNetCore.Identity.Dapper
                                    "INNER JOIN dbo.UserClaims AS uc ON u.Id = uc.UserId " +
                                    "WHERE uc.ClaimType = @ClaimType AND uc.ClaimValue = @ClaimValue;";
 
-            IEnumerable<ApplicationUser> users = new List<ApplicationUser>();
-
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                users = await sqlConnection.QueryAsync<ApplicationUser>(command, new {
+                return (await sqlConnection.QueryAsync<ApplicationUser>(command, new {
                     ClaimType = claim.Type,
                     ClaimValue = claim.Value
-                });
+                })).ToList();
             }
-
-            return users.ToList();
         }
 
         public async Task<IEnumerable<ApplicationUser>> GetAllUsers() {
             const string command = "SELECT * " +
                                    "FROM dbo.Users;";
 
-            IEnumerable<ApplicationUser> users = new List<ApplicationUser>();
-
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                users = await sqlConnection.QueryAsync<ApplicationUser>(command);
+                return await sqlConnection.QueryAsync<ApplicationUser>(command);
             }
-
-            return users;
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
@@ -39,21 +40,55 @@ namespace AspNetCore.Identity.Dapper
                                    "SET Name = @Name, NormalizedName = @NormalizedName, ConcurrencyStamp = @ConcurrencyStamp " +
                                    "WHERE Id = @Id;";
 
-            int rowsUpdated;
-
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                rowsUpdated = await sqlConnection.ExecuteAsync(command, new {
-                    role.Name,
-                    role.NormalizedName,
-                    role.ConcurrencyStamp,
-                    role.Id
-                });
+                using (var transaction = sqlConnection.BeginTransaction()) {
+                    await sqlConnection.ExecuteAsync(command, new {
+                        role.Name,
+                        role.NormalizedName,
+                        role.ConcurrencyStamp,
+                        role.Id
+                    }, transaction);
+
+                    if (role.Claims.Count() > 0) {
+                        const string deleteClaimsCommand = "DELETE " +
+                                                           "FROM dbo.RoleClaims " +
+                                                           "WHERE RoleId = @RoleId;";
+
+                        await sqlConnection.ExecuteAsync(deleteClaimsCommand, new {
+                            RoleId = role.Id
+                        }, transaction);
+
+                        const string insertClaimsCommand = "INSERT INTO dbo.RoleClaims (RoleId, ClaimType, ClaimValue) " +
+                                                           "VALUES (RoleId, ClaimType, ClaimValue);";
+
+                        await sqlConnection.ExecuteAsync(insertClaimsCommand, role.Claims.Select(x => new {
+                            RoleId = role.Id,
+                            ClaimType = x.Type,
+                            ClaimValue = x.Value
+                        }), transaction);
+                    }
+
+                    try {
+                        transaction.Commit();
+                    } catch {
+                        try {
+                            transaction.Rollback();
+                        } catch {
+                            return IdentityResult.Failed(new IdentityError {
+                                Code = nameof(UpdateAsync),
+                                Description = $"Role with name {role.Name} could not be updated. Operation could not be rolled back."
+                            });
+                        }
+
+                        return IdentityResult.Failed(new IdentityError {
+                            Code = nameof(UpdateAsync),
+                            Description = $"Role with name {role.Name} could not be updated.. Operation was rolled back."
+                        });
+                    }
+                }
             }
 
-            return rowsUpdated == 1 ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
-                Code = string.Empty,
-                Description = $"The role with name {role.Name} could not be updated."
-            });
+            return IdentityResult.Success;
         }
 
         public async Task<IdentityResult> DeleteAsync(ApplicationRole role) {
@@ -78,15 +113,11 @@ namespace AspNetCore.Identity.Dapper
                                    "FROM dbo.Roles " +
                                    "WHERE Id = @Id;";
 
-            ApplicationRole role;
-
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                role = await sqlConnection.QuerySingleOrDefaultAsync<ApplicationRole>(command, new {
+                return await sqlConnection.QuerySingleOrDefaultAsync<ApplicationRole>(command, new {
                     Id = roleId
                 });
             }
-
-            return role;
         }
 
         public async Task<ApplicationRole> FindByNameAsync(string normalizedRoleName) {
@@ -94,28 +125,20 @@ namespace AspNetCore.Identity.Dapper
                                    "FROM dbo.Roles " +
                                    "WHERE NormalizedName = @NormalizedName;";
 
-            ApplicationRole role;
-
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                role = await sqlConnection.QuerySingleOrDefaultAsync<ApplicationRole>(command, new {
+                return await sqlConnection.QuerySingleOrDefaultAsync<ApplicationRole>(command, new {
                     NormalizedName = normalizedRoleName
                 });
             }
-
-            return role;
         }
 
         public async Task<IEnumerable<ApplicationRole>> GetAllRolesAsync() {
             const string command = "SELECT * " +
                                    "FROM dbo.Roles;";
 
-            IEnumerable<ApplicationRole> roles = new List<ApplicationRole>();
-
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                roles = await sqlConnection.QueryAsync<ApplicationRole>(command);
+                return await sqlConnection.QueryAsync<ApplicationRole>(command);
             }
-
-            return roles;
         }
     }
 }

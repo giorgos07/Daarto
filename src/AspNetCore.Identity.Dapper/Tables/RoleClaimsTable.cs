@@ -20,12 +20,12 @@ namespace AspNetCore.Identity.Dapper
             IEnumerable<RoleClaim> roleClaims = new List<RoleClaim>();
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                roleClaims = await sqlConnection.QueryAsync<RoleClaim>(command, new {
-                    RoleId = roleId
-                });
+                return (
+                    await sqlConnection.QueryAsync<RoleClaim>(command, new { RoleId = roleId })
+                )
+                .Select(x => new Claim(x.ClaimType, x.ClaimValue))
+                .ToList();
             }
-
-            return roleClaims.Select(x => new Claim(x.ClaimType, x.ClaimValue)).ToList();
         }
     }
 }
