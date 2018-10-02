@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace AspNetCore.Identity.Dapper
+﻿namespace AspNetCore.Identity.Dapper
 {
     internal class UserClaim
     {

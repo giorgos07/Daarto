@@ -9,6 +9,9 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 
 namespace AspNetCore.Identity.Dapper
 {
+    /// <summary>
+    /// Extension methods on <see cref="IdentityBuilder"/> class.
+    /// </summary>
     public static class IdentityBuilderExtensions
     {
         /// <summary>
