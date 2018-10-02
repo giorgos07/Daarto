@@ -16,10 +16,10 @@
     <PackageId>AspNetCore.Identity.Dapper</PackageId>
     <PackageTags>AspNetCore;Dapper;Identity</PackageTags>
     <PackageReleaseNotes>Initial release of the library.</PackageReleaseNotes>
-    <PackageProjectUrl>https://github.com/giorgos07/Daarto</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/giorgos07/Daarto/tree/master/src/AspNetCore.Identity.Dapper</PackageProjectUrl>
     <PackageLicenseUrl>https://github.com/giorgos07/Daarto/tree/master/src/AspNetCore.Identity.Dapper/LICENSE</PackageLicenseUrl>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/giorgos07/Daarto</RepositoryUrl>
+    <RepositoryUrl>https://github.com/giorgos07/Daarto/tree/master/src/AspNetCore.Identity.Dapper</RepositoryUrl>
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
