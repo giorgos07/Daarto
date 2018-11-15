@@ -135,7 +135,7 @@ namespace AspNetCore.Identity.Dapper
                         user.Id
                     }, transaction);
 
-                    if (user.Claims.Count() > 0) {
+                    if (user.Claims?.Count() > 0) {
                         const string deleteClaimsCommand = "DELETE " +
                                                            "FROM dbo.UserClaims " +
                                                            "WHERE UserId = @UserId;";
@@ -154,7 +154,7 @@ namespace AspNetCore.Identity.Dapper
                         }), transaction);
                     }
 
-                    if (user.Logins.Count() > 0) {
+                    if (user.Logins?.Count() > 0) {
                         const string deleteLoginsCommand = "DELETE " +
                                                            "FROM dbo.UserLogins " +
                                                            "WHERE UserId = @UserId;";
@@ -174,7 +174,7 @@ namespace AspNetCore.Identity.Dapper
                         }), transaction);
                     }
 
-                    if (user.Roles.Count() > 0) {
+                    if (user.Roles?.Count() > 0) {
                         const string deleteRolesCommand = "DELETE " +
                                                           "FROM dbo.UserRoles " +
                                                           "WHERE UserId = @UserId;";
@@ -192,7 +192,7 @@ namespace AspNetCore.Identity.Dapper
                         }), transaction);
                     }
 
-                    if (user.Tokens.Count() > 0) {
+                    if (user.Tokens?.Count() > 0) {
                         const string deleteTokensCommand = "DELETE " +
                                                            "FROM dbo.UserTokens " +
                                                            "WHERE UserId = @UserId;";
