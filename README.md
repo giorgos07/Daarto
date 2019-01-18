@@ -1,3 +1,15 @@
+# Identity.Dapper.Postgres
+
+This is a fork of the Daarto repo. It uses Postgres (a real database :-) instead of SQLServer.  It uses standard Postgres table and field names (underscores instead of camel case).   Thankfully dapper converts bweteen underscored names and camel case class names.
+
+I also removed the editor config file as I don't use the java style of curly bracing.  I also renamed some projects and will rename more.
+
+Much appreciation to giorgos07, as this is the best code I've seen yet for using Dapper with MS Identity.
+
+The code runs, but more work is needed and I'll update this file with more info on how to setup the Postgres database.
+
+Original Readme:
+
 # Daarto
 
 The main purpose of the project is to demonstrate a custom implementation of [ASP.NET Core Identity](https://docs.microsoft.com/en-us/aspnet/core/security/authentication/identity) by using SQL Server and [Dapper](https://github.com/StackExchange/Dapper), in case you do not want to use the default implementation provided by Entity Framework.
