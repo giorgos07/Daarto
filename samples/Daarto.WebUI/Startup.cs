@@ -1,10 +1,11 @@
 ﻿using System;
-using AspNetCore.Identity.Dapper;
 using Daarto.Abstractions;
 using Daarto.Infrastructure.Identity;
 using Daarto.Infrastructure.Settings;
 using Daarto.Models;
 using Daarto.Services;
+using Identity.Dapper.Postgres;
+using Identity.Dapper.Postgres.Stores;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;

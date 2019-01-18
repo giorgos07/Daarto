@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AspNetCore.Identity.Dapper;
 using Daarto.Infrastructure.Filters;
 using Daarto.Infrastructure.Settings;
 using Daarto.Models;
 using Daarto.Security;
+using Identity.Dapper.Postgres.Stores;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

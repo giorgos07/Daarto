@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AspNetCore.Identity.Dapper;
 using Daarto.Models;
+using Identity.Dapper.Postgres.Stores;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;

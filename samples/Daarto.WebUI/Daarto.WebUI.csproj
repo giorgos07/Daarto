@@ -11,6 +11,7 @@
     <Folder Include="wwwroot\lib\" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Identity.Dapper.Postgres\Identity.Dapper.Postgres.csproj" />
     <ProjectReference Include="..\Daarto.Common\Daarto.Common.csproj" />
   </ItemGroup>
 </Project>

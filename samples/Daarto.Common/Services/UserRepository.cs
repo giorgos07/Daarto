@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AspNetCore.Identity.Dapper;
 using Daarto.Abstractions;
 using Daarto.Models;
+using Identity.Dapper.Postgres.Stores;
 using SqlKata.Compilers;
 using SqlKata.Execution;
 

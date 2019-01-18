@@ -10,6 +10,6 @@
     <PackageReference Include="MailKit" Version="2.1.2" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\AspNetCore.Identity.Dapper\AspNetCore.Identity.Dapper.csproj" />
+    <ProjectReference Include="..\..\src\Identity.Dapper.Postgres\Identity.Dapper.Postgres.csproj" />
   </ItemGroup>
 </Project>

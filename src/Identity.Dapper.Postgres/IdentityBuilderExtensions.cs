@@ -3,11 +3,12 @@
  */
 
 using System;
+using Identity.Dapper.Postgres.Stores;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace AspNetCore.Identity.Dapper
+namespace Identity.Dapper.Postgres
 {
     /// <summary>
     /// Extension methods on <see cref="IdentityBuilder"/> class.
