@@ -3,8 +3,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Dapper;
+using Identity.Dapper.Postgres.Stores;
 
-namespace AspNetCore.Identity.Dapper
+namespace Identity.Dapper.Postgres.Tables
 {
     internal class RoleClaimsTable
     {
@@ -14,8 +15,8 @@ namespace AspNetCore.Identity.Dapper
 
         public async Task<IList<Claim>> GetClaimsAsync(string roleId) {
             const string command = "SELECT * " +
-                                   "FROM dbo.RoleClaims " +
-                                   "WHERE RoleId = @RoleId;";
+                                   "FROM identity_role_claims " +
+                                   "WHERE role_id = @RoleId;";
 
             IEnumerable<RoleClaim> roleClaims = new List<RoleClaim>();
 

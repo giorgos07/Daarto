@@ -4,9 +4,10 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Identity.Dapper.Postgres.Tables;
 using Microsoft.AspNetCore.Identity;
 
-namespace AspNetCore.Identity.Dapper
+namespace Identity.Dapper.Postgres.Stores
 {
     internal class RoleStore : IQueryableRoleStore<ApplicationRole>, IRoleClaimStore<ApplicationRole>, IRoleStore<ApplicationRole>
     {

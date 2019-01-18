@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Security.Claims;
 
-namespace AspNetCore.Identity.Dapper
+namespace Identity.Dapper.Postgres.Stores
 {
     public class ApplicationRole
     {

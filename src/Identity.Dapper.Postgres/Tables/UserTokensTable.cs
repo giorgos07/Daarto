@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
+using Identity.Dapper.Postgres.Stores;
 
-namespace AspNetCore.Identity.Dapper
+namespace Identity.Dapper.Postgres.Tables
 {
     internal class UserTokensTable
     {
@@ -12,8 +13,8 @@ namespace AspNetCore.Identity.Dapper
 
         public async Task<IEnumerable<UserToken>> GetTokensAsync(string userId) {
             const string command = "SELECT * " +
-                                   "FROM dbo.UserTokens " +
-                                   "WHERE UserId = @UserId;";
+                                   "FROM identity_user_tokens " +
+                                   "WHERE user_id = @UserId;";
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
                 return await sqlConnection.QueryAsync<UserToken>(command, new {

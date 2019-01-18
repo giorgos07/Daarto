@@ -1,7 +1,7 @@
 ﻿using System.Data;
 using System.Threading.Tasks;
 
-namespace AspNetCore.Identity.Dapper
+namespace Identity.Dapper.Postgres
 {
     internal interface IDatabaseConnectionFactory
     {

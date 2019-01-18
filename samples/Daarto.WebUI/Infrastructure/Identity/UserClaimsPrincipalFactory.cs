@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using AspNetCore.Identity.Dapper;
 using Daarto.Infrastructure.Settings;
+using Identity.Dapper.Postgres.Stores;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 

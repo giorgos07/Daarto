@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AspNetCore.Identity.Dapper
+namespace Identity.Dapper.Postgres
 {
     internal static class ObjectExtensions
     {
