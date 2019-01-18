@@ -1,4 +1,4 @@
-﻿namespace AspNetCore.Identity.Dapper
+﻿namespace Identity.Dapper.Postgres.Stores
 {
     internal class UserClaim
     {

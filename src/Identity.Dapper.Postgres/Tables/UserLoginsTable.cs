@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
+using Identity.Dapper.Postgres.Stores;
 using Microsoft.AspNetCore.Identity;
 
-namespace AspNetCore.Identity.Dapper
+namespace Identity.Dapper.Postgres.Tables
 {
     internal class UserLoginsTable
     {
@@ -15,8 +16,8 @@ namespace AspNetCore.Identity.Dapper
 
         public async Task<IList<UserLoginInfo>> GetLoginsAsync(ApplicationUser user) {
             const string command = "SELECT * " +
-                                   "FROM dbo.UserLogins " +
-                                   "WHERE UserId = @UserId;";
+                                   "FROM identity_user_logins " +
+                                   "WHERE user_id = @UserId;";
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
                 return (
@@ -30,9 +31,9 @@ namespace AspNetCore.Identity.Dapper
         public async Task<ApplicationUser> FindByLoginAsync(string loginProvider, string providerKey) {
             string[] command =
             {
-                "SELECT UserId " +
-                "FROM dbo.UserLogins " +
-                "WHERE LoginProvider = @LoginProvider AND ProviderKey = @ProviderKey;"
+                "SELECT user_id " +
+                "FROM identity_user_logins " +
+                "WHERE login_provider = @LoginProvider AND provider_key = @ProviderKey;"
             };
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
@@ -46,8 +47,8 @@ namespace AspNetCore.Identity.Dapper
                 }
 
                 command[0] = "SELECT * " +
-                             "FROM dbo.Users " +
-                             "WHERE Id = @Id;";
+                             "FROM identity_users " +
+                             "WHERE id = @Id;";
 
                 return await sqlConnection.QuerySingleAsync<ApplicationUser>(command[0], new { Id = userId });
             }

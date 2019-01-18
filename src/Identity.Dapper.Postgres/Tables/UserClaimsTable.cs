@@ -3,8 +3,9 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Dapper;
+using Identity.Dapper.Postgres.Stores;
 
-namespace AspNetCore.Identity.Dapper
+namespace Identity.Dapper.Postgres.Tables
 {
     internal class UserClaimsTable
     {
@@ -14,8 +15,8 @@ namespace AspNetCore.Identity.Dapper
 
         public async Task<IList<Claim>> GetClaimsAsync(ApplicationUser user) {
             const string command = "SELECT * " +
-                                   "FROM dbo.UserClaims " +
-                                   "WHERE UserId = @UserId;";
+                                   "FROM identity_user_claims " +
+                                   "WHERE user_id = @UserId;";
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
                 return (

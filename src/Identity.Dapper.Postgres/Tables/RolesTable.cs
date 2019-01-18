@@ -4,9 +4,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Dapper;
+using Identity.Dapper.Postgres.Stores;
 using Microsoft.AspNetCore.Identity;
 
-namespace AspNetCore.Identity.Dapper
+namespace Identity.Dapper.Postgres.Tables
 {
     internal class RolesTable
     {
@@ -15,7 +16,8 @@ namespace AspNetCore.Identity.Dapper
         public RolesTable(IDatabaseConnectionFactory databaseConnectionFactory) => _databaseConnectionFactory = databaseConnectionFactory;
 
         public async Task<IdentityResult> CreateAsync(ApplicationRole role, CancellationToken cancellationToken) {
-            const string command = "INSERT INTO dbo.Roles " +
+            const string command = "INSERT INTO identity_roles " +
+                                   "(id, name, normalized_name, concurrency_stamp) "+
                                    "VALUES (@Id, @Name, @NormalizedName, @ConcurrencyStamp);";
 
             int rowsInserted;
@@ -36,9 +38,9 @@ namespace AspNetCore.Identity.Dapper
         }
 
         public async Task<IdentityResult> UpdateAsync(ApplicationRole role) {
-            const string command = "UPDATE dbo.Roles " +
-                                   "SET Name = @Name, NormalizedName = @NormalizedName, ConcurrencyStamp = @ConcurrencyStamp " +
-                                   "WHERE Id = @Id;";
+            const string command = "UPDATE identity_roles " +
+                                   "SET name = @Name, normalized_name = @NormalizedName, concurrency_stamp = @ConcurrencyStamp " +
+                                   "WHERE id = @Id;";
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
                 using (var transaction = sqlConnection.BeginTransaction()) {
@@ -51,15 +53,15 @@ namespace AspNetCore.Identity.Dapper
 
                     if (role.Claims.Count() > 0) {
                         const string deleteClaimsCommand = "DELETE " +
-                                                           "FROM dbo.RoleClaims " +
-                                                           "WHERE RoleId = @RoleId;";
+                                                           "FROM identity_role_claims " +
+                                                           "WHERE role_id = @RoleId;";
 
                         await sqlConnection.ExecuteAsync(deleteClaimsCommand, new {
                             RoleId = role.Id
                         }, transaction);
 
-                        const string insertClaimsCommand = "INSERT INTO dbo.RoleClaims (RoleId, ClaimType, ClaimValue) " +
-                                                           "VALUES (RoleId, ClaimType, ClaimValue);";
+                        const string insertClaimsCommand = "INSERT INTO identity_role_claims (role_id, claim_type, claim_value) " +
+                                                           "VALUES (@RoleId, @ClaimType, @ClaimValue);";
 
                         await sqlConnection.ExecuteAsync(insertClaimsCommand, role.Claims.Select(x => new {
                             RoleId = role.Id,
@@ -93,8 +95,8 @@ namespace AspNetCore.Identity.Dapper
 
         public async Task<IdentityResult> DeleteAsync(ApplicationRole role) {
             const string command = "DELETE " +
-                                   "FROM dbo.Roles " +
-                                   "WHERE Id = @Id;";
+                                   "FROM identity_roles " +
+                                   "WHERE id = @Id;";
 
             int rowsDeleted;
 
@@ -110,8 +112,8 @@ namespace AspNetCore.Identity.Dapper
 
         public async Task<ApplicationRole> FindByIdAsync(Guid roleId) {
             const string command = "SELECT * " +
-                                   "FROM dbo.Roles " +
-                                   "WHERE Id = @Id;";
+                                   "FROM identity_roles " +
+                                   "WHERE id = @Id;";
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
                 return await sqlConnection.QuerySingleOrDefaultAsync<ApplicationRole>(command, new {
@@ -122,8 +124,8 @@ namespace AspNetCore.Identity.Dapper
 
         public async Task<ApplicationRole> FindByNameAsync(string normalizedRoleName) {
             const string command = "SELECT * " +
-                                   "FROM dbo.Roles " +
-                                   "WHERE NormalizedName = @NormalizedName;";
+                                   "FROM identity_roles " +
+                                   "WHERE normalized_name = @NormalizedName;";
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
                 return await sqlConnection.QuerySingleOrDefaultAsync<ApplicationRole>(command, new {
@@ -134,7 +136,7 @@ namespace AspNetCore.Identity.Dapper
 
         public async Task<IEnumerable<ApplicationRole>> GetAllRolesAsync() {
             const string command = "SELECT * " +
-                                   "FROM dbo.Roles;";
+                                   "FROM identity_roles;";
 
             using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
                 return await sqlConnection.QueryAsync<ApplicationRole>(command);

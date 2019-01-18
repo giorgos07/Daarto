@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
+using Npgsql;
 using System.Threading.Tasks;
+using D = Dapper;
 
-namespace AspNetCore.Identity.Dapper
+namespace Identity.Dapper.Postgres
 {
     internal class SqlConnectionFactory : IDatabaseConnectionFactory
     {
@@ -11,14 +12,12 @@ namespace AspNetCore.Identity.Dapper
 
         public SqlConnectionFactory(string connectionString) => _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
 
-        public async Task<IDbConnection> CreateConnectionAsync() {
-            try {
-                var sqlConnection = new SqlConnection(_connectionString);
-                await sqlConnection.OpenAsync();
-                return sqlConnection;
-            } catch {
-                throw;
-            }
+        public async Task<IDbConnection> CreateConnectionAsync() 
+        {
+            var sqlConnection = new NpgsqlConnection(_connectionString);
+            D.DefaultTypeMap.MatchNamesWithUnderscores = true;
+            await sqlConnection.OpenAsync();
+            return sqlConnection;
         }
     }
 }
