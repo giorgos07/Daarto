@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Dapper;
 using Identity.Dapper.Postgres.Stores;
@@ -11,7 +12,7 @@ namespace Identity.Dapper.Postgres.Tables
 
         public UserTokensTable(IDatabaseConnectionFactory databaseConnectionFactory) => _databaseConnectionFactory = databaseConnectionFactory;
 
-        public async Task<IEnumerable<UserToken>> GetTokensAsync(string userId) {
+        public async Task<IEnumerable<UserToken>> GetTokensAsync(Guid userId) {
             const string command = "SELECT * " +
                                    "FROM identity_user_tokens " +
                                    "WHERE user_id = @UserId;";

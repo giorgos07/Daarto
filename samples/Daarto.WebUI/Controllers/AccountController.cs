@@ -112,7 +112,7 @@ namespace Daarto.WebUI.Controllers
             }
 
             var user = new ApplicationUser {
-                Id = $"{Guid.NewGuid()}",
+                Id = Guid.NewGuid(),
                 UserName = model.Email,
                 Email = model.Email
             };

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -13,7 +14,7 @@ namespace Identity.Dapper.Postgres.Tables
 
         public RoleClaimsTable(IDatabaseConnectionFactory databaseConnectionFactory) => _databaseConnectionFactory = databaseConnectionFactory;
 
-        public async Task<IList<Claim>> GetClaimsAsync(string roleId) {
+        public async Task<IList<Claim>> GetClaimsAsync(Guid roleId) {
             const string command = "SELECT * " +
                                    "FROM identity_role_claims " +
                                    "WHERE role_id = @RoleId;";

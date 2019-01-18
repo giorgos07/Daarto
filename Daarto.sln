@@ -10,7 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{02369E2A-8527-4EC5-AE86-CB7805427398}"
 	ProjectSection(SolutionItems) = preProject
 		misc\scripts\clear_database.sql = misc\scripts\clear_database.sql
-		misc\scripts\create_database_schema.sql = misc\scripts\create_database_schema.sql
+		CreateDatabase.sql = CreateDatabase.sql
 		misc\scripts\generate_roles_table_data.sql = misc\scripts\generate_roles_table_data.sql
 		misc\scripts\generate_users_roles_table_data.sql = misc\scripts\generate_users_roles_table_data.sql
 		misc\scripts\generate_users_table_data.sql = misc\scripts\generate_users_table_data.sql

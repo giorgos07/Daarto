@@ -7,7 +7,7 @@ namespace Identity.Dapper.Postgres.Stores
 {
     public class ApplicationUser
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         public string UserName { get; set; }
         public string NormalizedUserName { get; set; }
         public string Email { get; set; }
