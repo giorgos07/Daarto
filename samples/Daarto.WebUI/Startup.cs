@@ -35,7 +35,7 @@ namespace Daarto.WebUI
         // application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services) {
             // Get the connection string from appsettings.json file.
-            var connectionString = Configuration.GetConnectionString("DaartoDbConnection");
+            var connectionString = Configuration.GetConnectionString("DbConnection");
 
             // Add and configure the default identity system that will be used in the application.
             services.AddIdentity<ApplicationUser, ApplicationRole>()
