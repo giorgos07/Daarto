@@ -1,4 +1,5 @@
 ﻿using Daarto.Abstractions;
+using Daarto.Infrastructure.Caching;
 using Daarto.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

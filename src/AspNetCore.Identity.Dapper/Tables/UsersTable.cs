@@ -104,8 +104,8 @@ namespace AspNetCore.Identity.Dapper
 
         public async Task<IdentityResult> UpdateAsync(ApplicationUser user) {
             // The implementation here might look a little strange, however there is a reason for this.
-            // ASP.NET Core Identity stores follow a UOW (Unit of Work) pattern which practically means that when an operation is called it does not necessarily writes to the database.
-            // It tracks the changes made and finally commits to the database. UserStore methods just manipulate the user and only CreateAsync, UpdateAsync and DeleteAsync of IUserStore<>
+            // ASP.NET Core Identity stores follow a UOW (Unit of Work) pattern which practically means that when an operation is called it does not necessarily commits to the database.
+            // It tracks the changes made and finally commits to the database. UserStore methods just manipulates the user and only CreateAsync, UpdateAsync and DeleteAsync of IUserStore<>
             // write to the database. This makes sense because this way we avoid connection to the database all the time and also we can commit all changes at once by using a transaction.
             const string updateUserCommand =
                 "UPDATE dbo.Users " +

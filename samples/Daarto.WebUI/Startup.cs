@@ -78,7 +78,6 @@ namespace Daarto.WebUI
             services.Configure<AppSettings>(Configuration);
             // Add services required for using options.
             services.AddOptions();
-
             // Configure custom services to be used by the framework.
             services.AddTransient<IDatabaseConnectionFactory>(e => new SqlConnectionFactory(connectionString));
             services.AddScoped<IUserClaimsPrincipalFactory<ApplicationUser>, UserClaimsPrincipalFactory>();
@@ -97,7 +96,7 @@ namespace Daarto.WebUI
 
             // Add and configure MVC services.
             services.AddMvc()
-                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
+                    .SetCompatibilityVersion(CompatibilityVersion.Latest)
                     .AddJsonOptions(setupAction => {
                         // Configure the contract resolver that is used when serializing .NET objects to JSON and vice versa.
                         setupAction.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
@@ -106,9 +105,6 @@ namespace Daarto.WebUI
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder applicationBuilder, IHostingEnvironment hostingEnvironment, ILoggerFactory loggerFactory) {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
-            loggerFactory.AddDebug();
-
             if (hostingEnvironment.IsDevelopment()) {
                 applicationBuilder.UseDeveloperExceptionPage();
             } else {
