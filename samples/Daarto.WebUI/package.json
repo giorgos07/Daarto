@@ -1,7 +1,7 @@
 {
   "dependencies": {
     "animate.css": "3.7.0",
-    "bootstrap": "3.3.7",
+    "bootstrap": "3.4.1",
     "datatables": "1.10.18",
     "datatables.net-plugins": "1.10.18",
     "datatables-bootstrap": "0.0.1",
