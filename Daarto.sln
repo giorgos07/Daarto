@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26403.7
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29613.14
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AE94DD8D-1626-4618-AB38-37459DEE54E0}"
 EndProject
@@ -9,11 +9,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{AAE1B832-6
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{02369E2A-8527-4EC5-AE86-CB7805427398}"
 	ProjectSection(SolutionItems) = preProject
-		misc\scripts\clear_database.sql = misc\scripts\clear_database.sql
-		misc\scripts\create_database_schema.sql = misc\scripts\create_database_schema.sql
-		misc\scripts\generate_roles_table_data.sql = misc\scripts\generate_roles_table_data.sql
-		misc\scripts\generate_users_roles_table_data.sql = misc\scripts\generate_users_roles_table_data.sql
-		misc\scripts\generate_users_table_data.sql = misc\scripts\generate_users_table_data.sql
+		misc\scripts\AspNetRolesData.sql = misc\scripts\AspNetRolesData.sql
+		misc\scripts\AspNetUserRolesData.sql = misc\scripts\AspNetUserRolesData.sql
+		misc\scripts\AspNetUsersData.sql = misc\scripts\AspNetUsersData.sql
+		misc\scripts\ClearDatabase.sql = misc\scripts\ClearDatabase.sql
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Identity.Dapper", "src\AspNetCore.Identity.Dapper\AspNetCore.Identity.Dapper.csproj", "{DD01411B-826F-4CA3-8581-8FDA9C7961AC}"
@@ -23,6 +22,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daarto.Common", "samples\Daarto.Common\Daarto.Common.csproj", "{A00BF7E1-5FC4-4038-A506-4A59898E046F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daarto.WebUI", "samples\Daarto.WebUI\Daarto.WebUI.csproj", "{25AA0C36-2CB3-44E9-8593-13BFCC20B9A6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database", "database", "{661AB817-BF00-4B7F-88B5-9ADC84DC93A5}"
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "IdentityDb", "misc\database\IdentityDb\IdentityDb.sqlproj", "{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -42,6 +45,12 @@ Global
 		{25AA0C36-2CB3-44E9-8593-13BFCC20B9A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25AA0C36-2CB3-44E9-8593-13BFCC20B9A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25AA0C36-2CB3-44E9-8593-13BFCC20B9A6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -51,6 +60,8 @@ Global
 		{DD01411B-826F-4CA3-8581-8FDA9C7961AC} = {AE94DD8D-1626-4618-AB38-37459DEE54E0}
 		{A00BF7E1-5FC4-4038-A506-4A59898E046F} = {525F9EE4-17EB-4E98-A775-C28282BC2962}
 		{25AA0C36-2CB3-44E9-8593-13BFCC20B9A6} = {525F9EE4-17EB-4E98-A775-C28282BC2962}
+		{661AB817-BF00-4B7F-88B5-9ADC84DC93A5} = {AAE1B832-6032-4C5C-8154-F6775CC051F8}
+		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB} = {661AB817-BF00-4B7F-88B5-9ADC84DC93A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {78AE28B8-138A-401A-B79E-457DC5EFB188}

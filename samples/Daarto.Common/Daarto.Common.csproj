@@ -9,7 +9,4 @@
     <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
     <PackageReference Include="MailKit" Version="2.1.3" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\src\AspNetCore.Identity.Dapper\AspNetCore.Identity.Dapper.csproj" />
-  </ItemGroup>
 </Project>

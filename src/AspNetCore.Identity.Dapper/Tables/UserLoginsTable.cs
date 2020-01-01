@@ -1,56 +1,67 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCore.Identity.Dapper
 {
-    internal class UserLoginsTable
+    /// <summary>
+    /// The default implementation of <see cref="IUserLoginsTable{TKey, TUser, TUserLogin}"/>.
+    /// </summary>
+    /// <typeparam name="TDbConnection">The type of the database connection class used to access the store.</typeparam>
+    /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
+    /// <typeparam name="TUser">The type representing a user.</typeparam>
+    /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
+    public class UserLoginsTable<TDbConnection, TKey, TUser, TUserLogin> : IUserLoginsTable<TKey, TUser, TUserLogin>
+        where TDbConnection : IDbConnection
+        where TKey : IEquatable<TKey>
+        where TUser : IdentityUser<TKey>
+        where TUserLogin : IdentityUserLogin<TKey>, new()
     {
-        private readonly IDatabaseConnectionFactory _databaseConnectionFactory;
-
-        public UserLoginsTable(IDatabaseConnectionFactory databaseConnectionFactory) => _databaseConnectionFactory = databaseConnectionFactory;
-
-        public async Task<IList<UserLoginInfo>> GetLoginsAsync(ApplicationUser user) {
-            const string command = "SELECT * " +
-                                   "FROM dbo.UserLogins " +
-                                   "WHERE UserId = @UserId;";
-
-            using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                return (
-                    await sqlConnection.QueryAsync<UserLogin>(command, new { UserId = user.Id })
-                )
-                .Select(x => new UserLoginInfo(x.LoginProvider, x.ProviderKey, x.ProviderDisplayName))
-                .ToList(); ;
-            }
+        /// <summary>
+        /// Creates a new instance of <see cref="UserLoginsTable{TDbConnection, TKey, TUser, TUserLogin}"/>.
+        /// </summary>
+        /// <param name="dbConnection">The <see cref="IDbConnection"/> to use.</param>
+        public UserLoginsTable(TDbConnection dbConnection) {
+            DbConnection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
         }
 
-        public async Task<ApplicationUser> FindByLoginAsync(string loginProvider, string providerKey) {
-            string[] command =
+        /// <summary>
+        /// The <see cref="IDbConnection"/> to use.
+        /// </summary>
+        protected TDbConnection DbConnection { get; set; }
+
+        /// <inheritdoc/>
+        public virtual async Task<IEnumerable<TUserLogin>> GetLoginsAsync(TKey userId) {
+            const string sql = "SELECT * " +
+                               "FROM [dbo].[AspNetUserLogins] " +
+                               "WHERE [UserId] = @UserId;";
+            var userLogins = await DbConnection.QueryAsync<TUserLogin>(sql, new { UserId = userId });
+            return userLogins;
+        }
+
+        /// <inheritdoc/>
+        public virtual async Task<TUser> FindByLoginAsync(string loginProvider, string providerKey) {
+            string[] sql =
             {
-                "SELECT UserId " +
-                "FROM dbo.UserLogins " +
-                "WHERE LoginProvider = @LoginProvider AND ProviderKey = @ProviderKey;"
+                "SELECT [UserId] " +
+                "FROM [dbo].[AspNetUserLogins] " +
+                "WHERE [LoginProvider] = @LoginProvider AND [ProviderKey] = @ProviderKey;"
             };
-
-            using (var sqlConnection = await _databaseConnectionFactory.CreateConnectionAsync()) {
-                var userId = await sqlConnection.QuerySingleOrDefaultAsync<Guid?>(command[0], new {
-                    LoginProvider = loginProvider,
-                    ProviderKey = providerKey
-                });
-
-                if (userId == null) {
-                    return null;
-                }
-
-                command[0] = "SELECT * " +
-                             "FROM dbo.Users " +
-                             "WHERE Id = @Id;";
-
-                return await sqlConnection.QuerySingleAsync<ApplicationUser>(command[0], new { Id = userId });
+            var userId = await DbConnection.QuerySingleOrDefaultAsync<TKey>(sql[0], new {
+                LoginProvider = loginProvider,
+                ProviderKey = providerKey
+            });
+            if (userId == null) {
+                return null;
             }
+            sql[0] = "SELECT * " +
+                     "FROM [dbo].[AspNetUsers] " +
+                     "WHERE [Id] = @Id;";
+            var user = await DbConnection.QuerySingleAsync<TUser>(sql[0], new { Id = userId });
+            return user;
         }
     }
 }

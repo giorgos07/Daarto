@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using AspNetCore.Identity.Dapper;
 using Daarto.Abstractions;
 using Daarto.Models;
 using SqlKata.Compilers;
@@ -26,8 +25,8 @@ namespace Daarto.Services
                                     .Select(nameof(User.Id), nameof(User.Email), nameof(User.EmailConfirmed), nameof(User.PhoneNumber), nameof(User.LockoutEnd), nameof(User.LockoutEnabled));
 
                 if (!string.IsNullOrEmpty(searchTerm)) {
-                    query = query.Where(q => q.Where(nameof(ApplicationUser.Email), "LIKE", $"%{searchTerm}%")
-                                              .OrWhere(nameof(ApplicationUser.PhoneNumber), "LIKE", $"%{searchTerm}%"));
+                    query = query.Where(q => q.Where(nameof(User.Email), "LIKE", $"%{searchTerm}%")
+                                              .OrWhere(nameof(User.PhoneNumber), "LIKE", $"%{searchTerm}%"));
                 }
 
                 if (sortDirection == SortDirection.Ascending) {
