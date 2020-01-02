@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Identity;
 namespace AspNetCore.Identity.Dapper
 {
     /// <summary>
-    /// The default implementation of <see cref="IUsersTable{TKey, TUser, TUserClaim, TUserRole, TUserLogin, TUserToken}"/>.
+    /// The default implementation of <see cref="IUsersTable{TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken}"/>.
     /// </summary>
     /// <typeparam name="TDbConnection">The type of the database connection class used to access the store.</typeparam>
     /// <typeparam name="TKey">The type of the primary key for a role and user.</typeparam>
@@ -19,17 +19,17 @@ namespace AspNetCore.Identity.Dapper
     /// <typeparam name="TUserRole">The type representing a user role.</typeparam>
     /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
     /// <typeparam name="TUserToken">The type representing a user token.</typeparam>
-    public class UsersTable<TDbConnection, TKey, TUser, TUserClaim, TUserRole, TUserLogin, TUserToken> : IUsersTable<TKey, TUser, TUserClaim, TUserRole, TUserLogin, TUserToken>
+    public class UsersTable<TDbConnection, TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken> : IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken>
         where TDbConnection : IDbConnection
-        where TKey : IEquatable<TKey>
         where TUser : IdentityUser<TKey>
+        where TKey : IEquatable<TKey>
         where TUserClaim : IdentityUserClaim<TKey>, new()
         where TUserRole : IdentityUserRole<TKey>, new()
         where TUserLogin : IdentityUserLogin<TKey>, new()
         where TUserToken : IdentityUserToken<TKey>, new()
     {
         /// <summary>
-        /// Creates a new instance of <see cref="UsersTable{TDbConnection, TKey, TUser, TUserClaim, TUserRole, TUserLogin, TUserToken}"/>.
+        /// Creates a new instance of <see cref="UsersTable{TDbConnection, TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken}"/>.
         /// </summary>
         /// <param name="dbConnection">The <see cref="IDbConnection"/> to use.</param>
         public UsersTable(TDbConnection dbConnection) {
@@ -85,7 +85,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public async Task<TUser> FindByNameAsync(string normalizedUserName) {
+        public virtual async Task<TUser> FindByNameAsync(string normalizedUserName) {
             const string sql = "SELECT * " +
                                "FROM [dbo].[AspNetUsers] " +
                                "WHERE [NormalizedUserName] = @NormalizedUserName;";
@@ -94,7 +94,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public async Task<TUser> FindByEmailAsync(string normalizedEmail) {
+        public virtual async Task<TUser> FindByEmailAsync(string normalizedEmail) {
             const string command = "SELECT * " +
                                    "FROM [dbo].[AspNetUsers] " +
                                    "WHERE [NormalizedEmail] = @NormalizedEmail;";
@@ -193,7 +193,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<TUser>> GetUsersInRoleAsync(string roleName) {
+        public virtual async Task<IEnumerable<TUser>> GetUsersInRoleAsync(string roleName) {
             const string sql = "SELECT * " +
                                "FROM [dbo].[AspNetUsers] AS [u] " +
                                "INNER JOIN [dbo].[AspNetUserRoles] AS [ur] ON [u].[Id] = [ur].[UserId] " +
@@ -204,7 +204,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<TUser>> GetUsersForClaimAsync(Claim claim) {
+        public virtual async Task<IEnumerable<TUser>> GetUsersForClaimAsync(Claim claim) {
             const string sql = "SELECT * " +
                                    "FROM [dbo].[AspNetUsers] AS [u] " +
                                    "INNER JOIN [dbo].[AspNetUserClaims] AS [uc] ON [u].[Id] = [uc].[UserId] " +

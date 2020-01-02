@@ -8,12 +8,12 @@ namespace AspNetCore.Identity.Dapper
     /// <summary>
     /// Abstraction for interacting with AspNetUserLogins table.
     /// </summary>
-    /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
     /// <typeparam name="TUser">The type representing a user.</typeparam>
+    /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
     /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
-    public interface IUserLoginsTable<TKey, TUser, TUserLogin>
-        where TKey : IEquatable<TKey>
+    public interface IUserLoginsTable<TUser, TKey, TUserLogin>
         where TUser : IdentityUser<TKey>
+        where TKey : IEquatable<TKey>
         where TUserLogin : IdentityUserLogin<TKey>, new()
     {
         /// <summary>
@@ -27,5 +27,18 @@ namespace AspNetCore.Identity.Dapper
         /// <param name="loginProvider">The login provider.</param>
         /// <param name="providerKey">The provider key.</param>
         Task<TUser> FindByLoginAsync(string loginProvider, string providerKey);
+        /// <summary>
+        /// Finds a user login.
+        /// </summary>
+        /// <param name="loginProvider">The login provider.</param>
+        /// <param name="providerKey">The provider key.</param>
+        Task<TUserLogin> FindUserLoginAsync(string loginProvider, string providerKey);
+        /// <summary>
+        /// Finds a user login.
+        /// </summary>
+        /// <param name="userId">The id of the user.</param>
+        /// <param name="loginProvider">The login provider.</param>
+        /// <param name="providerKey">The provider key.</param>
+        Task<TUserLogin> FindUserLoginAsync(TKey userId, string loginProvider, string providerKey);
     }
 }

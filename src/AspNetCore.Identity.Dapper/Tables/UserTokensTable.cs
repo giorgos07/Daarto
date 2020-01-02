@@ -19,7 +19,7 @@ namespace AspNetCore.Identity.Dapper
         where TUserToken : IdentityUserToken<TKey>, new()
     {
         /// <summary>
-        /// Creates a new instance of .
+        /// Creates a new instance of <see cref="UserTokensTable{TDbConnection, TKey, TUserToken}"/>.
         /// </summary>
         /// <param name="dbConnection">The <see cref="IDbConnection"/> to use.</param>
         public UserTokensTable(TDbConnection dbConnection) {
@@ -32,12 +32,25 @@ namespace AspNetCore.Identity.Dapper
         protected TDbConnection DbConnection { get; set; }
 
         /// <inheritdoc/>
-        public async Task<IEnumerable<TUserToken>> GetTokensAsync(string userId) {
+        public virtual async Task<IEnumerable<TUserToken>> GetTokensAsync(TKey userId) {
             const string sql = "SELECT * " +
                                "FROM [dbo].[AspNetUserTokens] " +
                                "WHERE [UserId] = @UserId;";
             var userTokens = await DbConnection.QueryAsync<TUserToken>(sql, new { UserId = userId });
             return userTokens;
+        }
+
+        /// <inheritdoc/>
+        public virtual async Task<TUserToken> FindTokenAsync(TKey userId, string loginProvider, string name) {
+            const string sql = "SELECT * " +
+                               "FROM [dbo].[AspNetUserTokens] " +
+                               "WHERE [UserId] = @UserId AND [LoginProvider] = @LoginProvider AND [Name] = @Name;";
+            var token = await DbConnection.QuerySingleOrDefaultAsync<TUserToken>(sql, new {
+                UserId = userId,
+                LoginProvider = loginProvider,
+                Name = name
+            });
+            return token;
         }
     }
 }

@@ -18,6 +18,13 @@ namespace AspNetCore.Identity.Dapper
         /// Gets a list of tokens to be belonging to the specified user.
         /// </summary>
         /// <param name="userId">The id of the user.</param>
-        Task<IEnumerable<TUserToken>> GetTokensAsync(string userId);
+        Task<IEnumerable<TUserToken>> GetTokensAsync(TKey userId);
+        /// <summary>
+        /// Finds a token entry for the specified user.
+        /// </summary>
+        /// <param name="userId">The id of the user.</param>
+        /// <param name="loginProvider">The login provider.</param>
+        /// <param name="name">The token name.</param>
+        Task<TUserToken> FindTokenAsync(TKey userId, string loginProvider, string name);
     }
 }

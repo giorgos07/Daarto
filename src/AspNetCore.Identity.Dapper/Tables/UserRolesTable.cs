@@ -8,18 +8,18 @@ using Microsoft.AspNetCore.Identity;
 namespace AspNetCore.Identity.Dapper
 {
     /// <summary>
-    /// The default implementation of <see cref="IUserRolesTable{TKey, TUserRole}"/>.
+    /// The default implementation of <see cref="IUserRolesTable{TRole, TKey}"/>.
     /// </summary>
     /// <typeparam name="TDbConnection">The type of the database connection class used to access the store.</typeparam>
-    /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
     /// <typeparam name="TRole">The type representing a role.</typeparam>
-    public class UserRolesTable<TDbConnection, TKey, TRole> : IUserRolesTable<TKey, TRole>
+    /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
+    public class UserRolesTable<TDbConnection, TRole, TKey> : IUserRolesTable<TRole, TKey>
         where TDbConnection : IDbConnection
-        where TKey : IEquatable<TKey>
         where TRole : IdentityRole<TKey>
+        where TKey : IEquatable<TKey>
     {
         /// <summary>
-        /// Creates a new instance of <see cref="UserRolesTable{TDbConnection, TKey, TUserRole}"/>.
+        /// Creates a new instance of <see cref="UserRolesTable{TDbConnection, TRole, TKey}"/>.
         /// </summary>
         /// <param name="dbConnection">The <see cref="IDbConnection"/> to use.</param>
         public UserRolesTable(TDbConnection dbConnection) {

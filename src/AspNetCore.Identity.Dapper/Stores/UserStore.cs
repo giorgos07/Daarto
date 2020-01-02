@@ -11,20 +11,20 @@ namespace AspNetCore.Identity.Dapper
     /// <summary>
     /// Represents a persistence store for the specified user and role types.
     /// </summary>
-    /// <typeparam name="TKey">The type of the primary key for a role and user.</typeparam>
     /// <typeparam name="TUser">The type representing a user.</typeparam>
     /// <typeparam name="TRole">The type representing a role.</typeparam>
+    /// <typeparam name="TKey">The type of the primary key for a role and user.</typeparam>
     /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
     /// <typeparam name="TUserRole">The type representing a user role.</typeparam>
     /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
     /// <typeparam name="TUserToken">The type representing a user token.</typeparam>
     /// <typeparam name="TRoleClaim">The type representing a role claim.</typeparam>
-    public class UserStore<TKey, TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> :
-        UserStoreBase<TKey, TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>,
+    public class UserStore<TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim> :
+        UserStoreBase<TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim>,
         IProtectedUserStore<TUser>
-        where TKey : IEquatable<TKey>
         where TUser : IdentityUser<TKey>
         where TRole : IdentityRole<TKey>
+        where TKey : IEquatable<TKey>
         where TUserClaim : IdentityUserClaim<TKey>, new()
         where TUserRole : IdentityUserRole<TKey>, new()
         where TUserLogin : IdentityUserLogin<TKey>, new()
@@ -32,7 +32,7 @@ namespace AspNetCore.Identity.Dapper
         where TRoleClaim : IdentityRoleClaim<TKey>, new()
     {
         /// <summary>
-        /// Constructs a new instance of <see cref="UserStore{TKey, TUser, TRole, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>.
+        /// Constructs a new instance of <see cref="UserStore{TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken, TRoleClaim}"/>.
         /// </summary>
         /// <param name="usersTable">Abstraction for interacting with AspNetUsers table.</param>
         /// <param name="userClaimsTable">Abstraction for interacting with AspNetUserClaims table.</param>
@@ -41,8 +41,8 @@ namespace AspNetCore.Identity.Dapper
         /// <param name="userTokensTable">Abstraction for interacting with AspNetUserTokens table.</param>
         /// <param name="rolesTable">Abstraction for interacting with AspNetRoles table.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-        public UserStore(IUsersTable<TKey, TUser, TUserClaim, TUserRole, TUserLogin, TUserToken> usersTable, IUserClaimsTable<TKey, TUserClaim> userClaimsTable, IUserRolesTable<TKey, TRole> userRolesTable,
-            IUserLoginsTable<TKey, TUser, TUserLogin> userLoginsTable, IUserTokensTable<TKey, TUserToken> userTokensTable, IRolesTable<TKey, TRole, TRoleClaim> rolesTable, IdentityErrorDescriber describer = null) : base(describer) {
+        public UserStore(IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken> usersTable, IUserClaimsTable<TKey, TUserClaim> userClaimsTable, IUserRolesTable<TRole, TKey> userRolesTable,
+            IUserLoginsTable<TUser, TKey, TUserLogin> userLoginsTable, IUserTokensTable<TKey, TUserToken> userTokensTable, IRolesTable<TRole, TKey, TRoleClaim> rolesTable, IdentityErrorDescriber describer = null) : base(describer) {
             UsersTable = usersTable ?? throw new ArgumentNullException(nameof(usersTable));
             UserClaimsTable = userClaimsTable ?? throw new ArgumentNullException(nameof(userClaimsTable));
             UserRolesTable = userRolesTable ?? throw new ArgumentNullException(nameof(userRolesTable));
@@ -70,7 +70,7 @@ namespace AspNetCore.Identity.Dapper
         /// <summary>
         /// Abstraction for interacting with AspNetUsers table.
         /// </summary>
-        public IUsersTable<TKey, TUser, TUserClaim, TUserRole, TUserLogin, TUserToken> UsersTable { get; }
+        public IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken> UsersTable { get; }
         /// <summary>
         /// Abstraction for interacting with AspNetUserClaims table.
         /// </summary>
@@ -78,11 +78,11 @@ namespace AspNetCore.Identity.Dapper
         /// <summary>
         /// Abstraction for interacting with AspNetUserRoles table.
         /// </summary>
-        public IUserRolesTable<TKey, TRole> UserRolesTable { get; }
+        public IUserRolesTable<TRole, TKey> UserRolesTable { get; }
         /// <summary>
         /// Abstraction for interacting with AspNetUserLogins table.
         /// </summary>
-        public IUserLoginsTable<TKey, TUser, TUserLogin> UserLoginsTable { get; }
+        public IUserLoginsTable<TUser, TKey, TUserLogin> UserLoginsTable { get; }
         /// <summary>
         /// Abstraction for interacting with AspNetUserTokens table.
         /// </summary>
@@ -90,7 +90,10 @@ namespace AspNetCore.Identity.Dapper
         /// <summary>
         /// Abstraction for interacting with AspNetRoles table.
         /// </summary>
-        public IRolesTable<TKey, TRole, TRoleClaim> RolesTable { get; }
+        public IRolesTable<TRole, TKey, TRoleClaim> RolesTable { get; }
+
+        /// <inheritdoc/>
+        public override IQueryable<TUser> Users => throw new NotSupportedException();
 
         /// <inheritdoc/>
         public override async Task AddClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken) {
@@ -134,7 +137,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public override async Task<IdentityResult> CreateAsync(TUser user, CancellationToken cancellationToken) {
+        public override async Task<IdentityResult> CreateAsync(TUser user, CancellationToken cancellationToken = default) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             user.ThrowIfNull(nameof(user));
@@ -201,6 +204,23 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
+        public async override Task<TUser> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (string.IsNullOrEmpty(loginProvider)) {
+                throw new ArgumentNullException(nameof(loginProvider));
+            }
+            if (string.IsNullOrEmpty(providerKey)) {
+                throw new ArgumentNullException(nameof(providerKey));
+            }
+            var userLogin = await FindUserLoginAsync(loginProvider, providerKey, cancellationToken);
+            if (userLogin != null) {
+                return await FindUserAsync(userLogin.UserId, cancellationToken);
+            }
+            return null;
+        }
+
+        /// <inheritdoc/>
         public override async Task<IList<string>> GetRolesAsync(TUser user, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
@@ -219,67 +239,168 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public override Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken cancellationToken) {
-            throw new NotImplementedException();
+        public override async Task<IList<TUser>> GetUsersInRoleAsync(string normalizedRoleName, CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            if (string.IsNullOrEmpty(normalizedRoleName)) {
+                throw new ArgumentNullException(nameof(normalizedRoleName));
+            }
+            var role = await FindRoleAsync(normalizedRoleName, cancellationToken);
+            var users = new List<TUser>();
+            if (role != null) {
+                users = (await UsersTable.GetUsersInRoleAsync(normalizedRoleName)).ToList();
+            }
+            return users;
         }
 
         /// <inheritdoc/>
-        public override Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken) {
-            throw new NotImplementedException();
+        public override async Task<bool> IsInRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            user.ThrowIfNull(nameof(user));
+            if (string.IsNullOrEmpty(normalizedRoleName)) {
+                throw new ArgumentException(nameof(normalizedRoleName));
+            }
+            var role = await FindRoleAsync(normalizedRoleName, cancellationToken);
+            if (role != null) {
+                var userRole = await FindUserRoleAsync(user.Id, role.Id, cancellationToken);
+                return userRole != null;
+            }
+            return false;
         }
 
         /// <inheritdoc/>
-        public override Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken) {
-            throw new NotImplementedException();
+        public override async Task RemoveClaimsAsync(TUser user, IEnumerable<Claim> claims, CancellationToken cancellationToken) {
+            ThrowIfDisposed();
+            user.ThrowIfNull(nameof(user));
+            claims.ThrowIfNull(nameof(claims));
+            UserClaims ??= (await UserClaimsTable.GetClaimsAsync(user.Id)).ToList();
+            foreach (var claim in claims) {
+                var matchedClaims = UserClaims.Where(x => x.UserId.Equals(user.Id) && x.ClaimType == claim.Type && x.ClaimValue == claim.Value);
+                foreach (var matchedClaim in matchedClaims) {
+                    UserClaims.Remove(matchedClaim);
+                }
+            }
         }
 
         /// <inheritdoc/>
-        public override Task RemoveFromRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken) {
-            throw new NotImplementedException();
+        public override async Task RemoveFromRoleAsync(TUser user, string normalizedRoleName, CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            user.ThrowIfNull(nameof(user));
+            if (string.IsNullOrEmpty(normalizedRoleName)) {
+                throw new ArgumentException(nameof(normalizedRoleName));
+            }
+            var roleEntity = await FindRoleAsync(normalizedRoleName, cancellationToken);
+            if (roleEntity != null) {
+                var userRoles = (await UserRolesTable.GetRolesAsync(user.Id))?.Select(x => new TUserRole {
+                    UserId = user.Id,
+                    RoleId = x.Id
+                }).ToList();
+                UserRoles = userRoles;
+                var userRole = await FindUserRoleAsync(user.Id, roleEntity.Id, cancellationToken);
+                if (userRole != null) {
+                    UserRoles.Remove(userRole);
+                }
+            }
         }
 
         /// <inheritdoc/>
-        public override Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken) {
-            throw new NotImplementedException();
+        public override async Task RemoveLoginAsync(TUser user, string loginProvider, string providerKey, CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            user.ThrowIfNull(nameof(user));
+            UserLogins ??= (await UserLoginsTable.GetLoginsAsync(user.Id)).ToList();
+            var userLogin = await FindUserLoginAsync(user.Id, loginProvider, providerKey, cancellationToken);
+            if (userLogin != null) {
+                UserLogins.Remove(userLogin);
+            }
         }
 
         /// <inheritdoc/>
-        public override Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken) {
-            throw new NotImplementedException();
+        public override async Task ReplaceClaimAsync(TUser user, Claim claim, Claim newClaim, CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            user.ThrowIfNull(nameof(user));
+            claim.ThrowIfNull(nameof(claim));
+            newClaim.ThrowIfNull(nameof(newClaim));
+            UserClaims ??= (await UserClaimsTable.GetClaimsAsync(user.Id)).ToList();
+            var matchedClaims = UserClaims.Where(x => x.UserId.Equals(user.Id) && x.ClaimType == claim.Type && x.ClaimValue == claim.Value);
+            foreach (var matchedClaim in matchedClaims) {
+                matchedClaim.ClaimValue = newClaim.Value;
+                matchedClaim.ClaimType = newClaim.Type;
+            }
         }
 
         /// <inheritdoc/>
-        public override Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken) {
-            throw new NotImplementedException();
+        public override async Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            user.ThrowIfNull(nameof(user));
+            user.ConcurrencyStamp = Guid.NewGuid().ToString();
+            var updated = await UsersTable.UpdateAsync(user, UserClaims, UserRoles, UserLogins, UserTokens);
+            return updated ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
+                Code = string.Empty,
+                Description = $"User '{user.UserName}' could not be deleted."
+            });
         }
 
         /// <inheritdoc/>
-        protected override Task AddUserTokenAsync(TUserToken token) {
-            throw new NotImplementedException();
+        protected override async Task<TUserToken> FindTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            var token = await UserTokensTable.FindTokenAsync(user.Id, loginProvider, name);
+            return token;
         }
 
         /// <inheritdoc/>
-        protected override Task<TUserToken> FindTokenAsync(TUser user, string loginProvider, string name, CancellationToken cancellationToken) {
-            throw new NotImplementedException();
+        protected override async Task<TUser> FindUserAsync(TKey userId, CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            var user = await UsersTable.FindByIdAsync(userId);
+            return user;
         }
 
         /// <inheritdoc/>
-        protected override Task<TUser> FindUserAsync(TKey userId, CancellationToken cancellationToken) {
-            throw new NotImplementedException();
+        protected override async Task<TUserLogin> FindUserLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            var userLogin = await UserLoginsTable.FindUserLoginAsync(loginProvider, providerKey);
+            return userLogin;
         }
 
         /// <inheritdoc/>
-        protected override Task<TUserLogin> FindUserLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken) {
-            throw new NotImplementedException();
+        protected override async Task<TUserLogin> FindUserLoginAsync(TKey userId, string loginProvider, string providerKey, CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            var userLogin = await UserLoginsTable.FindUserLoginAsync(userId, loginProvider, providerKey);
+            return userLogin;
         }
 
         /// <inheritdoc/>
-        protected override Task RemoveUserTokenAsync(TUserToken token) {
-            throw new NotImplementedException();
+        protected override async Task AddUserTokenAsync(TUserToken token) {
+            token.ThrowIfNull(nameof(token));
+            UserTokens ??= (await UserTokensTable.GetTokensAsync(token.UserId)).ToList();
+            UserTokens.Add(token);
         }
 
         /// <inheritdoc/>
-        protected override Task<TRole> FindRoleAsync(string normalizedRoleName, CancellationToken cancellationToken) =>
-            RolesTable.FindByNameAsync(normalizedRoleName);
+        protected override async Task RemoveUserTokenAsync(TUserToken token) {
+            UserTokens ??= (await UserTokensTable.GetTokensAsync(token.UserId)).ToList();
+            UserTokens.Remove(token);
+        }
+
+        /// <inheritdoc/>
+        protected override Task<TRole> FindRoleAsync(string normalizedRoleName, CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            var findRoleTask = RolesTable.FindByNameAsync(normalizedRoleName);
+            return findRoleTask;
+        }
+
+        /// <inheritdoc/>
+        protected override Task<TUserRole> FindUserRoleAsync(TKey userId, TKey roleId, CancellationToken cancellationToken) {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -23,7 +23,7 @@ namespace AspNetCore.Identity.Dapper
         /// <param name="rolesTable">Abstraction for interacting with Roles table.</param>
         /// <param name="roleClaimsTable">Abstraction for interacting with RoleClaims table.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-        public RoleStore(IRolesTable<string, TRole, IdentityRoleClaim<string>> rolesTable, IRoleClaimsTable<string, IdentityRoleClaim<string>> roleClaimsTable, IdentityErrorDescriber describer = null)
+        public RoleStore(IRolesTable<TRole, string, IdentityRoleClaim<string>> rolesTable, IRoleClaimsTable<string, IdentityRoleClaim<string>> roleClaimsTable, IdentityErrorDescriber describer = null)
             : base(rolesTable, roleClaimsTable, describer) { }
     }
 
@@ -44,7 +44,7 @@ namespace AspNetCore.Identity.Dapper
         /// <param name="rolesTable">Abstraction for interacting with Roles table.</param>
         /// <param name="roleClaimsTable">Abstraction for interacting with RoleClaims table.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-        public RoleStore(IRolesTable<TKey, TRole, IdentityRoleClaim<TKey>> rolesTable, IRoleClaimsTable<TKey, IdentityRoleClaim<TKey>> roleClaimsTable, IdentityErrorDescriber describer = null)
+        public RoleStore(IRolesTable<TRole, TKey, IdentityRoleClaim<TKey>> rolesTable, IRoleClaimsTable<TKey, IdentityRoleClaim<TKey>> roleClaimsTable, IdentityErrorDescriber describer = null)
             : base(rolesTable, roleClaimsTable, describer) { }
     }
 
@@ -69,7 +69,7 @@ namespace AspNetCore.Identity.Dapper
         /// <param name="rolesTable">Abstraction for interacting with Roles table.</param>
         /// <param name="roleClaimsTable">Abstraction for interacting with RoleClaims table.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-        public RoleStore(IRolesTable<TKey, TRole, TRoleClaim> rolesTable, IRoleClaimsTable<TKey, TRoleClaim> roleClaimsTable, IdentityErrorDescriber describer = null) {
+        public RoleStore(IRolesTable<TRole, TKey, TRoleClaim> rolesTable, IRoleClaimsTable<TKey, TRoleClaim> roleClaimsTable, IdentityErrorDescriber describer = null) {
             RolesTable = rolesTable ?? throw new ArgumentNullException(nameof(rolesTable));
             RoleClaimsTable = roleClaimsTable ?? throw new ArgumentNullException(nameof(roleClaimsTable));
             ErrorDescriber = describer ?? new IdentityErrorDescriber();
@@ -78,7 +78,7 @@ namespace AspNetCore.Identity.Dapper
         /// <summary>
         /// Abstraction for interacting with Roles table.
         /// </summary>
-        private IRolesTable<TKey, TRole, TRoleClaim> RolesTable { get; set; }
+        private IRolesTable<TRole, TKey, TRoleClaim> RolesTable { get; set; }
         /// <summary>
         /// Abstraction for interacting with RoleClaims table.
         /// </summary>
@@ -216,7 +216,7 @@ namespace AspNetCore.Identity.Dapper
             var updated = await RolesTable.UpdateAsync(role, RoleClaims);
             return updated ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
                 Code = string.Empty,
-                Description = $"Role '{role.Name}' could not be deleted."
+                Description = $"Role '{role.Name}' could not be updated."
             });
         }
 

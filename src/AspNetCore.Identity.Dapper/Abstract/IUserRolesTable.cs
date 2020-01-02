@@ -10,9 +10,9 @@ namespace AspNetCore.Identity.Dapper
     /// </summary>
     /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
     /// <typeparam name="TRole">The type representing a role.</typeparam>
-    public interface IUserRolesTable<TKey, TRole>
-        where TKey : IEquatable<TKey>
+    public interface IUserRolesTable<TRole, TKey>
         where TRole : IdentityRole<TKey>
+        where TKey : IEquatable<TKey>
     {
         /// <summary>
         /// Gets a list of roles to be belonging to the specified user.

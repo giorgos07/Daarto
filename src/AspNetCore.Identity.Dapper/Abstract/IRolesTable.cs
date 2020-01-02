@@ -8,12 +8,12 @@ namespace AspNetCore.Identity.Dapper
     /// <summary>
     /// Abstraction for interacting with AspNetRoles table.
     /// </summary>
-    /// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
     /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
+    /// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
     /// <typeparam name="TRoleClaim">The type of the class representing a role claim.</typeparam>
-    public interface IRolesTable<TKey, TRole, TRoleClaim>
-        where TKey : IEquatable<TKey>
+    public interface IRolesTable<TRole, TKey, TRoleClaim>
         where TRole : IdentityRole<TKey>
+        where TKey : IEquatable<TKey>
         where TRoleClaim : IdentityRoleClaim<TKey>, new()
     {
         /// <summary>
