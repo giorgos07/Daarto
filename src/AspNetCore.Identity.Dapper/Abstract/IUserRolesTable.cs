@@ -10,7 +10,8 @@ namespace AspNetCore.Identity.Dapper
     /// </summary>
     /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
     /// <typeparam name="TRole">The type representing a role.</typeparam>
-    public interface IUserRolesTable<TRole, TKey>
+    /// <typeparam name="TUserRole">The type representing a user role.</typeparam>
+    public interface IUserRolesTable<TRole, TKey, TUserRole>
         where TRole : IdentityRole<TKey>
         where TKey : IEquatable<TKey>
     {
@@ -19,5 +20,11 @@ namespace AspNetCore.Identity.Dapper
         /// </summary>
         /// <param name="userId">The id of the user.</param>
         Task<IEnumerable<TRole>> GetRolesAsync(TKey userId);
+        /// <summary>
+        /// Find the specified role for a certain user.
+        /// </summary>
+        /// <param name="userId">The id of the user.</param>
+        /// <param name="roleId">The id of the role.</param>
+        Task<TUserRole> FindUserRoleAsync(TKey userId, TKey roleId);
     }
 }

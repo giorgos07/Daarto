@@ -41,7 +41,7 @@ namespace AspNetCore.Identity.Dapper
         /// <param name="userTokensTable">Abstraction for interacting with AspNetUserTokens table.</param>
         /// <param name="rolesTable">Abstraction for interacting with AspNetRoles table.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-        public UserStore(IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken> usersTable, IUserClaimsTable<TKey, TUserClaim> userClaimsTable, IUserRolesTable<TRole, TKey> userRolesTable,
+        public UserStore(IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken> usersTable, IUserClaimsTable<TKey, TUserClaim> userClaimsTable, IUserRolesTable<TRole, TKey, TUserRole> userRolesTable,
             IUserLoginsTable<TUser, TKey, TUserLogin> userLoginsTable, IUserTokensTable<TKey, TUserToken> userTokensTable, IRolesTable<TRole, TKey, TRoleClaim> rolesTable, IdentityErrorDescriber describer = null) : base(describer) {
             UsersTable = usersTable ?? throw new ArgumentNullException(nameof(usersTable));
             UserClaimsTable = userClaimsTable ?? throw new ArgumentNullException(nameof(userClaimsTable));
@@ -78,7 +78,7 @@ namespace AspNetCore.Identity.Dapper
         /// <summary>
         /// Abstraction for interacting with AspNetUserRoles table.
         /// </summary>
-        public IUserRolesTable<TRole, TKey> UserRolesTable { get; }
+        public IUserRolesTable<TRole, TKey, TUserRole> UserRolesTable { get; }
         /// <summary>
         /// Abstraction for interacting with AspNetUserLogins table.
         /// </summary>
@@ -399,8 +399,11 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        protected override Task<TUserRole> FindUserRoleAsync(TKey userId, TKey roleId, CancellationToken cancellationToken) {
-            throw new NotImplementedException();
+        protected override async Task<TUserRole> FindUserRoleAsync(TKey userId, TKey roleId, CancellationToken cancellationToken) {
+            cancellationToken.ThrowIfCancellationRequested();
+            ThrowIfDisposed();
+            var userRole = await UserRolesTable.FindUserRoleAsync(userId, roleId);
+            return userRole;
         }
     }
 }
