@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Security.Claims;
@@ -14,7 +13,7 @@ namespace AspNetCore.Identity.Dapper
     /// The persistence store for roles.
     /// </summary>
     /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
-    public class RoleStore<TRole> : RoleStore<string, TRole>
+    public class RoleStore<TRole> : RoleStore<TRole, string>
         where TRole : IdentityRole<string>
     {
         /// <summary>
@@ -32,8 +31,8 @@ namespace AspNetCore.Identity.Dapper
     /// </summary>
     /// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
     /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
-    public class RoleStore<TKey, TRole> :
-        RoleStore<TKey, TRole, IdentityUserRole<TKey>, IdentityRoleClaim<TKey>>,
+    public class RoleStore<TRole, TKey> :
+        RoleStore<TRole, TKey, IdentityUserRole<TKey>, IdentityRoleClaim<TKey>>,
         IRoleClaimStore<TRole>
         where TKey : IEquatable<TKey>
         where TRole : IdentityRole<TKey>
@@ -51,29 +50,30 @@ namespace AspNetCore.Identity.Dapper
     /// <summary>
     /// The persistence store for roles.
     /// </summary>
-    /// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
     /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
+    /// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
     /// <typeparam name="TUserRole">The type of the class representing a user role.</typeparam>
     /// <typeparam name="TRoleClaim">The type of the class representing a role claim.</typeparam>
-    public class RoleStore<TKey, TRole, TUserRole, TRoleClaim> : IRoleClaimStore<TRole>
-        where TKey : IEquatable<TKey>
+    public class RoleStore<TRole, TKey, TUserRole, TRoleClaim> : RoleStoreBase<TRole, TKey, TUserRole, TRoleClaim>
         where TRole : IdentityRole<TKey>
+        where TKey : IEquatable<TKey>
         where TUserRole : IdentityUserRole<TKey>, new()
         where TRoleClaim : IdentityRoleClaim<TKey>, new()
     {
-        private bool _disposed = false;
-
         /// <summary>
         /// Constructs a new instance of <see cref="RoleStore{TKey, TRole, TUserRole, TRoleClaim}"/>.
         /// </summary>
         /// <param name="rolesTable">Abstraction for interacting with Roles table.</param>
         /// <param name="roleClaimsTable">Abstraction for interacting with RoleClaims table.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
-        public RoleStore(IRolesTable<TRole, TKey, TRoleClaim> rolesTable, IRoleClaimsTable<TKey, TRoleClaim> roleClaimsTable, IdentityErrorDescriber describer = null) {
+        public RoleStore(IRolesTable<TRole, TKey, TRoleClaim> rolesTable, IRoleClaimsTable<TKey, TRoleClaim> roleClaimsTable, IdentityErrorDescriber describer) : base(describer) {
             RolesTable = rolesTable ?? throw new ArgumentNullException(nameof(rolesTable));
             RoleClaimsTable = roleClaimsTable ?? throw new ArgumentNullException(nameof(roleClaimsTable));
             ErrorDescriber = describer ?? new IdentityErrorDescriber();
         }
+
+        /// <inheritdoc/>
+        public override IQueryable<TRole> Roles => throw new NotSupportedException();
 
         /// <summary>
         /// Abstraction for interacting with Roles table.
@@ -87,13 +87,9 @@ namespace AspNetCore.Identity.Dapper
         /// Internally keeps the claims of a role.
         /// </summary>
         private IList<TRoleClaim> RoleClaims { get; set; }
-        /// <summary>
-        /// Gets or sets the <see cref="IdentityErrorDescriber"/> for any error that occurred with the current operation.
-        /// </summary>
-        public IdentityErrorDescriber ErrorDescriber { get; set; }
 
         /// <inheritdoc/>
-        public virtual async Task AddClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken) {
+        public override async Task AddClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             role.ThrowIfNull(nameof(role));
@@ -103,7 +99,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public virtual async Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken) {
+        public override async Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             role.ThrowIfNull(nameof(role));
@@ -115,7 +111,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public virtual async Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken) {
+        public override async Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             role.ThrowIfNull(nameof(role));
@@ -127,7 +123,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public virtual async Task<TRole> FindByIdAsync(string roleId, CancellationToken cancellationToken) {
+        public override async Task<TRole> FindByIdAsync(string roleId, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             var id = ConvertIdFromString(roleId);
@@ -136,7 +132,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public virtual async Task<TRole> FindByNameAsync(string normalizedName, CancellationToken cancellationToken) {
+        public override async Task<TRole> FindByNameAsync(string normalizedName, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             var role = await RolesTable.FindByNameAsync(normalizedName);
@@ -144,7 +140,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public virtual async Task<IList<Claim>> GetClaimsAsync(TRole role, CancellationToken cancellationToken) {
+        public override async Task<IList<Claim>> GetClaimsAsync(TRole role, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             role.ThrowIfNull(nameof(role));
@@ -153,7 +149,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public virtual Task<string> GetNormalizedRoleNameAsync(TRole role, CancellationToken cancellationToken) {
+        public override Task<string> GetNormalizedRoleNameAsync(TRole role, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             role.ThrowIfNull(nameof(role));
@@ -161,7 +157,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public virtual Task<string> GetRoleIdAsync(TRole role, CancellationToken cancellationToken) {
+        public override Task<string> GetRoleIdAsync(TRole role, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             role.ThrowIfNull(nameof(role));
@@ -169,7 +165,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public virtual Task<string> GetRoleNameAsync(TRole role, CancellationToken cancellationToken) {
+        public override Task<string> GetRoleNameAsync(TRole role, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             role.ThrowIfNull(nameof(role));
@@ -177,7 +173,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public virtual async Task RemoveClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken) {
+        public override async Task RemoveClaimAsync(TRole role, Claim claim, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             role.ThrowIfNull(nameof(role));
@@ -190,7 +186,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public virtual Task SetNormalizedRoleNameAsync(TRole role, string normalizedName, CancellationToken cancellationToken) {
+        public override Task SetNormalizedRoleNameAsync(TRole role, string normalizedName, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             role.ThrowIfNull(nameof(role));
@@ -199,7 +195,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public virtual Task SetRoleNameAsync(TRole role, string roleName, CancellationToken cancellationToken) {
+        public override Task SetRoleNameAsync(TRole role, string roleName, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             role.ThrowIfNull(nameof(role));
@@ -208,7 +204,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public virtual async Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken) {
+        public override async Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             role.ThrowIfNull(nameof(role));
@@ -219,72 +215,5 @@ namespace AspNetCore.Identity.Dapper
                 Description = $"Role '{role.Name}' could not be updated."
             });
         }
-
-        /// <inheritdoc/>
-        public void Dispose() {
-            // Dispose of unmanaged resources.
-            Dispose(true);
-            // Suppress finalization.
-            GC.SuppressFinalize(this);
-        }
-
-        /// <summary>
-        /// Converts the provided <paramref name="id"/> to a strongly typed key object.
-        /// </summary>
-        /// <param name="id">The id to convert.</param>
-        /// <returns>An instance of <typeparamref name="TKey"/> representing the provided <paramref name="id"/>.</returns>
-        public virtual TKey ConvertIdFromString(string id) {
-            if (id == null) {
-                return default;
-            }
-            return (TKey)TypeDescriptor.GetConverter(typeof(TKey)).ConvertFromInvariantString(id);
-        }
-
-        /// <summary>
-        /// Converts the provided <paramref name="id"/> to its string representation.
-        /// </summary>
-        /// <param name="id">The id to convert.</param>
-        /// <returns>An <see cref="string"/> representation of the provided <paramref name="id"/>.</returns>
-        public virtual string ConvertIdToString(TKey id) {
-            if (id.Equals(default)) {
-                return null;
-            }
-            return id.ToString();
-        }
-
-        /// <summary>
-        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
-        /// </summary>
-        /// <param name="disposing">Indicates whether the method call comes from a Dispose method (its value is true) or from a finalizer (its value is false).</param>
-        protected virtual void Dispose(bool disposing) {
-            if (_disposed) {
-                return;
-            }
-            if (disposing) {
-                // Free any other managed objects here.
-            }
-            _disposed = true;
-        }
-
-        /// <summary>
-        /// Throws if this class has been disposed.
-        /// </summary>
-        protected void ThrowIfDisposed() {
-            if (_disposed) {
-                throw new ObjectDisposedException(GetType().Name);
-            }
-        }
-
-        /// <summary>
-        /// Creates an entity representing a role claim.
-        /// </summary>
-        /// <param name="role">The associated role.</param>
-        /// <param name="claim">The associated claim.</param>
-        /// <returns>The role claim entity.</returns>
-        protected virtual TRoleClaim CreateRoleClaim(TRole role, Claim claim) => new TRoleClaim {
-            RoleId = role.Id,
-            ClaimType = claim.Type,
-            ClaimValue = claim.Value
-        };
     }
 }

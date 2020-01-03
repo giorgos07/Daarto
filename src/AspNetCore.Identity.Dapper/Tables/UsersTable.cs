@@ -12,15 +12,15 @@ namespace AspNetCore.Identity.Dapper
     /// <summary>
     /// The default implementation of <see cref="IUsersTable{TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken}"/>.
     /// </summary>
-    /// <typeparam name="TDbConnection">The type of the database connection class used to access the store.</typeparam>
     /// <typeparam name="TKey">The type of the primary key for a role and user.</typeparam>
     /// <typeparam name="TUser">The type representing a user.</typeparam>
     /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
     /// <typeparam name="TUserRole">The type representing a user role.</typeparam>
     /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
     /// <typeparam name="TUserToken">The type representing a user token.</typeparam>
-    public class UsersTable<TDbConnection, TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken> : IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken>
-        where TDbConnection : IDbConnection
+    public class UsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken> :
+        IdentityTable,
+        IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken>
         where TUser : IdentityUser<TKey>
         where TKey : IEquatable<TKey>
         where TUserClaim : IdentityUserClaim<TKey>, new()
@@ -29,17 +29,10 @@ namespace AspNetCore.Identity.Dapper
         where TUserToken : IdentityUserToken<TKey>, new()
     {
         /// <summary>
-        /// Creates a new instance of <see cref="UsersTable{TDbConnection, TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken}"/>.
+        /// Creates a new instance of <see cref="UsersTable{TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken}"/>.
         /// </summary>
-        /// <param name="dbConnection">The <see cref="IDbConnection"/> to use.</param>
-        public UsersTable(TDbConnection dbConnection) {
-            DbConnection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
-        }
-
-        /// <summary>
-        /// The <see cref="IDbConnection"/> to use.
-        /// </summary>
-        protected TDbConnection DbConnection { get; set; }
+        /// <param name="dbConnectionFactory">A factory for creating instances of <see cref="IDbConnection"/>.</param>
+        public UsersTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
 
         /// <inheritdoc/>
         public virtual async Task<bool> CreateAsync(TUser user) {

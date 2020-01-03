@@ -11,28 +11,21 @@ namespace AspNetCore.Identity.Dapper
     /// <summary>
     /// The default implementation of <see cref="IRolesTable{TRole, TKey, TRoleClaim}"/>.
     /// </summary>
-    /// <typeparam name="TDbConnection">The type of the database connection class used to access the store.</typeparam>
     /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
     /// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
     /// <typeparam name="TRoleClaim">The type of the class representing a role claim.</typeparam>
-    public class RolesTable<TDbConnection, TRole, TKey, TRoleClaim> : IRolesTable<TRole, TKey, TRoleClaim>
-        where TDbConnection : IDbConnection
+    public class RolesTable<TRole, TKey, TRoleClaim> :
+        IdentityTable,
+        IRolesTable<TRole, TKey, TRoleClaim>
         where TRole : IdentityRole<TKey>
         where TKey : IEquatable<TKey>
         where TRoleClaim : IdentityRoleClaim<TKey>, new()
     {
         /// <summary>
-        /// Creates a new instance of <see cref="RolesTable{TDbConnection, TRole, TKey, TRoleClaim}"/>.
+        /// Creates a new instance of <see cref="RolesTable{TRole, TKey, TRoleClaim}"/>.
         /// </summary>
-        /// <param name="dbConnection">The <see cref="IDbConnection"/> to use.</param>
-        public RolesTable(TDbConnection dbConnection) {
-            DbConnection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
-        }
-
-        /// <summary>
-        /// The <see cref="IDbConnection"/> to use.
-        /// </summary>
-        protected TDbConnection DbConnection { get; set; }
+        /// <param name="dbConnectionFactory">A factory for creating instances of <see cref="IDbConnection"/>.</param>
+        public RolesTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
 
         /// <inheritdoc/>
         public virtual async Task<bool> CreateAsync(TRole role) {

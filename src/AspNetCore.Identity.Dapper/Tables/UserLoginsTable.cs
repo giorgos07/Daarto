@@ -10,28 +10,21 @@ namespace AspNetCore.Identity.Dapper
     /// <summary>
     /// The default implementation of <see cref="IUserLoginsTable{TUser, TKey, TUserLogin}"/>.
     /// </summary>
-    /// <typeparam name="TDbConnection">The type of the database connection class used to access the store.</typeparam>
     /// <typeparam name="TUser">The type representing a user.</typeparam>
     /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
     /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
-    public class UserLoginsTable<TDbConnection, TUser, TKey, TUserLogin> : IUserLoginsTable<TUser, TKey, TUserLogin>
-        where TDbConnection : IDbConnection
+    public class UserLoginsTable<TUser, TKey, TUserLogin> :
+        IdentityTable,
+        IUserLoginsTable<TUser, TKey, TUserLogin>
         where TUser : IdentityUser<TKey>
         where TKey : IEquatable<TKey>
         where TUserLogin : IdentityUserLogin<TKey>, new()
     {
         /// <summary>
-        /// Creates a new instance of <see cref="UserLoginsTable{TDbConnection, TUser, TKey, TUserLogin}"/>.
+        /// Creates a new instance of <see cref="UserLoginsTable{TUser, TKey, TUserLogin}"/>.
         /// </summary>
-        /// <param name="dbConnection">The <see cref="IDbConnection"/> to use.</param>
-        public UserLoginsTable(TDbConnection dbConnection) {
-            DbConnection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
-        }
-
-        /// <summary>
-        /// The <see cref="IDbConnection"/> to use.
-        /// </summary>
-        protected TDbConnection DbConnection { get; set; }
+        /// <param name="dbConnectionFactory">A factory for creating instances of <see cref="IDbConnection"/>.</param>
+        public UserLoginsTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
 
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TUserLogin>> GetLoginsAsync(TKey userId) {
@@ -44,23 +37,14 @@ namespace AspNetCore.Identity.Dapper
 
         /// <inheritdoc/>
         public virtual async Task<TUser> FindByLoginAsync(string loginProvider, string providerKey) {
-            string[] sql =
-            {
-                "SELECT [UserId] " +
-                "FROM [dbo].[AspNetUserLogins] " +
-                "WHERE [LoginProvider] = @LoginProvider AND [ProviderKey] = @ProviderKey;"
-            };
-            var userId = await DbConnection.QuerySingleOrDefaultAsync<TKey>(sql[0], new {
+            const string sql = "SELECT [u].* " +
+                               "FROM [dbo].[AspNetUsers] AS [u] " +
+                               "INNER JOIN [dbo].[AspNetUserLogins] AS [ul] ON [ul].[UserId] = [u].[Id] " +
+                               "WHERE [ul].[LoginProvider] = @LoginProvider AND [ul].[ProviderKey] = @ProviderKey;";
+            var user = await DbConnection.QuerySingleOrDefaultAsync<TUser>(sql, new {
                 LoginProvider = loginProvider,
                 ProviderKey = providerKey
             });
-            if (userId == null) {
-                return null;
-            }
-            sql[0] = "SELECT * " +
-                     "FROM [dbo].[AspNetUsers] " +
-                     "WHERE [Id] = @Id;";
-            var user = await DbConnection.QuerySingleAsync<TUser>(sql[0], new { Id = userId });
             return user;
         }
 

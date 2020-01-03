@@ -10,26 +10,19 @@ namespace AspNetCore.Identity.Dapper
     /// <summary>
     /// The default implementation of <see cref="IUserTokensTable{TKey, TUserToken}"/>.
     /// </summary>
-    /// <typeparam name="TDbConnection">The type of the database connection class used to access the store.</typeparam>
     /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
     /// <typeparam name="TUserToken">The type representing a user token.</typeparam>
-    public class UserTokensTable<TDbConnection, TKey, TUserToken> : IUserTokensTable<TKey, TUserToken>
-        where TDbConnection : IDbConnection
+    public class UserTokensTable<TKey, TUserToken> :
+        IdentityTable,
+        IUserTokensTable<TKey, TUserToken>
         where TKey : IEquatable<TKey>
         where TUserToken : IdentityUserToken<TKey>, new()
     {
         /// <summary>
-        /// Creates a new instance of <see cref="UserTokensTable{TDbConnection, TKey, TUserToken}"/>.
+        /// Creates a new instance of <see cref="UserTokensTable{TKey, TUserToken}"/>.
         /// </summary>
-        /// <param name="dbConnection">The <see cref="IDbConnection"/> to use.</param>
-        public UserTokensTable(TDbConnection dbConnection) {
-            DbConnection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
-        }
-
-        /// <summary>
-        /// The <see cref="IDbConnection"/> to use.
-        /// </summary>
-        protected TDbConnection DbConnection { get; set; }
+        /// <param name="dbConnectionFactory">A factory for creating instances of <see cref="IDbConnection"/>.</param>
+        public UserTokensTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
 
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TUserToken>> GetTokensAsync(TKey userId) {

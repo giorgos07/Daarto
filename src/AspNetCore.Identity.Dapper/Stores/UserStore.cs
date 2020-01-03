@@ -42,7 +42,7 @@ namespace AspNetCore.Identity.Dapper
         /// <param name="rolesTable">Abstraction for interacting with AspNetRoles table.</param>
         /// <param name="describer">The <see cref="IdentityErrorDescriber"/>.</param>
         public UserStore(IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken> usersTable, IUserClaimsTable<TKey, TUserClaim> userClaimsTable, IUserRolesTable<TRole, TKey, TUserRole> userRolesTable,
-            IUserLoginsTable<TUser, TKey, TUserLogin> userLoginsTable, IUserTokensTable<TKey, TUserToken> userTokensTable, IRolesTable<TRole, TKey, TRoleClaim> rolesTable, IdentityErrorDescriber describer = null) : base(describer) {
+            IUserLoginsTable<TUser, TKey, TUserLogin> userLoginsTable, IUserTokensTable<TKey, TUserToken> userTokensTable, IRolesTable<TRole, TKey, TRoleClaim> rolesTable, IdentityErrorDescriber describer) : base(describer) {
             UsersTable = usersTable ?? throw new ArgumentNullException(nameof(usersTable));
             UserClaimsTable = userClaimsTable ?? throw new ArgumentNullException(nameof(userClaimsTable));
             UserRolesTable = userRolesTable ?? throw new ArgumentNullException(nameof(userRolesTable));

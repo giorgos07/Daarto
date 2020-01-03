@@ -10,26 +10,19 @@ namespace AspNetCore.Identity.Dapper
     /// <summary>
     /// The default implementation of <see cref="IUserClaimsTable{TKey, TUserClaim}"/>.
     /// </summary>
-    /// <typeparam name="TDbConnection">The type of the database connection class used to access the store.</typeparam>
     /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
     /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
-    public class UserClaimsTable<TDbConnection, TKey, TUserClaim> : IUserClaimsTable<TKey, TUserClaim>
-        where TDbConnection : IDbConnection
+    public class UserClaimsTable<TKey, TUserClaim> :
+        IdentityTable,
+        IUserClaimsTable<TKey, TUserClaim>
         where TKey : IEquatable<TKey>
         where TUserClaim : IdentityUserClaim<TKey>, new()
     {
         /// <summary>
-        /// Creates a new instance of <see cref="UserClaimsTable{TDbConnection, TKey, TUserClaim}"/>.
+        /// Creates a new instance of <see cref="UserClaimsTable{TKey, TUserClaim}"/>.
         /// </summary>
-        /// <param name="dbConnection">The <see cref="IDbConnection"/> to use.</param>
-        public UserClaimsTable(TDbConnection dbConnection) {
-            DbConnection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
-        }
-
-        /// <summary>
-        /// The <see cref="IDbConnection"/> to use.
-        /// </summary>
-        protected TDbConnection DbConnection { get; set; }
+        /// <param name="dbConnectionFactory">A factory for creating instances of <see cref="IDbConnection"/>.</param>
+        public UserClaimsTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
 
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TUserClaim>> GetClaimsAsync(TKey userId) {
