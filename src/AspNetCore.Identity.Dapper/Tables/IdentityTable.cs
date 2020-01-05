@@ -9,7 +9,7 @@ namespace AspNetCore.Identity.Dapper
     public class IdentityTable : TableBase
     {
         /// <summary>
-        /// 
+        /// Creates a new instance of <see cref="IdentityTable"/>.
         /// </summary>
         /// <param name="dbConnectionFactory"></param>
         public IdentityTable(IDbConnectionFactory dbConnectionFactory) {
