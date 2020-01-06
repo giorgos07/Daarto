@@ -12,14 +12,12 @@ namespace AspNetCore.Identity.Dapper
     /// <typeparam name="TUser">The type representing a user.</typeparam>
     /// <typeparam name="TKey">The type of the primary key for a role and user.</typeparam>
     /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
-    /// <typeparam name="TUserRole">The type representing a user role.</typeparam>
     /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
     /// <typeparam name="TUserToken">The type representing a user token.</typeparam>
-    public interface IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken>
+    public interface IUsersOnlyTable<TUser, TKey, TUserClaim, TUserLogin, TUserToken>
         where TUser : IdentityUser<TKey>
         where TKey : IEquatable<TKey>
         where TUserClaim : IdentityUserClaim<TKey>, new()
-        where TUserRole : IdentityUserRole<TKey>, new()
         where TUserLogin : IdentityUserLogin<TKey>, new()
         where TUserToken : IdentityUserToken<TKey>, new()
     {
@@ -53,6 +51,38 @@ namespace AspNetCore.Identity.Dapper
         /// </summary>
         /// <param name="user">The user to update in the store.</param>
         /// <param name="claims">The claims of the user.</param>
+        /// <param name="logins">The logins of the user.</param>
+        /// <param name="tokens">The tokens of the user.</param>
+        Task<bool> UpdateAsync(TUser user, IList<TUserClaim> claims, IList<TUserLogin> logins, IList<TUserToken> tokens);
+        /// <summary>
+        /// Gets the users that own the specified claim.
+        /// </summary>
+        /// <param name="claim">The claim to look for.</param>
+        Task<IEnumerable<TUser>> GetUsersForClaimAsync(Claim claim);
+    }
+
+    /// <summary>
+    /// Abstraction for interacting with AspNetUsers table.
+    /// </summary>
+    /// <typeparam name="TUser">The type representing a user.</typeparam>
+    /// <typeparam name="TKey">The type of the primary key for a role and user.</typeparam>
+    /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
+    /// <typeparam name="TUserRole">The type representing a user role.</typeparam>
+    /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
+    /// <typeparam name="TUserToken">The type representing a user token.</typeparam>
+    public interface IUsersTable<TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken> : IUsersOnlyTable<TUser, TKey, TUserClaim, TUserLogin, TUserToken>
+        where TUser : IdentityUser<TKey>
+        where TKey : IEquatable<TKey>
+        where TUserClaim : IdentityUserClaim<TKey>, new()
+        where TUserRole : IdentityUserRole<TKey>, new()
+        where TUserLogin : IdentityUserLogin<TKey>, new()
+        where TUserToken : IdentityUserToken<TKey>, new()
+    {
+        /// <summary>
+        /// Updates a user in the store.
+        /// </summary>
+        /// <param name="user">The user to update in the store.</param>
+        /// <param name="claims">The claims of the user.</param>
         /// <param name="roles">The roles of the user.</param>
         /// <param name="logins">The logins of the user.</param>
         /// <param name="tokens">The tokens of the user.</param>
@@ -62,10 +92,5 @@ namespace AspNetCore.Identity.Dapper
         /// </summary>
         /// <param name="roleName">The name of the role.</param>
         Task<IEnumerable<TUser>> GetUsersInRoleAsync(string roleName);
-        /// <summary>
-        /// Gets the users that own the specified claim.
-        /// </summary>
-        /// <param name="claim">The claim to look for.</param>
-        Task<IEnumerable<TUser>> GetUsersForClaimAsync(Claim claim);
     }
 }

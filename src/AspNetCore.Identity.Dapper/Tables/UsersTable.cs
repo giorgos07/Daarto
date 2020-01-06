@@ -96,6 +96,11 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
+        public virtual Task<bool> UpdateAsync(TUser user, IList<TUserClaim> claims, IList<TUserLogin> logins, IList<TUserToken> tokens) {
+            return UpdateAsync(user, claims, null, logins, tokens);
+        }
+
+        /// <inheritdoc/>
         public virtual async Task<bool> UpdateAsync(TUser user, IList<TUserClaim> claims, IList<TUserRole> roles, IList<TUserLogin> logins, IList<TUserToken> tokens) {
             const string updateUserSql =
                 "UPDATE [dbo].[AspNetUsers] " +

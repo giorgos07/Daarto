@@ -4,7 +4,7 @@ using System.Data.SqlClient;
 namespace AspNetCore.Identity.Dapper
 {
     /// <summary>
-    /// Creates a new <see cref="SqlConnection"/> instance for connection to Microsoft SQL Server.
+    /// Creates a new <see cref="SqlConnection"/> instance for connecting to Microsoft SQL Server.
     /// </summary>
     public class SqlServerDbConnectionFactory : IDbConnectionFactory
     {
@@ -14,6 +14,10 @@ namespace AspNetCore.Identity.Dapper
         public string ConnectionString { get; set; }
 
         /// <inheritdoc/>
-        public IDbConnection Create() => new SqlConnection(ConnectionString);
+        public IDbConnection Create() {
+            var sqlConnection = new SqlConnection(ConnectionString);
+            sqlConnection.Open();
+            return sqlConnection;
+        }
     }
 }

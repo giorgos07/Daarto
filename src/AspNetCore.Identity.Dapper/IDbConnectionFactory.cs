@@ -8,7 +8,7 @@ namespace AspNetCore.Identity.Dapper
     public interface IDbConnectionFactory
     {
         /// <summary>
-        /// The connection string to use for connecting to the data source.
+        /// The connection string to use for connecting to Microsoft SQL Server.
         /// </summary>
         public string ConnectionString { get; set; }
         /// <summary>

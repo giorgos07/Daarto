@@ -23,6 +23,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database", "database", "{66
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "IdentityDb", "misc\database\IdentityDb\IdentityDb.sqlproj", "{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Daarto.WebUI", "samples\Daarto.WebUI\Daarto.WebUI.csproj", "{22BA1F98-E1F9-421E-9B84-CAC07745BAEF}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{22BA1F98-E1F9-421E-9B84-CAC07745BAEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{22BA1F98-E1F9-421E-9B84-CAC07745BAEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{22BA1F98-E1F9-421E-9B84-CAC07745BAEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{22BA1F98-E1F9-421E-9B84-CAC07745BAEF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -48,6 +54,7 @@ Global
 		{DD01411B-826F-4CA3-8581-8FDA9C7961AC} = {AE94DD8D-1626-4618-AB38-37459DEE54E0}
 		{661AB817-BF00-4B7F-88B5-9ADC84DC93A5} = {AAE1B832-6032-4C5C-8154-F6775CC051F8}
 		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB} = {661AB817-BF00-4B7F-88B5-9ADC84DC93A5}
+		{22BA1F98-E1F9-421E-9B84-CAC07745BAEF} = {525F9EE4-17EB-4E98-A775-C28282BC2962}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {78AE28B8-138A-401A-B79E-457DC5EFB188}

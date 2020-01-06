@@ -1,18 +1,8 @@
 ﻿using System;
-using System.Data;
 using Microsoft.AspNetCore.Identity;
 
 namespace AspNetCore.Identity.Dapper
 {
-    /// <summary>
-    /// The default <see cref="DbConnectionContext"/> used by the library.
-    /// </summary>
-    public class DefaultDbConnectionContext : DbConnectionContext
-    {
-        /// <inheritdoc/>
-        public override IDbConnectionFactory DbConnectionFactory => new SqlServerDbConnectionFactory();
-    }
-
     /// <summary>
     /// Base class for the Dapper database context used for identity.
     /// </summary>
@@ -47,19 +37,14 @@ namespace AspNetCore.Identity.Dapper
     /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
     /// <typeparam name="TUserToken">The type representing a user token.</typeparam>
     /// <typeparam name="TRoleClaim">The type representing a role claim.</typeparam>
-    public abstract class DbConnectionContext<TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin, TRoleClaim, TUserToken>
+    public class DbConnectionContext<TUser, TRole, TKey, TUserClaim, TUserRole, TUserLogin, TRoleClaim, TUserToken>
         where TUser : IdentityUser<TKey>
         where TRole : IdentityRole<TKey>
         where TKey : IEquatable<TKey>
-        where TUserClaim : IdentityUserClaim<TKey>
-        where TUserRole : IdentityUserRole<TKey>
-        where TUserLogin : IdentityUserLogin<TKey>
-        where TRoleClaim : IdentityRoleClaim<TKey>
-        where TUserToken : IdentityUserToken<TKey>
-    {
-        /// <summary>
-        /// A factory for creating instances of <see cref="IDbConnection"/>.
-        /// </summary>
-        public virtual IDbConnectionFactory DbConnectionFactory { get; set; }
-    }
+        where TUserClaim : IdentityUserClaim<TKey>, new()
+        where TUserRole : IdentityUserRole<TKey>, new()
+        where TUserLogin : IdentityUserLogin<TKey>, new()
+        where TRoleClaim : IdentityRoleClaim<TKey>, new()
+        where TUserToken : IdentityUserToken<TKey>, new()
+    { }
 }

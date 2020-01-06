@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 
 namespace AspNetCore.Identity.Dapper
 {
@@ -13,9 +12,6 @@ namespace AspNetCore.Identity.Dapper
         /// </summary>
         /// <param name="dbConnectionFactory"></param>
         public IdentityTable(IDbConnectionFactory dbConnectionFactory) {
-            if (dbConnectionFactory == null) {
-                throw new ArgumentNullException(nameof(dbConnectionFactory));
-            }
             DbConnection = dbConnectionFactory.Create();
         }
 
