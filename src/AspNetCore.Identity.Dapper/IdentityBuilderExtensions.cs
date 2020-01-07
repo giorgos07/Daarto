@@ -37,9 +37,8 @@ namespace AspNetCore.Identity.Dapper
             };
             configureAction?.Invoke(dbConnectionContextOptions);
             dbConnectionContextOptions.Services = null;
-            services.AddSingleton(dbConnectionContextOptions);
             var keyType = identityUserType.GenericTypeArguments[0];
-            services.AddScoped(typeof(IDbConnectionFactory), x => {
+            services.TryAddScoped(typeof(IDbConnectionFactory), x => {
                 var dbConnectionFactoryInstance = (IDbConnectionFactory)Activator.CreateInstance(dbConnectionContextOptions.DbConnectionFactory.GetType());
                 dbConnectionFactoryInstance.ConnectionString = dbConnectionContextOptions.ConnectionString;
                 return dbConnectionFactoryInstance;
@@ -76,116 +75,6 @@ namespace AspNetCore.Identity.Dapper
             services.AddScoped(typeof(IUserTokensTable<,>).MakeGenericType(keyType, userTokenType), typeof(UserTokensTable<,>).MakeGenericType(keyType, userTokenType));
             services.TryAddScoped(typeof(IUserStore<>).MakeGenericType(userType), userStoreType);
         }
-
-        #region Table Extensions
-        /// <summary>
-        /// Add a custom implementation for <see cref="RoleClaimsTable{TKey, TRoleClaim}"/>.
-        /// </summary>
-        /// <typeparam name="TRoleClaimsTable">The type of the table to register.</typeparam>
-        /// <typeparam name="TRoleClaim">The type of the class representing a role claim.</typeparam>
-        /// <param name="options">Options for configuring Dapper stores.</param>
-        public static void AddRoleClaimsTable<TRoleClaimsTable, TRoleClaim>(this DapperStoreOptions options)
-            where TRoleClaimsTable : RoleClaimsTable<string, TRoleClaim>
-            where TRoleClaim : IdentityRoleClaim<string>, new() {
-            options.AddRoleClaimsTable<TRoleClaimsTable, string, TRoleClaim>();
-        }
-
-        /// <summary>
-        /// Add a custom implementation for <see cref="RoleClaimsTable{TKey, TRoleClaim}"/>.
-        /// </summary>
-        /// <typeparam name="TRoleClaimsTable">The type of the table to register.</typeparam>
-        /// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
-        /// <typeparam name="TRoleClaim">The type of the class representing a role claim.</typeparam>
-        /// <param name="options">Options for configuring Dapper stores.</param>
-        public static void AddRoleClaimsTable<TRoleClaimsTable, TKey, TRoleClaim>(this DapperStoreOptions options)
-            where TRoleClaimsTable : RoleClaimsTable<TKey, TRoleClaim>
-            where TKey : IEquatable<TKey>
-            where TRoleClaim : IdentityRoleClaim<TKey>, new() {
-            options.Services.AddScoped(typeof(IRoleClaimsTable<,>).MakeGenericType(typeof(TKey), typeof(TRoleClaim)), typeof(TRoleClaimsTable));
-        }
-
-        /// <summary>
-        /// Add a custom implementation for <see cref="RolesTable{TRole, TKey, TRoleClaim}"/>.
-        /// </summary>
-        /// <typeparam name="TRolesTable">The type of the table to register.</typeparam>
-        /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
-        /// <param name="options">Options for configuring Dapper stores.</param>
-        public static void AddRolesTable<TRolesTable, TRole>(this DapperStoreOptions options)
-            where TRolesTable : RolesTable<TRole, string, IdentityRoleClaim<string>>
-            where TRole : IdentityRole<string> {
-            options.AddRolesTable<TRolesTable, TRole, string, IdentityRoleClaim<string>>();
-        }
-
-        /// <summary>
-        /// Add a custom implementation for <see cref="RolesTable{TRole, TKey, TRoleClaim}"/>.
-        /// </summary>
-        /// <typeparam name="TRolesTable">The type of the table to register.</typeparam>
-        /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
-        /// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
-        /// <typeparam name="TRoleClaim">The type of the class representing a role claim.</typeparam>
-        /// <param name="options">Options for configuring Dapper stores.</param>
-        public static void AddRolesTable<TRolesTable, TRole, TKey, TRoleClaim>(this DapperStoreOptions options)
-            where TRolesTable : RolesTable<TRole, TKey, TRoleClaim>
-            where TRole : IdentityRole<TKey>
-            where TKey : IEquatable<TKey>
-            where TRoleClaim : IdentityRoleClaim<TKey>, new() {
-            options.Services.AddScoped(typeof(IRolesTable<,,>).MakeGenericType(typeof(TRole), typeof(TKey), typeof(TRoleClaim)), typeof(TRolesTable));
-        }
-
-        /// <summary>
-        /// Add a custom implementation for <see cref="UserClaimsTable{TKey, TUserClaim}"/>.
-        /// </summary>
-        /// <typeparam name="TUserClaimsTable">The type of the table to register.</typeparam>
-        /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
-        /// <param name="options">Options for configuring Dapper stores.</param>
-        public static void AddUserClaimsTable<TUserClaimsTable, TUserClaim>(this DapperStoreOptions options)
-            where TUserClaimsTable : UserClaimsTable<string, TUserClaim>
-            where TUserClaim : IdentityUserClaim<string>, new() {
-            options.AddUserClaimsTable<TUserClaimsTable, string, TUserClaim>();
-        }
-
-        /// <summary>
-        /// Add a custom implementation for <see cref="UserClaimsTable{TKey, TUserClaim}"/>.
-        /// </summary>
-        /// <typeparam name="TUserClaimsTable">The type of the table to register.</typeparam>
-        /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
-        /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
-        /// <param name="options">Options for configuring Dapper stores.</param>
-        public static void AddUserClaimsTable<TUserClaimsTable, TKey, TUserClaim>(this DapperStoreOptions options)
-            where TUserClaimsTable : UserClaimsTable<TKey, TUserClaim>
-            where TKey : IEquatable<TKey>
-            where TUserClaim : IdentityUserClaim<TKey>, new() {
-            options.Services.AddScoped(typeof(IUserClaimsTable<,>).MakeGenericType(typeof(TKey), typeof(TUserClaim)), typeof(TUserClaimsTable));
-        }
-
-        /// <summary>
-        /// Add a custom implementation for <see cref="UserClaimsTable{TKey, TUserClaim}"/>.
-        /// </summary>
-        /// <typeparam name="TUserLoginsTable">The type of the table to register.</typeparam>
-        /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
-        /// <param name="options">Options for configuring Dapper stores.</param>
-        public static void AddUserLoginsTable<TUserLoginsTable, TUserLogin>(this DapperStoreOptions options)
-            where TUserLoginsTable : UserLoginsTable<IdentityUser, string, TUserLogin>
-            where TUserLogin : IdentityUserLogin<string>, new() {
-            options.AddUserLoginsTable<TUserLoginsTable, IdentityUser, string, TUserLogin>();
-        }
-
-        /// <summary>
-        /// Add a custom implementation for <see cref="UserClaimsTable{TKey, TUserClaim}"/>.
-        /// </summary>
-        /// <typeparam name="TUserLoginsTable">The type of the table to register.</typeparam>
-        /// <typeparam name="TUser">The type representing a user.</typeparam>
-        /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
-        /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
-        /// <param name="options">Options for configuring Dapper stores.</param>
-        public static void AddUserLoginsTable<TUserLoginsTable, TUser, TKey, TUserLogin>(this DapperStoreOptions options)
-            where TUserLoginsTable : UserLoginsTable<TUser, TKey, TUserLogin>
-            where TUser : IdentityUser<TKey>
-            where TKey : IEquatable<TKey>
-            where TUserLogin : IdentityUserLogin<TKey>, new() {
-            options.Services.AddScoped(typeof(IUserLoginsTable<,,>).MakeGenericType(typeof(TUser), typeof(TKey), typeof(TUserLogin)), typeof(TUserLoginsTable));
-        }
-        #endregion
 
         private static TypeInfo FindGenericBaseType(Type currentType, Type genericBaseType) {
             var type = currentType;

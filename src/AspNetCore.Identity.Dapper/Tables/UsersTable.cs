@@ -12,8 +12,8 @@ namespace AspNetCore.Identity.Dapper
     /// <summary>
     /// The default implementation of <see cref="IUsersTable{TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken}"/>.
     /// </summary>
-    /// <typeparam name="TKey">The type of the primary key for a role and user.</typeparam>
     /// <typeparam name="TUser">The type representing a user.</typeparam>
+    /// <typeparam name="TKey">The type of the primary key for a role and user.</typeparam>
     /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
     /// <typeparam name="TUserRole">The type representing a user role.</typeparam>
     /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>

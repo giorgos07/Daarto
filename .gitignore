@@ -292,7 +292,6 @@ __pycache__/
 *.xsd.cs
 
 # Custom ignored items
-samples/Daarto.WebUI/wwwroot/lib/*
 samples/Daarto.WebUI/node_modules/*
 samples/Daarto.WebUI/package-lock.json
 
