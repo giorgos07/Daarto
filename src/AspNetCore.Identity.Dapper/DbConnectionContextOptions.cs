@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Identity.Dapper
 {
@@ -7,6 +8,7 @@ namespace AspNetCore.Identity.Dapper
     /// </summary>
     public class DbConnectionContextOptions
     {
+        internal IServiceCollection Services;
         /// <summary>
         /// The connection string to use for connecting to the data source.
         /// </summary>

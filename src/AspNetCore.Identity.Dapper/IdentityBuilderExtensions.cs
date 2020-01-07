@@ -41,9 +41,11 @@ namespace AspNetCore.Identity.Dapper
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
             var dbConnectionContextOptions = new DbConnectionContextOptions {
                 ConnectionString = configuration.GetConnectionString("DefaultConnection"),
-                DbConnectionFactory = new SqlServerDbConnectionFactory()
+                DbConnectionFactory = new SqlServerDbConnectionFactory(),
+                Services = services
             };
             configureAction?.Invoke(dbConnectionContextOptions);
+            dbConnectionContextOptions.Services = null;
             services.AddSingleton(dbConnectionContextOptions);
             var keyType = identityUserType.GenericTypeArguments[0];
             var dbConnectionContext = FindGenericBaseType(dbConnectionContextType, typeof(DbConnectionContext<,,,,,,,>));
@@ -83,6 +85,48 @@ namespace AspNetCore.Identity.Dapper
             services.AddScoped(typeof(IUserLoginsTable<,,>).MakeGenericType(userType, keyType, userLoginType), typeof(UserLoginsTable<,,>).MakeGenericType(userType, keyType, userLoginType));
             services.AddScoped(typeof(IUserTokensTable<,>).MakeGenericType(keyType, userTokenType), typeof(UserTokensTable<,>).MakeGenericType(keyType, userTokenType));
             services.TryAddScoped(typeof(IUserStore<>).MakeGenericType(userType), userStoreType);
+        }
+
+        /// <summary>
+        /// Add a custom implementation for <see cref="RolesTable{TRole, TKey, TRoleClaim}"/>.
+        /// </summary>
+        /// <typeparam name="TRolesTable">The type of the table to register.</typeparam>
+        /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
+        /// <param name="options">Options for use within <see cref="DbConnectionContext"/>.</param>
+        public static void AddRolesTable<TRolesTable, TRole>(this DbConnectionContextOptions options)
+            where TRolesTable : RolesTable<TRole, string, IdentityRoleClaim<string>>
+            where TRole : IdentityRole<string> {
+            options.AddRolesTable<TRolesTable, TRole, string, IdentityRoleClaim<string>>();
+        }
+
+        /// <summary>
+        /// Add a custom implementation for <see cref="RolesTable{TRole, TKey, TRoleClaim}"/>.
+        /// </summary>
+        /// <typeparam name="TRolesTable">The type of the table to register.</typeparam>
+        /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
+        /// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
+        /// <typeparam name="TRoleClaim">The type of the class representing a role claim.</typeparam>
+        /// <param name="options">Options for use within <see cref="DbConnectionContext"/>.</param>
+        public static void AddRolesTable<TRolesTable, TRole, TKey, TRoleClaim>(this DbConnectionContextOptions options)
+            where TRolesTable : RolesTable<TRole, TKey, TRoleClaim>
+            where TRole : IdentityRole<TKey>
+            where TKey : IEquatable<TKey>
+            where TRoleClaim : IdentityRoleClaim<TKey>, new() {
+            options.Services.AddScoped(typeof(IRolesTable<,,>).MakeGenericType(typeof(TRole), typeof(TKey), typeof(TRoleClaim)), typeof(TRolesTable));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="TRoleClaimsTable"></typeparam>
+        /// <typeparam name="TKey"></typeparam>
+        /// <typeparam name="TRoleClaim"></typeparam>
+        /// <param name="options"></param>
+        public static void AddRoleClaimsTable<TRoleClaimsTable, TKey, TRoleClaim>(this DbConnectionContextOptions options)
+            where TRoleClaimsTable : RoleClaimsTable<TKey, TRoleClaim>
+            where TKey : IEquatable<TKey>
+            where TRoleClaim : IdentityRoleClaim<TKey>, new() {
+            options.Services.AddScoped(typeof(IRoleClaimsTable<,>).MakeGenericType(typeof(TKey), typeof(TRoleClaim)), typeof(TRoleClaimsTable));
         }
 
         private static TypeInfo FindGenericBaseType(Type currentType, Type genericBaseType) {
