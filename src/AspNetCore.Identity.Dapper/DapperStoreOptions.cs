@@ -4,9 +4,9 @@ using Microsoft.Extensions.DependencyInjection;
 namespace AspNetCore.Identity.Dapper
 {
     /// <summary>
-    /// Options for use within <see cref="DbConnectionContext"/>.
+    /// Options for configuring Dapper stores.
     /// </summary>
-    public class DbConnectionContextOptions
+    public class DapperStoreOptions
     {
         internal IServiceCollection Services;
         /// <summary>
