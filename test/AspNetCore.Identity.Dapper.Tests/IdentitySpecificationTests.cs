@@ -6,14 +6,24 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Identity.Dapper.Tests
 {
-    public class UserManagerSpecificationTests : UserManagerSpecificationTestBase<IdentityUser>
+    public class IdentitySpecificationTests : IdentitySpecificationTestBase<IdentityUser, IdentityRole, string>
     {
+        protected override void AddRoleStore(IServiceCollection services, object context = null) {
+            throw new NotImplementedException();
+        }
+
         protected override void AddUserStore(IServiceCollection services, object context = null) {
             throw new NotImplementedException();
         }
 
         protected override object CreateTestContext() {
-            return null;
+            throw new NotImplementedException();
+        }
+
+        protected override IdentityRole CreateTestRole(string roleNamePrefix = "", bool useRoleNamePrefixAsRoleName = false) {
+            return new IdentityRole {
+                Name = useRoleNamePrefixAsRoleName ? roleNamePrefix : $"{roleNamePrefix}{Guid.NewGuid()}"
+            };
         }
 
         protected override IdentityUser CreateTestUser(string namePrefix = "", string email = "", string phoneNumber = "", bool lockoutEnabled = false, DateTimeOffset? lockoutEnd = null, bool useNamePrefixAsUserName = false) {
@@ -24,6 +34,14 @@ namespace AspNetCore.Identity.Dapper.Tests
                 LockoutEnabled = lockoutEnabled,
                 LockoutEnd = lockoutEnd
             };
+        }
+
+        protected override Expression<Func<IdentityRole, bool>> RoleNameEqualsPredicate(string roleName) {
+            return role => role.Name == roleName;
+        }
+
+        protected override Expression<Func<IdentityRole, bool>> RoleNameStartsWithPredicate(string roleName) {
+            return role => role != null && role.Name.StartsWith(roleName);
         }
 
         protected override void SetUserPasswordHash(IdentityUser user, string hashedPassword) {
