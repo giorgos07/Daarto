@@ -4,7 +4,7 @@
     <UserSecretsId>aspnet-Daarto.WebUI-0BC4D06A-1285-4595-85EA-07A68DD02CF3</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="3.1.1" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\AspNetCore.Identity.Dapper\AspNetCore.Identity.Dapper.csproj" />
