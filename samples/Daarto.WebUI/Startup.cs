@@ -26,6 +26,8 @@ namespace Daarto.WebUI
                     })
                     .AddDefaultUI()
                     .AddDefaultTokenProviders();
+            services.AddDefaultIdentity<IdentityUser>()
+                    .AddDapperStores();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Reflection;
+using AspNetCore.Identity.Dapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 
-namespace AspNetCore.Identity.Dapper
+namespace Microsoft.Extensions.DependencyInjection
 {
     /// <summary>
     /// Extension methods on <see cref="IdentityBuilder"/> class.

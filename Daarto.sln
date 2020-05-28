@@ -7,14 +7,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AE94DD8D-162
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{AAE1B832-6032-4C5C-8154-F6775CC051F8}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{02369E2A-8527-4EC5-AE86-CB7805427398}"
-	ProjectSection(SolutionItems) = preProject
-		misc\scripts\AspNetRolesData.sql = misc\scripts\AspNetRolesData.sql
-		misc\scripts\AspNetUserRolesData.sql = misc\scripts\AspNetUserRolesData.sql
-		misc\scripts\AspNetUsersData.sql = misc\scripts\AspNetUsersData.sql
-		misc\scripts\ClearDatabase.sql = misc\scripts\ClearDatabase.sql
-	EndProjectSection
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AspNetCore.Identity.Dapper", "src\AspNetCore.Identity.Dapper\AspNetCore.Identity.Dapper.csproj", "{DD01411B-826F-4CA3-8581-8FDA9C7961AC}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{525F9EE4-17EB-4E98-A775-C28282BC2962}"
@@ -24,6 +16,19 @@ EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "IdentityDb", "misc\database\IdentityDb\IdentityDb.sqlproj", "{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daarto.WebUI", "samples\Daarto.WebUI\Daarto.WebUI.csproj", "{22BA1F98-E1F9-421E-9B84-CAC07745BAEF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{C413D479-154F-4A24-9984-2B0D0C0C4CC2}"
+	ProjectSection(SolutionItems) = preProject
+		misc\data\AspNetRolesData.sql = misc\data\AspNetRolesData.sql
+		misc\data\AspNetUserRolesData.sql = misc\data\AspNetUserRolesData.sql
+		misc\data\AspNetUsersData.sql = misc\data\AspNetUsersData.sql
+		misc\data\ClearDatabase.sql = misc\data\ClearDatabase.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{B0C64769-72F4-42AE-B0E3-938FF8D1C145}"
+	ProjectSection(SolutionItems) = preProject
+		misc\docs\1.use_the_package.md = misc\docs\1.use_the_package.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,11 +55,12 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{02369E2A-8527-4EC5-AE86-CB7805427398} = {AAE1B832-6032-4C5C-8154-F6775CC051F8}
 		{DD01411B-826F-4CA3-8581-8FDA9C7961AC} = {AE94DD8D-1626-4618-AB38-37459DEE54E0}
 		{661AB817-BF00-4B7F-88B5-9ADC84DC93A5} = {AAE1B832-6032-4C5C-8154-F6775CC051F8}
 		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB} = {661AB817-BF00-4B7F-88B5-9ADC84DC93A5}
 		{22BA1F98-E1F9-421E-9B84-CAC07745BAEF} = {525F9EE4-17EB-4E98-A775-C28282BC2962}
+		{C413D479-154F-4A24-9984-2B0D0C0C4CC2} = {AAE1B832-6032-4C5C-8154-F6775CC051F8}
+		{B0C64769-72F4-42AE-B0E3-938FF8D1C145} = {AAE1B832-6032-4C5C-8154-F6775CC051F8}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {78AE28B8-138A-401A-B79E-457DC5EFB188}

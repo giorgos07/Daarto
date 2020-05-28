@@ -1,8 +1,8 @@
 ﻿using System;
+using AspNetCore.Identity.Dapper;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace AspNetCore.Identity.Dapper
+namespace Microsoft.Extensions.DependencyInjection
 {
     /// <summary>
     /// Extensions on <see cref="DapperStoreOptions"/> type.
