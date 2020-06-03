@@ -1,4 +1,3 @@
-using AspNetCore.Identity.Dapper;
 using Daarto.WebUI.Data;
 using Daarto.WebUI.Data.Tables;
 using Microsoft.AspNetCore.Builder;
@@ -26,8 +25,8 @@ namespace Daarto.WebUI
                     })
                     .AddDefaultUI()
                     .AddDefaultTokenProviders();
-            services.AddDefaultIdentity<IdentityUser>()
-                    .AddDapperStores();
+            //services.AddDefaultIdentity<IdentityUser>()
+            //        .AddDapperStores();
             services.AddControllersWithViews();
             services.AddRazorPages();
         }

@@ -7,7 +7,7 @@
     <Description>Dapper implementation of ASP.NET Core Identity stores.</Description>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <TargetFrameworks>netstandard2.1;netcoreapp3.1</TargetFrameworks>
-    <VersionPrefix>3.1.0</VersionPrefix>
+    <VersionPrefix>3.1.1</VersionPrefix>
   </PropertyGroup>
   <PropertyGroup Label="Package">
     <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
@@ -15,7 +15,7 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageId>AspNetCore.Identity.DapperOrm</PackageId>
     <PackageTags>AspNetCore;Dapper;Identity</PackageTags>
-    <PackageReleaseNotes>Update to .NET Core 3.1.</PackageReleaseNotes>
+    <PackageReleaseNotes>Fixes issue #14.</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/giorgos07/Daarto/tree/master/src/AspNetCore.Identity.Dapper</PackageProjectUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryType>git</RepositoryType>
