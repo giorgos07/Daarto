@@ -20,12 +20,12 @@ namespace AspNetCore.Identity.Dapper
         /// Creates a new role in the store.
         /// </summary>
         /// <param name="role">The role to create in the store.</param>
-        Task<bool> CreateAsync(TRole role);
+        Task<IdentityResult> CreateAsync(TRole role);
         /// <summary>
         /// Deletes a role from the store.
         /// </summary>
         /// <param name="roleId">The id of the role to delete from the store.</param>
-        Task<bool> DeleteAsync(TKey roleId);
+        Task<IdentityResult> DeleteAsync(TKey roleId);
         /// <summary>
         /// Finds the role who has the specified id.
         /// </summary>
@@ -41,6 +41,6 @@ namespace AspNetCore.Identity.Dapper
         /// </summary>
         /// <param name="role">The role to update in the store.</param>
         /// <param name="claims">The claims of the role.</param>
-        Task<bool> UpdateAsync(TRole role, IList<TRoleClaim> claims = null);
+        Task<IdentityResult> UpdateAsync(TRole role, IList<TRoleClaim> claims = null);
     }
 }
