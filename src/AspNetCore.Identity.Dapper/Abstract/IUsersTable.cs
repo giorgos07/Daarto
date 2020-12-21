@@ -25,12 +25,12 @@ namespace AspNetCore.Identity.Dapper
         /// Creates a new user in the store.
         /// </summary>
         /// <param name="user">The user to create in the store.</param>
-        Task<bool> CreateAsync(TUser user);
+        Task<IdentityResult> CreateAsync(TUser user);
         /// <summary>
         /// Deletes a user from the store.
         /// </summary>
         /// <param name="userId">The id of the user to delete from the store.</param>
-        Task<bool> DeleteAsync(TKey userId);
+        Task<IdentityResult> DeleteAsync(TKey userId);
         /// <summary>
         /// Finds the user who has the specified id.
         /// </summary>
@@ -53,7 +53,7 @@ namespace AspNetCore.Identity.Dapper
         /// <param name="claims">The claims of the user.</param>
         /// <param name="logins">The logins of the user.</param>
         /// <param name="tokens">The tokens of the user.</param>
-        Task<bool> UpdateAsync(TUser user, IList<TUserClaim> claims, IList<TUserLogin> logins, IList<TUserToken> tokens);
+        Task<IdentityResult> UpdateAsync(TUser user, IList<TUserClaim> claims, IList<TUserLogin> logins, IList<TUserToken> tokens);
         /// <summary>
         /// Gets the users that own the specified claim.
         /// </summary>
@@ -86,7 +86,7 @@ namespace AspNetCore.Identity.Dapper
         /// <param name="roles">The roles of the user.</param>
         /// <param name="logins">The logins of the user.</param>
         /// <param name="tokens">The tokens of the user.</param>
-        Task<bool> UpdateAsync(TUser user, IList<TUserClaim> claims, IList<TUserRole> roles, IList<TUserLogin> logins, IList<TUserToken> tokens);
+        Task<IdentityResult> UpdateAsync(TUser user, IList<TUserClaim> claims, IList<TUserRole> roles, IList<TUserLogin> logins, IList<TUserToken> tokens);
         /// <summary>
         /// Gets the users that belong to the specified role.
         /// </summary>

@@ -22,9 +22,7 @@ namespace AspNetCore.Identity.Dapper
 
         /// <inheritdoc/>
         protected override void OnDispose() {
-            if (DbConnection != null) {
-                DbConnection.Dispose();
-            }
+            DbConnection?.Dispose();
         }
     }
 }

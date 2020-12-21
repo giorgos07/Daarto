@@ -35,7 +35,7 @@ namespace AspNetCore.Identity.Dapper
         public UsersTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
 
         /// <inheritdoc/>
-        public virtual async Task<bool> CreateAsync(TUser user) {
+        public virtual async Task<IdentityResult> CreateAsync(TUser user) {
             const string sql = "INSERT INTO [dbo].[AspNetUsers] " +
                                "VALUES (@Id, @UserName, @NormalizedUserName, @Email, @NormalizedEmail, @EmailConfirmed, @PasswordHash, @SecurityStamp, @ConcurrencyStamp, " +
                                        "@PhoneNumber, @PhoneNumberConfirmed, @TwoFactorEnabled, @LockoutEnd, @LockoutEnabled, @AccessFailedCount);";
@@ -56,16 +56,26 @@ namespace AspNetCore.Identity.Dapper
                 user.LockoutEnabled,
                 user.AccessFailedCount
             });
-            return rowsInserted == 1;
+            return rowsInserted == 1
+                ? IdentityResult.Success 
+                : IdentityResult.Failed(new IdentityError { 
+                        Code = string.Empty,
+                        Description = $"User '{user.UserName}' could not be created."
+                    });
         }
 
         /// <inheritdoc/>
-        public virtual async Task<bool> DeleteAsync(TKey userId) {
+        public virtual async Task<IdentityResult> DeleteAsync(TKey userId) {
             const string sql = "DELETE " +
                                "FROM [dbo].[AspNetUsers] " +
                                "WHERE [Id] = @Id;";
             var rowsDeleted = await DbConnection.ExecuteAsync(sql, new { Id = userId });
-            return rowsDeleted == 1;
+            return rowsDeleted == 1
+                ? IdentityResult.Success
+                : IdentityResult.Failed(new IdentityError {
+                    Code = string.Empty,
+                    Description = $"User Id '{userId}' could not be deleted."
+                });
         }
 
         /// <inheritdoc/>
@@ -96,12 +106,12 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public virtual Task<bool> UpdateAsync(TUser user, IList<TUserClaim> claims, IList<TUserLogin> logins, IList<TUserToken> tokens) {
+        public virtual Task<IdentityResult> UpdateAsync(TUser user, IList<TUserClaim> claims, IList<TUserLogin> logins, IList<TUserToken> tokens) {
             return UpdateAsync(user, claims, null, logins, tokens);
         }
 
         /// <inheritdoc/>
-        public virtual async Task<bool> UpdateAsync(TUser user, IList<TUserClaim> claims, IList<TUserRole> roles, IList<TUserLogin> logins, IList<TUserToken> tokens) {
+        public virtual async Task<IdentityResult> UpdateAsync(TUser user, IList<TUserClaim> claims, IList<TUserRole> roles, IList<TUserLogin> logins, IList<TUserToken> tokens) {
             const string updateUserSql =
                 "UPDATE [dbo].[AspNetUsers] " +
                 "SET [UserName] = @UserName, [NormalizedUserName] = @NormalizedUserName, [Email] = @Email, [NormalizedEmail] = @NormalizedEmail, [EmailConfirmed] = @EmailConfirmed, " +
@@ -184,10 +194,13 @@ namespace AspNetCore.Identity.Dapper
                     transaction.Commit();
                 } catch {
                     transaction.Rollback();
-                    return false;
+                    return IdentityResult.Failed(new IdentityError {
+                        Code = string.Empty,
+                        Description = $"User '{user.UserName}' could not be updated."
+                    });
                 }
             }
-            return true;
+            return IdentityResult.Success;
         }
 
         /// <inheritdoc/>
