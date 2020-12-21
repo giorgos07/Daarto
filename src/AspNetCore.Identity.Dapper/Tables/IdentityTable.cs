@@ -11,12 +11,12 @@ namespace AspNetCore.Identity.Dapper
         /// <summary>
         /// Creates a new instance of <see cref="IdentityTable"/>.
         /// </summary>
-        /// <param name="dbConnectionFactory"></param>
-        protected IdentityTable(IDbConnectionFactory dbConnectionFactory) {
-            _dbConnectionFactory = dbConnectionFactory;
+        /// <param name="dbConnectionStore"></param>
+        protected IdentityTable(IDbConnectionStore dbConnectionStore) {
+            _dbConnectionStore = dbConnectionStore;
         }
 
-        private IDbConnectionFactory _dbConnectionFactory;
+        private readonly IDbConnectionStore _dbConnectionStore;
         private IDbConnection _dbConnection;
 
         /// <summary>
@@ -24,14 +24,7 @@ namespace AspNetCore.Identity.Dapper
         /// </summary>
         protected IDbConnection DbConnection 
         {
-            get 
-            {
-                if (_dbConnection == null) {
-                    _dbConnection = _dbConnectionFactory.GetOrCreateConnection();
-                    _dbConnectionFactory = null;
-                }
-                return _dbConnection;
-            }
+            get => _dbConnection ??= _dbConnectionStore.GetOrCreateConnection();
         }
     }
 }

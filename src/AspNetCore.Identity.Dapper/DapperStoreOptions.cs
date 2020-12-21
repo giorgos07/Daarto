@@ -17,6 +17,6 @@ namespace AspNetCore.Identity.Dapper
         /// <summary>
         /// The type of the DbConnectionFactory (A factory for creating instances of <see cref="IDbConnection"/>)
         /// </summary>
-        public Type DbConnectionFactoryType { get; set; }
+        public Type DbConnectionStoreType { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace AspNetCore.Identity.Dapper
     /// <summary>
     /// A factory for creating instances of <see cref="IDbConnection"/>.
     /// </summary>
-    public interface IDbConnectionFactory : IDisposable
+    public interface IDbConnectionStore : IDisposable
     {
         /// <summary>
         /// The connection string to use for connecting to Microsoft SQL Server.

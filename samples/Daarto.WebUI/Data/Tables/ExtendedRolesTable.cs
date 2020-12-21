@@ -9,7 +9,7 @@ namespace Daarto.WebUI.Data.Tables
 {
     public class ExtendedRolesTable : RolesTable<ExtendedIdentityRole, string, IdentityRoleClaim<string>>
     {
-        public ExtendedRolesTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
+        public ExtendedRolesTable(IDbConnectionStore dbConnectionFactory) : base(dbConnectionFactory) { }
 
         public override async Task<IdentityResult> CreateAsync(ExtendedIdentityRole role) {
             const string sql = "INSERT INTO [dbo].[AspNetRoles] " +

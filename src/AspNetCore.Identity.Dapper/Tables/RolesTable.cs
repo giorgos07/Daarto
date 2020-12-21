@@ -25,7 +25,7 @@ namespace AspNetCore.Identity.Dapper
         /// Creates a new instance of <see cref="RolesTable{TRole, TKey, TRoleClaim}"/>.
         /// </summary>
         /// <param name="dbConnectionFactory">A factory for creating instances of <see cref="IDbConnection"/>.</param>
-        public RolesTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
+        public RolesTable(IDbConnectionStore dbConnectionFactory) : base(dbConnectionFactory) { }
 
         /// <inheritdoc/>
         public virtual async Task<IdentityResult> CreateAsync(TRole role) {
