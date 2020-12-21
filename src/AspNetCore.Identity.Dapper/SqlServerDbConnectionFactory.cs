@@ -13,11 +13,12 @@ namespace AspNetCore.Identity.Dapper
         /// </summary>
         public string ConnectionString { get; set; }
 
+        private IDbConnection _sqlConnection;
         /// <inheritdoc/>
-        public IDbConnection Create() {
-            var sqlConnection = new SqlConnection(ConnectionString);
-            sqlConnection.Open();
-            return sqlConnection;
+        public IDbConnection GetOrCreateConnection() {
+            // we could open the connection here and it will remain open until explicitly closed, but if we return a closed connection (as below),
+            // dapper will open and close with each query or transaction
+            return _sqlConnection ??= new SqlConnection(ConnectionString);
         }
     }
 }

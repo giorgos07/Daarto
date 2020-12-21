@@ -14,6 +14,6 @@ namespace AspNetCore.Identity.Dapper
         /// <summary>
         /// Creates a new instance of the underlying <see cref="IDbConnection"/>.
         /// </summary>
-        IDbConnection Create();
+        IDbConnection GetOrCreateConnection();
     }
 }
