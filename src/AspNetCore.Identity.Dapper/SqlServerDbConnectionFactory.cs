@@ -20,5 +20,22 @@ namespace AspNetCore.Identity.Dapper
             // dapper will open and close with each query or transaction
             return _sqlConnection ??= new SqlConnection(ConnectionString);
         }
+
+        private bool _disposed = false;
+        /// <inheritdoc/>
+        public void Dispose() {
+            Dispose(true);
+        }
+        /// <summary>
+        /// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+        /// </summary>
+        /// <param name="disposing">Indicates whether the method call comes from a Dispose method (its value is true) or from a finalizer (its value is false).</param>
+        protected virtual void Dispose(bool disposing) {
+            if (!_disposed && disposing) {
+                // Free any other managed objects here.
+                _sqlConnection?.Dispose();
+                _disposed = true;
+            }
+        }
     }
 }
