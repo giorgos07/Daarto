@@ -32,14 +32,14 @@ namespace Microsoft.Extensions.DependencyInjection
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
             var dbConnectionContextOptions = new DapperStoreOptions {
                 ConnectionString = configuration.GetConnectionString("DefaultConnection"),
-                DbConnectionFactory = new SqlServerDbConnectionFactory(),
+                DbConnectionFactoryType = typeof(SqlServerDbConnectionFactory),
                 Services = services
             };
             configureAction?.Invoke(dbConnectionContextOptions);
             dbConnectionContextOptions.Services = null;
             var keyType = identityUserType.GenericTypeArguments[0];
             services.TryAddScoped(typeof(IDbConnectionFactory), x => {
-                var dbConnectionFactoryInstance = (IDbConnectionFactory)Activator.CreateInstance(dbConnectionContextOptions.DbConnectionFactory.GetType());
+                var dbConnectionFactoryInstance = (IDbConnectionFactory)Activator.CreateInstance(dbConnectionContextOptions.DbConnectionFactoryType);
                 dbConnectionFactoryInstance.ConnectionString = dbConnectionContextOptions.ConnectionString;
                 return dbConnectionFactoryInstance;
             });

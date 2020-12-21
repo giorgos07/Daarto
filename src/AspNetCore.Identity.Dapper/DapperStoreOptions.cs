@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCore.Identity.Dapper
@@ -14,8 +15,8 @@ namespace AspNetCore.Identity.Dapper
         /// </summary>
         public string ConnectionString { get; set; }
         /// <summary>
-        /// A factory for creating instances of <see cref="IDbConnection"/>.
+        /// The type of the DbConnectionFactory (A factory for creating instances of <see cref="IDbConnection"/>)
         /// </summary>
-        public IDbConnectionFactory DbConnectionFactory { get; set; }
+        public Type DbConnectionFactoryType { get; set; }
     }
 }
