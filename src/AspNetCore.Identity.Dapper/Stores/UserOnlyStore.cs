@@ -95,27 +95,19 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public override async Task<IdentityResult> CreateAsync(TUser user, CancellationToken cancellationToken) {
+        public override Task<IdentityResult> CreateAsync(TUser user, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             user.ThrowIfNull(nameof(user));
-            var created = await UsersTable.CreateAsync(user);
-            return created ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
-                Code = string.Empty,
-                Description = $"User '{user.UserName}' could not be created."
-            });
+            return UsersTable.CreateAsync(user);
         }
 
         /// <inheritdoc/>
-        public override async Task<IdentityResult> DeleteAsync(TUser user, CancellationToken cancellationToken) {
+        public override Task<IdentityResult> DeleteAsync(TUser user, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             user.ThrowIfNull(nameof(user));
-            var deleted = await UsersTable.DeleteAsync(user.Id);
-            return deleted ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
-                Code = string.Empty,
-                Description = $"User '{user.UserName}' could not be deleted."
-            });
+            return UsersTable.DeleteAsync(user.Id);
         }
 
         /// <inheritdoc/>
@@ -212,16 +204,12 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public override async Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken) {
+        public override Task<IdentityResult> UpdateAsync(TUser user, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             user.ThrowIfNull(nameof(user));
             user.ConcurrencyStamp = Guid.NewGuid().ToString();
-            var updated = await UsersTable.UpdateAsync(user, UserClaims, UserLogins, UserTokens);
-            return updated ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
-                Code = string.Empty,
-                Description = $"User '{user.UserName}' could not be deleted."
-            });
+            return UsersTable.UpdateAsync(user, UserClaims, UserLogins, UserTokens);
         }
 
         /// <inheritdoc/>

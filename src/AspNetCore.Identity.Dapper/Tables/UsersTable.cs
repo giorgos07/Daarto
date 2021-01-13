@@ -32,10 +32,10 @@ namespace AspNetCore.Identity.Dapper
         /// Creates a new instance of <see cref="UsersTable{TUser, TKey, TUserClaim, TUserRole, TUserLogin, TUserToken}"/>.
         /// </summary>
         /// <param name="dbConnectionFactory">A factory for creating instances of <see cref="IDbConnection"/>.</param>
-        public UsersTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
+        public UsersTable(IDbConnectionStore dbConnectionFactory) : base(dbConnectionFactory) { }
 
         /// <inheritdoc/>
-        public virtual async Task<bool> CreateAsync(TUser user) {
+        public virtual async Task<IdentityResult> CreateAsync(TUser user) {
             const string sql = "INSERT INTO [dbo].[AspNetUsers] " +
                                "VALUES (@Id, @UserName, @NormalizedUserName, @Email, @NormalizedEmail, @EmailConfirmed, @PasswordHash, @SecurityStamp, @ConcurrencyStamp, " +
                                        "@PhoneNumber, @PhoneNumberConfirmed, @TwoFactorEnabled, @LockoutEnd, @LockoutEnabled, @AccessFailedCount);";
@@ -56,16 +56,26 @@ namespace AspNetCore.Identity.Dapper
                 user.LockoutEnabled,
                 user.AccessFailedCount
             });
-            return rowsInserted == 1;
+            return rowsInserted == 1
+                ? IdentityResult.Success 
+                : IdentityResult.Failed(new IdentityError { 
+                        Code = string.Empty,
+                        Description = $"User '{user.UserName}' could not be created."
+                    });
         }
 
         /// <inheritdoc/>
-        public virtual async Task<bool> DeleteAsync(TKey userId) {
+        public virtual async Task<IdentityResult> DeleteAsync(TKey userId) {
             const string sql = "DELETE " +
                                "FROM [dbo].[AspNetUsers] " +
                                "WHERE [Id] = @Id;";
             var rowsDeleted = await DbConnection.ExecuteAsync(sql, new { Id = userId });
-            return rowsDeleted == 1;
+            return rowsDeleted == 1
+                ? IdentityResult.Success
+                : IdentityResult.Failed(new IdentityError {
+                    Code = string.Empty,
+                    Description = $"User Id '{userId}' could not be deleted."
+                });
         }
 
         /// <inheritdoc/>
@@ -96,12 +106,12 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public virtual Task<bool> UpdateAsync(TUser user, IList<TUserClaim> claims, IList<TUserLogin> logins, IList<TUserToken> tokens) {
+        public virtual Task<IdentityResult> UpdateAsync(TUser user, IList<TUserClaim> claims, IList<TUserLogin> logins, IList<TUserToken> tokens) {
             return UpdateAsync(user, claims, null, logins, tokens);
         }
 
         /// <inheritdoc/>
-        public virtual async Task<bool> UpdateAsync(TUser user, IList<TUserClaim> claims, IList<TUserRole> roles, IList<TUserLogin> logins, IList<TUserToken> tokens) {
+        public virtual async Task<IdentityResult> UpdateAsync(TUser user, IList<TUserClaim> claims, IList<TUserRole> roles, IList<TUserLogin> logins, IList<TUserToken> tokens) {
             const string updateUserSql =
                 "UPDATE [dbo].[AspNetUsers] " +
                 "SET [UserName] = @UserName, [NormalizedUserName] = @NormalizedUserName, [Email] = @Email, [NormalizedEmail] = @NormalizedEmail, [EmailConfirmed] = @EmailConfirmed, " +
@@ -128,66 +138,28 @@ namespace AspNetCore.Identity.Dapper
                     user.Id
                 }, transaction);
                 if (claims?.Count() > 0) {
-                    const string deleteClaimsSql = "DELETE " +
-                                                   "FROM [dbo].[AspNetUserClaims] " +
-                                                   "WHERE [UserId] = @UserId;";
-                    await DbConnection.ExecuteAsync(deleteClaimsSql, new { UserId = user.Id }, transaction);
-                    const string insertClaimsSql = "INSERT INTO [dbo].[AspNetUserClaims] (UserId, ClaimType, ClaimValue) " +
-                                                   "VALUES (@UserId, @ClaimType, @ClaimValue);";
-                    await DbConnection.ExecuteAsync(insertClaimsSql, claims.Select(x => new {
-                        UserId = user.Id,
-                        x.ClaimType,
-                        x.ClaimValue
-                    }), transaction);
+                    await ReplaceClaims(claims, user.Id, transaction);
                 }
                 if (roles?.Count() > 0) {
-                    const string deleteRolesSql = "DELETE " +
-                                                  "FROM [dbo].[AspNetUserRoles] " +
-                                                  "WHERE [UserId] = @UserId;";
-                    await DbConnection.ExecuteAsync(deleteRolesSql, new { UserId = user.Id }, transaction);
-                    const string insertRolesSql = "INSERT INTO [dbo].[AspNetUserRoles] (UserId, RoleId) " +
-                                                  "VALUES (@UserId, @RoleId);";
-                    await DbConnection.ExecuteAsync(insertRolesSql, roles.Select(x => new {
-                        UserId = user.Id,
-                        x.RoleId
-                    }), transaction);
+                    await ReplaceRoles(roles, user.Id, transaction);
                 }
                 if (logins?.Count() > 0) {
-                    const string deleteLoginsSql = "DELETE " +
-                                                   "FROM [dbo].[AspNetUserLogins] " +
-                                                   "WHERE [UserId] = @UserId;";
-                    await DbConnection.ExecuteAsync(deleteLoginsSql, new { UserId = user.Id }, transaction);
-                    const string insertLoginsSql = "INSERT INTO [dbo].[AspNetUserLogins] (LoginProvider, ProviderKey, ProviderDisplayName, UserId) " +
-                                                   "VALUES (@LoginProvider, @ProviderKey, @ProviderDisplayName, @UserId);";
-                    await DbConnection.ExecuteAsync(insertLoginsSql, logins.Select(x => new {
-                        x.LoginProvider,
-                        x.ProviderKey,
-                        x.ProviderDisplayName,
-                        UserId = user.Id
-                    }), transaction);
+                    await ReplaceLogins(logins, user.Id, transaction);
                 }
                 if (tokens?.Count() > 0) {
-                    const string deleteTokensSql = "DELETE " +
-                                                   "FROM [dbo].[AspNetUserTokens] " +
-                                                   "WHERE [UserId] = @UserId;";
-                    await DbConnection.ExecuteAsync(deleteTokensSql, new { UserId = user.Id }, transaction);
-                    const string insertTokensSql = "INSERT INTO [dbo].[AspNetUserTokens] (UserId, LoginProvider, Name, Value) " +
-                                                   "VALUES (@UserId, @LoginProvider, @Name, @Value);";
-                    await DbConnection.ExecuteAsync(insertTokensSql, tokens.Select(x => new {
-                        x.UserId,
-                        x.LoginProvider,
-                        x.Name,
-                        x.Value
-                    }), transaction);
+                    await ReplaceTokens(tokens, user.Id, transaction);
                 }
                 try {
                     transaction.Commit();
                 } catch {
                     transaction.Rollback();
-                    return false;
+                    return IdentityResult.Failed(new IdentityError {
+                        Code = string.Empty,
+                        Description = $"User '{user.UserName}' could not be updated."
+                    });
                 }
             }
-            return true;
+            return IdentityResult.Success;
         }
 
         /// <inheritdoc/>
@@ -212,6 +184,63 @@ namespace AspNetCore.Identity.Dapper
                 ClaimValue = claim.Value
             });
             return users;
+        }
+        /// <inheritdoc/>
+        protected virtual async Task<int> ReplaceClaims(IList<TUserClaim> claims, TKey userId, IDbTransaction transaction) {
+            const string deleteClaimsSql = "DELETE " +
+                               "FROM [dbo].[AspNetUserClaims] " +
+                               "WHERE [UserId] = @UserId;";
+            await DbConnection.ExecuteAsync(deleteClaimsSql, new { UserId = userId }, transaction);
+            const string insertClaimsSql = "INSERT INTO [dbo].[AspNetUserClaims] (UserId, ClaimType, ClaimValue) " +
+                                           "VALUES (@UserId, @ClaimType, @ClaimValue);";
+            return await DbConnection.ExecuteAsync(insertClaimsSql, claims.Select(x => new {
+                UserId = userId,
+                x.ClaimType,
+                x.ClaimValue
+            }), transaction);
+        }
+        /// <inheritdoc/>
+        protected virtual async Task<int> ReplaceRoles(IList<TUserRole> roles, TKey userId, IDbTransaction transaction) {
+            const string deleteRolesSql = "DELETE " +
+                              "FROM [dbo].[AspNetUserRoles] " +
+                              "WHERE [UserId] = @UserId;";
+            await DbConnection.ExecuteAsync(deleteRolesSql, new { UserId = userId }, transaction);
+            const string insertRolesSql = "INSERT INTO [dbo].[AspNetUserRoles] (UserId, RoleId) " +
+                                          "VALUES (@UserId, @RoleId);";
+            return await DbConnection.ExecuteAsync(insertRolesSql, roles.Select(x => new {
+                UserId = userId,
+                x.RoleId
+            }), transaction);
+        }
+        /// <inheritdoc/>
+        protected virtual async Task<int> ReplaceLogins(IList<TUserLogin> logins, TKey userId, IDbTransaction transaction) {
+            const string deleteLoginsSql = "DELETE " +
+                               "FROM [dbo].[AspNetUserLogins] " +
+                               "WHERE [UserId] = @UserId;";
+            await DbConnection.ExecuteAsync(deleteLoginsSql, new { UserId = userId }, transaction);
+            const string insertLoginsSql = "INSERT INTO [dbo].[AspNetUserLogins] (LoginProvider, ProviderKey, ProviderDisplayName, UserId) " +
+                                           "VALUES (@LoginProvider, @ProviderKey, @ProviderDisplayName, @UserId);";
+            return await DbConnection.ExecuteAsync(insertLoginsSql, logins.Select(x => new {
+                x.LoginProvider,
+                x.ProviderKey,
+                x.ProviderDisplayName,
+                UserId = userId
+            }), transaction);
+        }
+        /// <inheritdoc/>
+        protected virtual async Task<int> ReplaceTokens(IList<TUserToken> tokens, TKey userId, IDbTransaction transaction) {
+            const string deleteTokensSql = "DELETE " +
+                                   "FROM [dbo].[AspNetUserTokens] " +
+                                   "WHERE [UserId] = @UserId;";
+            await DbConnection.ExecuteAsync(deleteTokensSql, new { UserId = userId }, transaction);
+            const string insertTokensSql = "INSERT INTO [dbo].[AspNetUserTokens] (UserId, LoginProvider, Name, Value) " +
+                                           "VALUES (@UserId, @LoginProvider, @Name, @Value);";
+            return await DbConnection.ExecuteAsync(insertTokensSql, tokens.Select(x => new {
+                x.UserId,
+                x.LoginProvider,
+                x.Name,
+                x.Value
+            }), transaction);
         }
     }
 }

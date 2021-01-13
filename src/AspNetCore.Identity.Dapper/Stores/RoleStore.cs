@@ -99,27 +99,19 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public override async Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken) {
+        public override Task<IdentityResult> CreateAsync(TRole role, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             role.ThrowIfNull(nameof(role));
-            var created = await RolesTable.CreateAsync(role);
-            return created ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
-                Code = string.Empty,
-                Description = $"Role '{role.Name}' could not be created."
-            });
+            return RolesTable.CreateAsync(role);
         }
 
         /// <inheritdoc/>
-        public override async Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken) {
+        public override Task<IdentityResult> DeleteAsync(TRole role, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             role.ThrowIfNull(nameof(role));
-            var deleted = await RolesTable.DeleteAsync(role.Id);
-            return deleted ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
-                Code = string.Empty,
-                Description = $"Role '{role.Name}' could not be deleted."
-            });
+            return RolesTable.DeleteAsync(role.Id);
         }
 
         /// <inheritdoc/>
@@ -204,16 +196,12 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public override async Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken) {
+        public override Task<IdentityResult> UpdateAsync(TRole role, CancellationToken cancellationToken) {
             cancellationToken.ThrowIfCancellationRequested();
             ThrowIfDisposed();
             role.ThrowIfNull(nameof(role));
             role.ConcurrencyStamp = Guid.NewGuid().ToString();
-            var updated = await RolesTable.UpdateAsync(role, RoleClaims);
-            return updated ? IdentityResult.Success : IdentityResult.Failed(new IdentityError {
-                Code = string.Empty,
-                Description = $"Role '{role.Name}' could not be updated."
-            });
+            return RolesTable.UpdateAsync(role, RoleClaims);
         }
     }
 }

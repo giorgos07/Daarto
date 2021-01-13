@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Reflection;
 using AspNetCore.Identity.Dapper;
 using Microsoft.AspNetCore.Identity;
@@ -32,14 +33,14 @@ namespace Microsoft.Extensions.DependencyInjection
             var configuration = serviceProvider.GetRequiredService<IConfiguration>();
             var dbConnectionContextOptions = new DapperStoreOptions {
                 ConnectionString = configuration.GetConnectionString("DefaultConnection"),
-                DbConnectionFactory = new SqlServerDbConnectionFactory(),
+                DbConnectionStoreType = typeof(SqlServerDbConnectionStore),
                 Services = services
             };
             configureAction?.Invoke(dbConnectionContextOptions);
             dbConnectionContextOptions.Services = null;
             var keyType = identityUserType.GenericTypeArguments[0];
-            services.TryAddScoped(typeof(IDbConnectionFactory), x => {
-                var dbConnectionFactoryInstance = (IDbConnectionFactory)Activator.CreateInstance(dbConnectionContextOptions.DbConnectionFactory.GetType());
+            services.TryAddScoped(typeof(IDbConnectionStore), x => {
+                var dbConnectionFactoryInstance = (IDbConnectionStore)Activator.CreateInstance(dbConnectionContextOptions.DbConnectionStoreType);
                 dbConnectionFactoryInstance.ConnectionString = dbConnectionContextOptions.ConnectionString;
                 return dbConnectionFactoryInstance;
             });
@@ -49,13 +50,14 @@ namespace Microsoft.Extensions.DependencyInjection
             var userLoginType = typeof(IdentityUserLogin<>).MakeGenericType(keyType);
             var roleClaimType = typeof(IdentityRoleClaim<>).MakeGenericType(keyType);
             var userTokenType = typeof(IdentityUserToken<>).MakeGenericType(keyType);
+            var usersTableServiceType = typeof(IUsersTable<,,,,,>).MakeGenericType(userType, keyType, userClaimType, userRoleType, userLoginType, userTokenType);
             if (roleType != null) {
                 var identityRoleType = FindGenericBaseType(roleType, typeof(IdentityRole<>));
                 if (identityRoleType == null) {
                     throw new InvalidOperationException($"Method {nameof(AddDapperStores)} can only be called with a role that derives from IdentityRole<TKey>.");
                 }
                 services.TryAddScoped(
-                    typeof(IUsersTable<,,,,,>).MakeGenericType(userType, keyType, userClaimType, userRoleType, userLoginType, userTokenType),
+                    usersTableServiceType,
                     typeof(UsersTable<,,,,,>).MakeGenericType(userType, keyType, userClaimType, userRoleType, userLoginType, userTokenType)
                 );
                 services.TryAddScoped(typeof(IRolesTable<,,>).MakeGenericType(roleType, keyType, roleClaimType), typeof(RolesTable<,,>).MakeGenericType(roleType, keyType, roleClaimType));
@@ -64,10 +66,14 @@ namespace Microsoft.Extensions.DependencyInjection
                 services.TryAddScoped(typeof(IRoleStore<>).MakeGenericType(roleType), typeof(RoleStore<,,,>).MakeGenericType(roleType, keyType, userRoleType, roleClaimType));
                 userStoreType = typeof(UserStore<,,,,,,,>).MakeGenericType(userType, roleType, keyType, userClaimType, userRoleType, userLoginType, userTokenType, roleClaimType);
             } else {
-                services.TryAddScoped(
-                    typeof(IUsersOnlyTable<,,,,>).MakeGenericType(userType, keyType, userClaimType, userLoginType, userTokenType),
-                    typeof(UsersTable<,,,,,>).MakeGenericType(userType, keyType, userClaimType, roleType, userLoginType, userTokenType)
-                );
+                var matchingServiceType = services.FirstOrDefault(s => s.ServiceType == usersTableServiceType);
+                usersTableServiceType = typeof(IUsersOnlyTable<,,,,>).MakeGenericType(userType, keyType, userClaimType, userLoginType, userTokenType);
+                if (matchingServiceType == null) {
+                    services.TryAddScoped(usersTableServiceType, typeof(UsersTable<,,,,,>).MakeGenericType(userType, keyType, userClaimType, userRoleType, userLoginType, userTokenType));
+                } else {
+                    services.Remove(matchingServiceType);
+                    services.TryAddScoped(usersTableServiceType, matchingServiceType.ImplementationType);
+                }
                 userStoreType = typeof(UserOnlyStore<,,,,>).MakeGenericType(userType, keyType, userClaimType, userLoginType, userTokenType);
             }
             services.TryAddScoped(typeof(IUserClaimsTable<,>).MakeGenericType(keyType, userClaimType), typeof(UserClaimsTable<,>).MakeGenericType(keyType, userClaimType));

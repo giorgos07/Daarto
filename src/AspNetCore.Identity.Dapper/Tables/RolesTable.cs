@@ -25,10 +25,10 @@ namespace AspNetCore.Identity.Dapper
         /// Creates a new instance of <see cref="RolesTable{TRole, TKey, TRoleClaim}"/>.
         /// </summary>
         /// <param name="dbConnectionFactory">A factory for creating instances of <see cref="IDbConnection"/>.</param>
-        public RolesTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
+        public RolesTable(IDbConnectionStore dbConnectionFactory) : base(dbConnectionFactory) { }
 
         /// <inheritdoc/>
-        public virtual async Task<bool> CreateAsync(TRole role) {
+        public virtual async Task<IdentityResult> CreateAsync(TRole role) {
             const string sql = "INSERT INTO [dbo].[AspNetRoles] " +
                                "VALUES (@Id, @Name, @NormalizedName, @ConcurrencyStamp);";
             var rowsInserted = await DbConnection.ExecuteAsync(sql, new {
@@ -37,16 +37,26 @@ namespace AspNetCore.Identity.Dapper
                 role.NormalizedName,
                 role.ConcurrencyStamp
             });
-            return rowsInserted == 1;
+            return rowsInserted == 1
+                ? IdentityResult.Success 
+                : IdentityResult.Failed(new IdentityError {
+                    Code = string.Empty,
+                    Description = $"Role '{role.Name}' could not be created."
+                });
         }
 
         /// <inheritdoc/>
-        public virtual async Task<bool> DeleteAsync(TKey roleId) {
+        public virtual async Task<IdentityResult> DeleteAsync(TKey roleId) {
             const string sql = "DELETE " +
                                "FROM [dbo].[AspNetRoles] " +
                                "WHERE [Id] = @Id;";
             var rowsDeleted = await DbConnection.ExecuteAsync(sql, new { Id = roleId });
-            return rowsDeleted == 1;
+            return rowsDeleted == 1
+                ? IdentityResult.Success 
+                : IdentityResult.Failed(new IdentityError {
+                    Code = string.Empty,
+                    Description = $"Role id '{roleId}' could not be deleted."
+                });
         }
 
         /// <inheritdoc/>
@@ -68,7 +78,7 @@ namespace AspNetCore.Identity.Dapper
         }
 
         /// <inheritdoc/>
-        public virtual async Task<bool> UpdateAsync(TRole role, IList<TRoleClaim> claims = null) {
+        public virtual async Task<IdentityResult> UpdateAsync(TRole role, IList<TRoleClaim> claims = null) {
             const string updateRoleSql = "UPDATE [dbo].[AspNetRoles] " +
                                          "SET [Name] = @Name, [NormalizedName] = @NormalizedName, [ConcurrencyStamp] = @ConcurrencyStamp " +
                                          "WHERE [Id] = @Id;";
@@ -98,10 +108,13 @@ namespace AspNetCore.Identity.Dapper
                     transaction.Commit();
                 } catch {
                     transaction.Rollback();
-                    return false;
+                    return IdentityResult.Failed(new IdentityError {
+                        Code = string.Empty,
+                        Description = $"Role '{role.Name}' could not be updated."
+                    });
                 }
             }
-            return true;
+            return IdentityResult.Success;
         }
     }
 }

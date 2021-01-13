@@ -9,9 +9,9 @@ namespace Daarto.WebUI.Data.Tables
 {
     public class ExtendedRolesTable : RolesTable<ExtendedIdentityRole, string, IdentityRoleClaim<string>>
     {
-        public ExtendedRolesTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
+        public ExtendedRolesTable(IDbConnectionStore dbConnectionFactory) : base(dbConnectionFactory) { }
 
-        public override async Task<bool> CreateAsync(ExtendedIdentityRole role) {
+        public override async Task<IdentityResult> CreateAsync(ExtendedIdentityRole role) {
             const string sql = "INSERT INTO [dbo].[AspNetRoles] " +
                                "VALUES (@Id, @Name, @NormalizedName, @ConcurrencyStamp, @Description);";
             var rowsInserted = await DbConnection.ExecuteAsync(sql, new {
@@ -21,10 +21,15 @@ namespace Daarto.WebUI.Data.Tables
                 role.ConcurrencyStamp,
                 role.Description
             });
-            return rowsInserted == 1;
+            return rowsInserted == 1
+                ? IdentityResult.Success
+                : IdentityResult.Failed(new IdentityError {
+                    Code = string.Empty,
+                    Description = $"Role '{role.Name}' could not be created."
+                });
         }
 
-        public override async Task<bool> UpdateAsync(ExtendedIdentityRole role, IList<IdentityRoleClaim<string>> claims = null) {
+        public override async Task<IdentityResult> UpdateAsync(ExtendedIdentityRole role, IList<IdentityRoleClaim<string>> claims = null) {
             const string updateRoleSql = "UPDATE [dbo].[AspNetRoles] " +
                                          "SET [Name] = @Name, [NormalizedName] = @NormalizedName, [ConcurrencyStamp] = @ConcurrencyStamp, [Description] = @Description " +
                                          "WHERE [Id] = @Id;";
@@ -55,10 +60,13 @@ namespace Daarto.WebUI.Data.Tables
                     transaction.Commit();
                 } catch {
                     transaction.Rollback();
-                    return false;
+                    return IdentityResult.Failed(new IdentityError {
+                        Code = string.Empty,
+                        Description = $"Role '{role.Name}' could not be updated."
+                    });
                 }
             }
-            return true;
+            return IdentityResult.Success;
         }
     }
 }
