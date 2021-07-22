@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AspNetCore.Identity.Dapper
+namespace AspNetCore.Identity.Dapper.Tables
 {
     /// <summary>
     /// A base implementation for all tables.

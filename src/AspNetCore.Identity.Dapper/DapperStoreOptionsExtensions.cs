@@ -1,5 +1,6 @@
 ﻿using System;
 using AspNetCore.Identity.Dapper;
+using AspNetCore.Identity.Dapper.Tables;
 using Microsoft.AspNetCore.Identity;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -10,7 +11,7 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class DapperStoreOptionsExtensions
     {
         /// <summary>
-        /// Add a custom implementation for <see cref="RoleClaimsTable{TKey, TRoleClaim}"/>.
+        /// Add a custom implementation for <see cref="RoleClaimsTable{TKey,TRoleClaim}"/>.
         /// </summary>
         /// <typeparam name="TRoleClaimsTable">The type of the table to register.</typeparam>
         /// <typeparam name="TRoleClaim">The type of the class representing a role claim.</typeparam>

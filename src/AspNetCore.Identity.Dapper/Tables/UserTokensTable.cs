@@ -4,11 +4,12 @@ using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Identity;
+using SqlKata;
 
-namespace AspNetCore.Identity.Dapper
+namespace AspNetCore.Identity.Dapper.Tables
 {
     /// <summary>
-    /// The default implementation of <see cref="IUserTokensTable{TKey, TUserToken}"/>.
+    /// The default implementation of <see cref="IUserTokensTable{TKey,TUserToken}"/>.
     /// </summary>
     /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
     /// <typeparam name="TUserToken">The type representing a user token.</typeparam>
@@ -26,23 +27,21 @@ namespace AspNetCore.Identity.Dapper
 
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TUserToken>> GetTokensAsync(TKey userId) {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserTokens] " +
-                               "WHERE [UserId] = @UserId;";
-            var userTokens = await DbConnection.QueryAsync<TUserToken>(sql, new { UserId = userId });
+            var query = new Query("AspNetUserTokens")
+                .Where("UserId", userId);
+            using var dbConnection =await DbConnectionFactory.CreateAsync();
+            var userTokens = await dbConnection.QueryAsync<TUserToken>(CompileQuery(query));
             return userTokens;
         }
 
         /// <inheritdoc/>
         public virtual async Task<TUserToken> FindTokenAsync(TKey userId, string loginProvider, string name) {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserTokens] " +
-                               "WHERE [UserId] = @UserId AND [LoginProvider] = @LoginProvider AND [Name] = @Name;";
-            var token = await DbConnection.QuerySingleOrDefaultAsync<TUserToken>(sql, new {
-                UserId = userId,
-                LoginProvider = loginProvider,
-                Name = name
-            });
+            var query = new Query("AspNetUserTokens")
+                .Where("UserId", userId)
+                .Where("LoginProvider", loginProvider)
+                .Where("Name", name);
+            using var dbConnection =await DbConnectionFactory.CreateAsync();
+            var token = await dbConnection.QuerySingleOrDefaultAsync<TUserToken>(CompileQuery(query));
             return token;
         }
     }
