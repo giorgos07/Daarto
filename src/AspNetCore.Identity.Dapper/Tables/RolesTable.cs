@@ -5,11 +5,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Identity;
+using SqlKata;
 
-namespace AspNetCore.Identity.Dapper
+namespace AspNetCore.Identity.Dapper.Tables
 {
     /// <summary>
-    /// The default implementation of <see cref="IRolesTable{TRole, TKey, TRoleClaim}"/>.
+    /// The default implementation of <see cref="IRolesTable{TRole,TKey,TRoleClaim}"/>.
     /// </summary>
     /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
     /// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
@@ -28,79 +29,94 @@ namespace AspNetCore.Identity.Dapper
         public RolesTable(IDbConnectionFactory dbConnectionFactory) : base(dbConnectionFactory) { }
 
         /// <inheritdoc/>
-        public virtual async Task<bool> CreateAsync(TRole role) {
-            const string sql = "INSERT INTO [dbo].[AspNetRoles] " +
-                               "VALUES (@Id, @Name, @NormalizedName, @ConcurrencyStamp);";
-            var rowsInserted = await DbConnection.ExecuteAsync(sql, new {
-                role.Id,
-                role.Name,
-                role.NormalizedName,
-                role.ConcurrencyStamp
-            });
+        public virtual async Task<bool> CreateAsync(TRole role)
+        {
+            var query = new Query("AspNetRoles")
+                .AsInsert(new
+                {
+                    role.Id,
+                    role.Name,
+                    role.NormalizedName,
+                    role.ConcurrencyStamp
+                });
+            using var dbConnection =await DbConnectionFactory.CreateAsync();
+            var rowsInserted = await dbConnection.ExecuteAsync(CompileQuery(query));
             return rowsInserted == 1;
         }
 
         /// <inheritdoc/>
-        public virtual async Task<bool> DeleteAsync(TKey roleId) {
-            const string sql = "DELETE " +
-                               "FROM [dbo].[AspNetRoles] " +
-                               "WHERE [Id] = @Id;";
-            var rowsDeleted = await DbConnection.ExecuteAsync(sql, new { Id = roleId });
+        public virtual async Task<bool> DeleteAsync(TKey roleId)
+        {
+            var query = new Query("AspNetRoles")
+                .Where("Id", roleId)
+                .AsDelete();
+            using var dbConnection =await DbConnectionFactory.CreateAsync();
+            var rowsDeleted = await dbConnection.ExecuteAsync(CompileQuery(query));
             return rowsDeleted == 1;
         }
 
         /// <inheritdoc/>
-        public virtual async Task<TRole> FindByIdAsync(TKey roleId) {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetRoles] " +
-                               "WHERE [Id] = @Id;";
-            var role = await DbConnection.QuerySingleOrDefaultAsync<TRole>(sql, new { Id = roleId });
+        public virtual async Task<TRole> FindByIdAsync(TKey roleId)
+        {
+            var query = new Query("AspNetRoles")
+                .Where("Id", roleId);
+            using var dbConnection =await DbConnectionFactory.CreateAsync();
+            var role = await dbConnection.QuerySingleOrDefaultAsync<TRole>(CompileQuery(query));
             return role;
         }
 
         /// <inheritdoc/>
         public virtual async Task<TRole> FindByNameAsync(string normalizedName) {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetRoles] " +
-                               "WHERE [NormalizedName] = @NormalizedName;";
-            var role = await DbConnection.QuerySingleOrDefaultAsync<TRole>(sql, new { NormalizedName = normalizedName });
+            var query = new Query("AspNetRoles")
+                .Where("NormalizedName", normalizedName);
+            using var dbConnection =await DbConnectionFactory.CreateAsync();
+            var role = await dbConnection.QuerySingleOrDefaultAsync<TRole>(CompileQuery(query));
             return role;
         }
 
         /// <inheritdoc/>
         public virtual async Task<bool> UpdateAsync(TRole role, IList<TRoleClaim> claims = null) {
-            const string updateRoleSql = "UPDATE [dbo].[AspNetRoles] " +
-                                         "SET [Name] = @Name, [NormalizedName] = @NormalizedName, [ConcurrencyStamp] = @ConcurrencyStamp " +
-                                         "WHERE [Id] = @Id;";
-            using (var transaction = DbConnection.BeginTransaction()) {
-                await DbConnection.ExecuteAsync(updateRoleSql, new {
+            var updateRoleSqlQuery = new Query("AspNetRoles")
+                .Where("Id", role.Id)
+                .AsUpdate(new
+                {
                     role.Name,
                     role.NormalizedName,
                     role.ConcurrencyStamp,
                     role.Id
-                }, transaction);
-                if (claims?.Count() > 0) {
-                    const string deleteClaimsSql = "DELETE " +
-                                                   "FROM [dbo].[AspNetRoleClaims] " +
-                                                   "WHERE [RoleId] = @RoleId;";
-                    await DbConnection.ExecuteAsync(deleteClaimsSql, new {
-                        RoleId = role.Id
-                    }, transaction);
-                    const string insertClaimsSql = "INSERT INTO [dbo].[AspNetRoleClaims] (RoleId, ClaimType, ClaimValue) " +
-                                                   "VALUES (@RoleId, @ClaimType, @ClaimValue);";
-                    await DbConnection.ExecuteAsync(insertClaimsSql, claims.Select(x => new {
-                        RoleId = role.Id,
-                        x.ClaimType,
-                        x.ClaimValue
-                    }), transaction);
-                }
-                try {
-                    transaction.Commit();
-                } catch {
-                    transaction.Rollback();
-                    return false;
-                }
+                });
+            using var dbConnection =await DbConnectionFactory.CreateAsync();
+            using var transaction = dbConnection.BeginTransaction();
+            await dbConnection.ExecuteAsync(CompileQuery(updateRoleSqlQuery), transaction);
+            if (claims?.Count() > 0) {
+                var deleteClaimsSqlQuery = new Query("AspNetRoleClaims")
+                    .Where("RoleId", role.Id)
+                    .AsDelete();
+                await dbConnection.ExecuteAsync(CompileQuery(deleteClaimsSqlQuery), transaction);
+                var insertClaimsSqlQuery =new Query("AspNetRoleClaims")
+                    .AsInsert(
+                        new[]
+                        {
+                            "RoleId",
+                            "ClaimType",
+                            "ClaimValue"
+                        },
+                        claims.Select(x => new object[]
+                        {
+                            role.Id,
+                            x.ClaimType,
+                            x.ClaimValue
+                        }).ToArray());
+                    
+                await dbConnection.ExecuteAsync(CompileQuery(insertClaimsSqlQuery), transaction);
             }
+            try {
+                transaction.Commit();
+            } catch {
+                transaction.Rollback();
+                return false;
+            }
+
             return true;
         }
     }

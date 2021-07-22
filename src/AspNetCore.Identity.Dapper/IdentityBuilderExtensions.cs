@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Reflection;
 using AspNetCore.Identity.Dapper;
+using AspNetCore.Identity.Dapper.Tables;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection.Extensions;

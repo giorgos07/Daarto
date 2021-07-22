@@ -4,11 +4,12 @@ using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Identity;
+using SqlKata;
 
-namespace AspNetCore.Identity.Dapper
+namespace AspNetCore.Identity.Dapper.Tables
 {
     /// <summary>
-    /// The default implementation of <see cref="IUserClaimsTable{TKey, TUserClaim}"/>.
+    /// The default implementation of <see cref="IUserClaimsTable{TKey,TUserClaim}"/>.
     /// </summary>
     /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
     /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
@@ -26,10 +27,10 @@ namespace AspNetCore.Identity.Dapper
 
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TUserClaim>> GetClaimsAsync(TKey userId) {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserClaims] " +
-                               "WHERE [UserId] = @UserId;";
-            var userClaims = await DbConnection.QueryAsync<TUserClaim>(sql, new { UserId = userId });
+            var query = new Query("AspNetUserClaims")
+                .Where("UserId", userId);
+            using var dbConnection =await DbConnectionFactory.CreateAsync();
+            var userClaims = await dbConnection.QueryAsync<TUserClaim>(CompileQuery(query));
             return userClaims;
         }
     }

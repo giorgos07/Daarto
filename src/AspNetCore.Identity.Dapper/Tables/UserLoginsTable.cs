@@ -4,11 +4,12 @@ using System.Data;
 using System.Threading.Tasks;
 using Dapper;
 using Microsoft.AspNetCore.Identity;
+using SqlKata;
 
-namespace AspNetCore.Identity.Dapper
+namespace AspNetCore.Identity.Dapper.Tables
 {
     /// <summary>
-    /// The default implementation of <see cref="IUserLoginsTable{TUser, TKey, TUserLogin}"/>.
+    /// The default implementation of <see cref="IUserLoginsTable{TUser,TKey,TUserLogin}"/>.
     /// </summary>
     /// <typeparam name="TUser">The type representing a user.</typeparam>
     /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
@@ -28,48 +29,43 @@ namespace AspNetCore.Identity.Dapper
 
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TUserLogin>> GetLoginsAsync(TKey userId) {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserLogins] " +
-                               "WHERE [UserId] = @UserId;";
-            var userLogins = await DbConnection.QueryAsync<TUserLogin>(sql, new { UserId = userId });
+            var query = new Query("AspNetUserLogins")
+                .Where("UserId", userId);
+            using var dbConnection =await DbConnectionFactory.CreateAsync();
+            var userLogins = await dbConnection.QueryAsync<TUserLogin>(CompileQuery(query));
             return userLogins;
         }
 
         /// <inheritdoc/>
-        public virtual async Task<TUser> FindByLoginAsync(string loginProvider, string providerKey) {
-            const string sql = "SELECT [u].* " +
-                               "FROM [dbo].[AspNetUsers] AS [u] " +
-                               "INNER JOIN [dbo].[AspNetUserLogins] AS [ul] ON [ul].[UserId] = [u].[Id] " +
-                               "WHERE [ul].[LoginProvider] = @LoginProvider AND [ul].[ProviderKey] = @ProviderKey;";
-            var user = await DbConnection.QuerySingleOrDefaultAsync<TUser>(sql, new {
-                LoginProvider = loginProvider,
-                ProviderKey = providerKey
-            });
+        public virtual async Task<TUser> FindByLoginAsync(string loginProvider, string providerKey)
+        {
+            var query = new Query("AspNetUsers as u")
+                .Join("AspNetUserLogins ul", "u.Id", "ul.Id")
+                .Where("ul.LoginProvider", loginProvider)
+                .Where("ul.ProviderKey", providerKey);
+            using var dbConnection =await DbConnectionFactory.CreateAsync();
+            var user = await dbConnection.QuerySingleOrDefaultAsync<TUser>(CompileQuery(query));
             return user;
         }
 
         /// <inheritdoc/>
         public virtual async Task<TUserLogin> FindUserLoginAsync(string loginProvider, string providerKey) {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserLogins] " +
-                               "WHERE [LoginProvider] = @LoginProvider AND [ProviderKey] = @ProviderKey;";
-            var userLogin = await DbConnection.QuerySingleOrDefaultAsync<TUserLogin>(sql, new {
-                LoginProvider = loginProvider,
-                ProviderKey = providerKey
-            });
+            var query = new Query("AspNetUserLogins")
+                .Where("LoginProvider", loginProvider)
+                .Where("ProviderKey", providerKey);
+            using var dbConnection =await DbConnectionFactory.CreateAsync();
+            var userLogin = await dbConnection.QuerySingleOrDefaultAsync<TUserLogin>(CompileQuery(query));
             return userLogin;
         }
 
         /// <inheritdoc/>
         public virtual async Task<TUserLogin> FindUserLoginAsync(TKey userId, string loginProvider, string providerKey) {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserLogins] " +
-                               "WHERE [UserId] = @UserId AND [LoginProvider] = @LoginProvider AND [ProviderKey] = @ProviderKey;";
-            var userLogin = await DbConnection.QuerySingleOrDefaultAsync<TUserLogin>(sql, new {
-                UserId = userId,
-                LoginProvider = loginProvider,
-                ProviderKey = providerKey
-            });
+            var query = new Query("AspNetUserLogins")
+                .Where("LoginProvider", loginProvider)
+                .Where("ProviderKey", providerKey)
+                .Where("UserId", userId);
+            using var dbConnection =await DbConnectionFactory.CreateAsync();
+            var userLogin = await dbConnection.QuerySingleOrDefaultAsync<TUserLogin>(CompileQuery(query));
             return userLogin;
         }
     }

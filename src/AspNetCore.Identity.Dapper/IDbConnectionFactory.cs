@@ -1,4 +1,5 @@
 ﻿using System.Data;
+using System.Threading.Tasks;
 
 namespace AspNetCore.Identity.Dapper
 {
@@ -15,5 +16,11 @@ namespace AspNetCore.Identity.Dapper
         /// Creates a new instance of the underlying <see cref="IDbConnection"/>.
         /// </summary>
         IDbConnection Create();
+
+        /// <summary>
+        /// Creates a new instance of the underlying <see cref="IDbConnection"/>.
+        /// </summary>
+        /// <returns></returns>
+        Task<IDbConnection> CreateAsync();
     }
 }
