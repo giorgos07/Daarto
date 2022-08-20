@@ -12,9 +12,7 @@ namespace AspNetCore.Identity.Dapper
     /// </summary>
     /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
     /// <typeparam name="TUserToken">The type representing a user token.</typeparam>
-    public class UserTokensTable<TKey, TUserToken> :
-        IdentityTable,
-        IUserTokensTable<TKey, TUserToken>
+    public class UserTokensTable<TKey, TUserToken> : IdentityTable, IUserTokensTable<TKey, TUserToken>
         where TKey : IEquatable<TKey>
         where TUserToken : IdentityUserToken<TKey>, new()
     {
@@ -26,18 +24,22 @@ namespace AspNetCore.Identity.Dapper
 
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TUserToken>> GetTokensAsync(TKey userId) {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserTokens] " +
-                               "WHERE [UserId] = @UserId;";
+            const string sql = @"
+                SELECT *
+                FROM [dbo].[AspNetUserTokens]
+                WHERE [UserId] = @UserId;
+            ";
             var userTokens = await DbConnection.QueryAsync<TUserToken>(sql, new { UserId = userId });
             return userTokens;
         }
 
         /// <inheritdoc/>
         public virtual async Task<TUserToken> FindTokenAsync(TKey userId, string loginProvider, string name) {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserTokens] " +
-                               "WHERE [UserId] = @UserId AND [LoginProvider] = @LoginProvider AND [Name] = @Name;";
+            const string sql = @"
+                SELECT *
+                FROM [dbo].[AspNetUserTokens]
+                WHERE [UserId] = @UserId AND [LoginProvider] = @LoginProvider AND [Name] = @Name;
+            ";
             var token = await DbConnection.QuerySingleOrDefaultAsync<TUserToken>(sql, new {
                 UserId = userId,
                 LoginProvider = loginProvider,

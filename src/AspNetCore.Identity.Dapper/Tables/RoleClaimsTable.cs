@@ -12,9 +12,7 @@ namespace AspNetCore.Identity.Dapper
     /// </summary>
     /// <typeparam name="TKey">The type of the primary key for a role.</typeparam>
     /// <typeparam name="TRoleClaim">The type of the class representing a role claim.</typeparam>
-    public class RoleClaimsTable<TKey, TRoleClaim> :
-        IdentityTable,
-        IRoleClaimsTable<TKey, TRoleClaim>
+    public class RoleClaimsTable<TKey, TRoleClaim> : IdentityTable, IRoleClaimsTable<TKey, TRoleClaim>
         where TKey : IEquatable<TKey>
         where TRoleClaim : IdentityRoleClaim<TKey>, new()
     {
@@ -26,9 +24,11 @@ namespace AspNetCore.Identity.Dapper
 
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TRoleClaim>> GetClaimsAsync(TKey roleId) {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetRoleClaims] " +
-                               "WHERE [RoleId] = @RoleId;";
+            const string sql = @"
+                SELECT *
+                FROM [dbo].[AspNetRoleClaims]
+                WHERE [RoleId] = @RoleId;
+            ";
             var roleClaims = await DbConnection.QueryAsync<TRoleClaim>(sql, new { RoleId = roleId });
             return roleClaims;
         }

@@ -16,9 +16,7 @@ namespace AspNetCore.Identity.Dapper
     /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
     /// <typeparam name="TUserLogin">The type representing a user external login.</typeparam>
     /// <typeparam name="TUserToken">The type representing a user token.</typeparam>
-    public class UserOnlyStore<TUser, TKey, TUserClaim, TUserLogin, TUserToken> :
-        UserStoreBase<TUser, TKey, TUserClaim, TUserLogin, TUserToken>,
-        IProtectedUserStore<TUser>
+    public class UserOnlyStore<TUser, TKey, TUserClaim, TUserLogin, TUserToken> : UserStoreBase<TUser, TKey, TUserClaim, TUserLogin, TUserToken>, IProtectedUserStore<TUser>
         where TUser : IdentityUser<TKey>
         where TKey : IEquatable<TKey>
         where TUserClaim : IdentityUserClaim<TKey>, new()

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29613.14
+# Visual Studio Version 17
+VisualStudioVersion = 17.3.32811.315
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{AE94DD8D-1626-4618-AB38-37459DEE54E0}"
 EndProject
@@ -12,8 +12,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{525F9EE4-17EB-4E98-A775-C28282BC2962}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "database", "database", "{661AB817-BF00-4B7F-88B5-9ADC84DC93A5}"
-EndProject
-Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "IdentityDb", "misc\database\IdentityDb\IdentityDb.sqlproj", "{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Daarto.WebUI", "samples\Daarto.WebUI\Daarto.WebUI.csproj", "{22BA1F98-E1F9-421E-9B84-CAC07745BAEF}"
 EndProject
@@ -28,7 +26,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{B0C64769-72F4-42AE-B0E3-938FF8D1C145}"
 	ProjectSection(SolutionItems) = preProject
 		misc\docs\1.use_the_package.md = misc\docs\1.use_the_package.md
+		README.md = README.md
 	EndProjectSection
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "IdentityDatabase", "misc\database\IdentityDatabase\IdentityDatabase.sqlproj", "{EFBE76EB-50AE-4C37-BA54-8ECBAB757EFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -40,16 +41,16 @@ Global
 		{DD01411B-826F-4CA3-8581-8FDA9C7961AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DD01411B-826F-4CA3-8581-8FDA9C7961AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DD01411B-826F-4CA3-8581-8FDA9C7961AC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB}.Release|Any CPU.Deploy.0 = Release|Any CPU
 		{22BA1F98-E1F9-421E-9B84-CAC07745BAEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{22BA1F98-E1F9-421E-9B84-CAC07745BAEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{22BA1F98-E1F9-421E-9B84-CAC07745BAEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{22BA1F98-E1F9-421E-9B84-CAC07745BAEF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFBE76EB-50AE-4C37-BA54-8ECBAB757EFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFBE76EB-50AE-4C37-BA54-8ECBAB757EFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFBE76EB-50AE-4C37-BA54-8ECBAB757EFC}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{EFBE76EB-50AE-4C37-BA54-8ECBAB757EFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFBE76EB-50AE-4C37-BA54-8ECBAB757EFC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EFBE76EB-50AE-4C37-BA54-8ECBAB757EFC}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -57,10 +58,10 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{DD01411B-826F-4CA3-8581-8FDA9C7961AC} = {AE94DD8D-1626-4618-AB38-37459DEE54E0}
 		{661AB817-BF00-4B7F-88B5-9ADC84DC93A5} = {AAE1B832-6032-4C5C-8154-F6775CC051F8}
-		{F082EB24-7AA8-4ECA-9856-6375B7AAAECB} = {661AB817-BF00-4B7F-88B5-9ADC84DC93A5}
 		{22BA1F98-E1F9-421E-9B84-CAC07745BAEF} = {525F9EE4-17EB-4E98-A775-C28282BC2962}
 		{C413D479-154F-4A24-9984-2B0D0C0C4CC2} = {AAE1B832-6032-4C5C-8154-F6775CC051F8}
 		{B0C64769-72F4-42AE-B0E3-938FF8D1C145} = {AAE1B832-6032-4C5C-8154-F6775CC051F8}
+		{EFBE76EB-50AE-4C37-BA54-8ECBAB757EFC} = {661AB817-BF00-4B7F-88B5-9ADC84DC93A5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {78AE28B8-138A-401A-B79E-457DC5EFB188}

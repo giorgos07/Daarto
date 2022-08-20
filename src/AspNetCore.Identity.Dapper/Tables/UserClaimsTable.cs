@@ -12,9 +12,7 @@ namespace AspNetCore.Identity.Dapper
     /// </summary>
     /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
     /// <typeparam name="TUserClaim">The type representing a claim.</typeparam>
-    public class UserClaimsTable<TKey, TUserClaim> :
-        IdentityTable,
-        IUserClaimsTable<TKey, TUserClaim>
+    public class UserClaimsTable<TKey, TUserClaim> : IdentityTable, IUserClaimsTable<TKey, TUserClaim>
         where TKey : IEquatable<TKey>
         where TUserClaim : IdentityUserClaim<TKey>, new()
     {
@@ -26,9 +24,11 @@ namespace AspNetCore.Identity.Dapper
 
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TUserClaim>> GetClaimsAsync(TKey userId) {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserClaims] " +
-                               "WHERE [UserId] = @UserId;";
+            const string sql = @"
+                SELECT *
+                FROM [dbo].[AspNetUserClaims]
+                WHERE [UserId] = @UserId;
+            ";
             var userClaims = await DbConnection.QueryAsync<TUserClaim>(sql, new { UserId = userId });
             return userClaims;
         }

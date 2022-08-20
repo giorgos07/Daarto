@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <UserSecretsId>aspnet-Daarto.WebUI-0BC4D06A-1285-4595-85EA-07A68DD02CF3</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>

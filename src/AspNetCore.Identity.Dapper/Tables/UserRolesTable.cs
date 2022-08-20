@@ -13,9 +13,7 @@ namespace AspNetCore.Identity.Dapper
     /// <typeparam name="TRole">The type representing a role.</typeparam>
     /// <typeparam name="TKey">The type of the primary key for a user.</typeparam>
     /// <typeparam name="TUserRole">The type representing a user role.</typeparam>
-    public class UserRolesTable<TRole, TKey, TUserRole> :
-        IdentityTable,
-        IUserRolesTable<TRole, TKey, TUserRole>
+    public class UserRolesTable<TRole, TKey, TUserRole> : IdentityTable, IUserRolesTable<TRole, TKey, TUserRole>
         where TRole : IdentityRole<TKey>
         where TKey : IEquatable<TKey>
         where TUserRole : IdentityUserRole<TKey>, new()
@@ -28,19 +26,23 @@ namespace AspNetCore.Identity.Dapper
 
         /// <inheritdoc/>
         public virtual async Task<IEnumerable<TRole>> GetRolesAsync(TKey userId) {
-            const string sql = "SELECT [r].* " +
-                               "FROM [dbo].[AspNetRoles] AS [r] " +
-                               "INNER JOIN [dbo].[AspNetUserRoles] AS [ur] ON [ur].[RoleId] = [r].[Id] " +
-                               "WHERE [ur].[UserId] = @UserId;";
+            const string sql = @"
+                SELECT [r].*
+                FROM [dbo].[AspNetRoles] AS [r]
+                INNER JOIN [dbo].[AspNetUserRoles] AS [ur] ON [ur].[RoleId] = [r].[Id]
+                WHERE [ur].[UserId] = @UserId;
+            ";
             var userRoles = await DbConnection.QueryAsync<TRole>(sql, new { UserId = userId });
             return userRoles;
         }
 
         /// <inheritdoc/>
         public virtual async Task<TUserRole> FindUserRoleAsync(TKey userId, TKey roleId) {
-            const string sql = "SELECT * " +
-                               "FROM [dbo].[AspNetUserRoles] " +
-                               "WHERE [UserId] = @UserId AND [RoleId] = @RoleId;";
+            const string sql = @"
+                SELECT *
+                FROM [dbo].[AspNetUserRoles]
+                WHERE [UserId] = @UserId AND [RoleId] = @RoleId;
+            ";
             var userRole = await DbConnection.QuerySingleOrDefaultAsync<TUserRole>(sql, new {
                 UserId = userId,
                 RoleId = roleId

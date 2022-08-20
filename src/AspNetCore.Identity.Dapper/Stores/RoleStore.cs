@@ -13,8 +13,7 @@ namespace AspNetCore.Identity.Dapper
     /// The persistence store for roles.
     /// </summary>
     /// <typeparam name="TRole">The type of the class representing a role.</typeparam>
-    public class RoleStore<TRole> : RoleStore<TRole, string>
-        where TRole : IdentityRole<string>
+    public class RoleStore<TRole> : RoleStore<TRole, string> where TRole : IdentityRole<string>
     {
         /// <summary>
         /// Constructs a new instance of <see cref="RoleStore{TRole}"/>.
