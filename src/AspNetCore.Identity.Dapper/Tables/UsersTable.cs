@@ -249,5 +249,16 @@ namespace AspNetCore.Identity.Dapper
             });
             return users;
         }
+
+        /// <inheritdoc/>
+        public virtual async Task<bool> RemoveUserFromRoleAsync(TUserRole userRole) {
+            const string sql = @"
+                DELETE
+                FROM [dbo].[AspNetUserRoles]
+                WHERE [UserId] = @UserId AND [RoleId] = @RoleId;
+            ";
+            var rowsDeleted = await DbConnection.ExecuteAsync(sql, new { userRole.UserId, userRole.RoleId });
+            return rowsDeleted == 1;
+        }
     }
 }

@@ -92,5 +92,12 @@ namespace AspNetCore.Identity.Dapper
         /// </summary>
         /// <param name="roleName">The name of the role.</param>
         Task<IEnumerable<TUser>> GetUsersInRoleAsync(string roleName);
+
+        /// <summary>
+        /// Removes a user role from AspNetUserRoles table
+        /// </summary>
+        /// <param name="userRole">the role of the user</param>
+        /// <returns>Was removal successful</returns>
+        Task<bool> RemoveUserFromRoleAsync(TUserRole userRole);
     }
 }

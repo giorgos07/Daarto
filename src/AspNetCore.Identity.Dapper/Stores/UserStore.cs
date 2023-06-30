@@ -298,7 +298,9 @@ namespace AspNetCore.Identity.Dapper
                 UserRoles = userRoles;
                 var userRole = await FindUserRoleAsync(user.Id, roleEntity.Id, cancellationToken);
                 if (userRole != null) {
-                    UserRoles.Remove(userRole);
+                    var deletedUserRole = UserRoles.FirstOrDefault(r => r.RoleId.Equals(userRole.RoleId) && r.UserId.Equals(userRole.UserId));
+                    UserRoles.Remove(deletedUserRole);
+                    await UsersTable.RemoveUserFromRoleAsync(deletedUserRole);
                 }
             }
         }
